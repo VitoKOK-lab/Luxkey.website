@@ -21,6 +21,8 @@ export type DealerService = {
   intro: string;
   image: string;
   imageAlt: string;
+  cardImage?: string;
+  cardImageAlt?: string;
   heroImage?: string;
   heroImageAlt?: string;
   demoIntro?: string;
@@ -42,6 +44,8 @@ export const dealerServices: DealerService[] = [
     intro: '打造專屬 AI 虛擬名模，持續介紹產品、回答常見問題、更新活動。老闆給重點，我們交付能發布的直式影片。',
     image: '/dealer/digital-human.webp',
     imageAlt: '品牌數字人介紹產品，製作團隊正在拍攝現場工作',
+    cardImage: '/dealer/cards/digital-human.webp',
+    cardImageAlt: '虛擬名模示範介紹商品的影片製作現場',
     priceLine: '4 支 NT$19,800 起',
     priceNote: '15–30 秒／支・未稅參考價',
     options: [{
@@ -71,6 +75,8 @@ export const dealerServices: DealerService[] = [
     intro: '產品、店面、服務流程真的拍給客戶看。從題目、拍攝到剪輯同一團隊完成，省掉老闆分頭找人。',
     image: '/dealer/real-video.webp',
     imageAlt: '攝影團隊在烘焙店拍攝店主製作與介紹商品的工作現場',
+    cardImage: '/dealer/cards/real-video.webp',
+    cardImageAlt: '攝影師在烘焙店拍攝店主製作麵包',
     priceLine: '4 支 NT$29,800 起',
     priceNote: '單一地點半天拍攝・未稅參考價',
     options: [{
@@ -100,6 +106,8 @@ export const dealerServices: DealerService[] = [
     intro: '不用先拍一堆影片。我們超 AI 技術把少量照片做成完整短片：白板手繪、簡報口播、品牌動態、黑底科技字卡，挑適合你的形式。',
     image: '/dealer/ai-video.webp',
     imageAlt: '五種 AI 製片畫面並列：白板手繪、平面口播、品牌動態、科技字卡與產品簡報',
+    cardImage: '/dealer/cards/ai-video.webp',
+    cardImageAlt: '製片人用少量照片、貼紙與積木組合成動畫短片',
     heroImage: '/dealer/ai-video-hero.webp',
     heroImageAlt: '工程師剪貼少量紙片、貼紙與積木，組成有趣的直式簡報影片',
     demoIntro: '白板、口播簡報、品牌動態、科技字卡都能做；看五種不同的製片方向。',
@@ -131,6 +139,8 @@ export const dealerServices: DealerService[] = [
     intro: '不用讓小編每天坐在電腦前想破頭、改了又改。產品題目、貼文文案、主圖和 IG 輪播一起排好，分批交付。',
     image: '/dealer/social-posts.webp',
     imageAlt: '小編在電腦前反覆修改貼文，旁邊展示整月已完成的 FB 與 IG 內容',
+    cardImage: '/dealer/cards/social-posts.webp',
+    cardImageAlt: '小編安排整月社群貼文與圖片',
     demoIntro: '直接看 FB 貼文組、IG 連續貼文，以及整月內容如何一次排好。',
     priceLine: '8 則 NT$16,800／月',
     priceNote: '圖文製作・未稅參考價',
@@ -161,6 +171,8 @@ export const dealerServices: DealerService[] = [
     intro: '訂單、報名、交接與進度集中在一套流程裡。老闆看得見，兩個人接得住；員工換了，工作方法也留在系統中。',
     image: '/dealer/web-system.webp',
     imageAlt: '原本六人手工傳單追進度，導入專案系統後兩人操作即可掌握流程',
+    cardImage: '/dealer/cards/web-system.webp',
+    cardImageAlt: '兩位同事透過訂單管理系統處理工作',
     demoIntro: '看訂單、報到與交接流程，如何從多人手工處理變成兩人掌握。',
     priceLine: '網站 NT$38,000 起',
     priceNote: '專案系統 NT$150,000 起・未稅',
@@ -188,6 +200,8 @@ export const dealerServices: DealerService[] = [
     intro: 'KOC 帶來使用者視角與內容素材；KOL 幫品牌打開新受眾。從人選、題目、合作到交付，一個窗口管理。',
     image: '/dealer/creator-campaign.webp',
     imageAlt: '多位創作者在拍攝現場開箱、示範並介紹商品',
+    cardImage: '/dealer/cards/creator-campaign.webp',
+    cardImageAlt: '多位創作者使用手機與相機介紹商品',
     priceLine: 'KOC 5 位 NT$30,000 起',
     priceNote: 'KOL 5 位 NT$100,000 起・未稅',
     accent: 'orange',
