@@ -89,3 +89,9 @@
   .ds-brand-name{min-width:142px;min-height:76px;font-size:19px;padding:12px 20px;margin-right:10px}
 }
 @media(prefers-reduced-motion:reduce){.ds-brand-track{animation:none}}
+
+.ds-service-notices{margin-top:26px;padding:24px 26px;border:1px solid var(--ds-line);border-left:5px solid var(--ds-blue);border-radius:14px;background:var(--ds-pale)}
+.ds-service-notices h3{margin:0 0 13px;font-size:21px;font-weight:950}
+.ds-service-notices ul{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.ds-service-notices li{display:flex;align-items:flex-start;gap:9px;font-size:14px;font-weight:700;color:#405b6c}
+.ds-service-notices li svg{flex-shrink:0;margin-top:3px;color:var(--ds-blue)}
