@@ -15,7 +15,7 @@ export function DealerHeader() {
       <details className="ds-menu">
         <summary>服務選單 <ChevronDown size={16}/></summary>
         <div className="ds-menu-list">{dealerServices.map(service =>
-          <Link key={service.slug} href={`/introduce/${service.slug}/`}>{service.nav}<ArrowRight size={15}/></Link>
+          <Link key={service.slug} href={`/introduce/#${service.slug}`}>{service.nav}<ArrowRight size={15}/></Link>
         )}</div>
       </details>
     </nav>
