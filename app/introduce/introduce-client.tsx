@@ -27,7 +27,7 @@ export default function IntroducePage() {
             <span className="ds-onepage-media"><img src={service.cardImage || service.image} alt={service.cardImageAlt || service.imageAlt} loading={index < 2 ? 'eager' : 'lazy'}/></span>
             <span className="ds-onepage-summary-copy"><span className="ds-kicker">服務 {String(index + 1).padStart(2, '0')}</span><strong>{service.nav}</strong><span>{service.headline}</span></span>
             <span className="ds-onepage-summary-price"><small>參考價格</small><b>{service.priceLine}</b></span>
-            <span className="ds-onepage-summary-action"><span className="ds-onepage-expand"><span className="ds-expand-closed">看方案</span><span className="ds-expand-open">收起方案</span><ChevronDown size={22}/></span><small className="ds-sample-folder">示意資料夾</small></span>
+            <span className="ds-onepage-summary-action"><span className="ds-onepage-expand"><span className="ds-expand-closed">看方案</span><span className="ds-expand-open">收起方案</span><ChevronDown size={22}/></span>{service.folderUrl ? <a className="ds-sample-folder" href={service.folderUrl} target="_blank" rel="noopener noreferrer">示意資料夾 ↗</a> : <small className="ds-sample-folder">示意資料夾待補</small>}</span>
           </summary>
           <div className="ds-onepage-content">
             <div className={`ds-onepage-options ${service.options.length === 1 ? 'ds-onepage-one-option' : ''}`}>{service.options.map(option => <section className="ds-onepage-option" key={option.name}>
