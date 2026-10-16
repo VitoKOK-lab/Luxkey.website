@@ -14,6 +14,7 @@ export type DealerCase = {
 };
 
 export type DealerService = {
+  folderUrl?: string;
   slug: string;
   nav: string;
   eyebrow: string;
@@ -41,6 +42,7 @@ const serviceOrder = ['digital-human', 'ai-video', 'website-optimization', 'onli
 export const dealerServices: DealerService[] = [
   {
     slug: 'digital-human',
+    folderUrl: 'https://drive.google.com/drive/folders/1AZ-pYMhDhss4IOdSAzKpBU7OfQbF4D4L',
     nav: '數字人',
     eyebrow: '01 / AI 數字人短影音',
     headline: '超級名模來幫你賣貨',
@@ -72,6 +74,7 @@ export const dealerServices: DealerService[] = [
   },
   {
     slug: 'real-video',
+    folderUrl: 'https://drive.google.com/drive/folders/1WtzFY0RjY5fB75T36Zeg-uEG7C69ySpt',
     nav: '實拍短影音',
     eyebrow: '05 / 真實到場拍攝',
     headline: '一次拍夠，一個月都有影片可發。',
@@ -103,6 +106,7 @@ export const dealerServices: DealerService[] = [
   },
   {
     slug: 'ai-video',
+    folderUrl: 'https://drive.google.com/drive/folders/1vOoRX1TAGEvIx1-FpzrEXkx36IRGcheT',
     nav: 'AI 製片',
     eyebrow: '02 / 一個製片 × 一組 AI 專員',
     headline: '一個製片，帶一整組 AI 專員。',
@@ -135,6 +139,7 @@ export const dealerServices: DealerService[] = [
   },
   {
     slug: 'web-system',
+    folderUrl: 'https://drive.google.com/drive/folders/1kb1mIDSnMK5RHcNdjMsdvyodE0pSP5_T',
     nav: '網站／系統',
     eyebrow: '07 / 網站與專案系統',
     headline: '原本一群人追的工作，系統做好，兩人就能管。',
@@ -189,6 +194,7 @@ export const dealerServices: DealerService[] = [
   },
   {
     slug: 'website-optimization',
+    folderUrl: 'https://drive.google.com/drive/folders/1IMNSHvCmrOuCKcELAPw8d8oJ2vfON0Vc',
     nav: '網站優化',
     eyebrow: '03 / 官方網站優化',
     headline: '讓官方網站更會接單。',
@@ -209,6 +215,7 @@ export const dealerServices: DealerService[] = [
   },
   {
     slug: 'creator-campaign',
+    folderUrl: 'https://drive.google.com/drive/folders/1Jl4pzyfh4Oc7uAzSulj0URRUYFWM73zK',
     nav: '網紅行銷',
     eyebrow: '06 / 網紅行銷專案合作',
     headline: '讓更多人分享你的商品',
