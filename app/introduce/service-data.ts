@@ -36,6 +36,8 @@ export type DealerService = {
   cases: DealerCase[];
 };
 
+const serviceOrder = ['digital-human', 'ai-video', 'website-optimization', 'online-course', 'real-video', 'creator-campaign', 'web-system'];
+
 export const dealerServices: DealerService[] = [
   {
     slug: 'digital-human',
@@ -71,7 +73,7 @@ export const dealerServices: DealerService[] = [
   {
     slug: 'real-video',
     nav: '實拍短影音',
-    eyebrow: '02 / 真實到場拍攝',
+    eyebrow: '05 / 真實到場拍攝',
     headline: '一次拍夠，一個月都有影片可發。',
     intro: '產品、店面、服務流程真的拍給客戶看。從題目、拍攝到剪輯同一團隊完成，省掉老闆分頭找人。',
     image: '/dealer/real-video.webp',
@@ -102,21 +104,20 @@ export const dealerServices: DealerService[] = [
   {
     slug: 'ai-video',
     nav: 'AI 製片',
-    eyebrow: '03 / 一個製片 × 一組 AI 專員',
+    eyebrow: '02 / 一個製片 × 一組 AI 專員',
     headline: '一個製片，帶一整組 AI 專員。',
-    intro: '不用先拍一堆影片。我們超 AI 技術把少量照片做成完整短片：白板手繪、簡報口播、品牌動態、黑底科技字卡，挑適合你的形式。',
+    intro: '給我們少量商品照片或貼紙圖，就能用 AI 動畫、Remotion 動態設計與 3D 效果組成有聲短片；旁白也能用 AI 人聲製作。',
     image: '/dealer/ai-video.webp',
     imageAlt: '五種 AI 製片畫面並列：白板手繪、平面口播、品牌動態、科技字卡與產品簡報',
     cardImage: '/dealer/cards/ai-video.webp',
     cardImageAlt: 'AI 製片完成的短影音成品組合',
     heroImage: '/dealer/ai-video-hero.webp',
     heroImageAlt: '工程師剪貼少量紙片、貼紙與積木，組成有趣的直式簡報影片',
-    demoIntro: '白板、口播簡報、品牌動態、科技字卡都能做；看五種不同的製片方向。',
+    demoIntro: '用商品照片、貼紙圖、AI 動畫、動態排版與 3D 畫面，做成有 AI 人聲的短片。',
     priceLine: '4 支 NT$12,800 起',
     priceNote: '少量客供照片即可啟動・未稅參考價',
     options: [
-      {name: 'AI 動態短片', price: 'NT$12,800', unit: '／4 支', detail: '用少量素材，做成有節奏的白板、簡報或科技字卡。', includes: ['4 支 9:16、15–30 秒成片', '客供照片動態化、重點圖卡、轉場、字幕與配樂', '開場文案、封面與必要的 AI 補畫面', '每支 1 次集中修改']},
-      {name: 'AI 口播製片', price: 'NT$19,800 起', unit: '／4 支', detail: '平面卡通人物口播，帶客戶看完一個完整主題。', includes: ['4 支 9:16、15–30 秒簡報式口播短片', '產品照片動畫、平面卡通角色與口播合成', '腳本、圖卡、剪輯、字幕與配樂', '每支 1 次集中修改；指定角色與特殊授權另估']},
+      {name: 'AI 動態短片', price: 'NT$12,800', unit: '／4 支', detail: '少量客戶照片、貼紙圖，就能組合成有 AI 人聲的動畫短片。', includes: ['4 支 9:16、15–30 秒成片', '用客供照片、貼紙圖結合 AI 動畫、Remotion 動態排版及適合主題的 3D 效果', 'AI 人聲旁白、字幕、配樂、封面與必要的補畫面', '每支 1 次集中修改']},
     ],
     reasons: [
       {title: '兩張照片也能開始', body: '先用現有商品照片，不必為了做影片重拍整套素材。'},
@@ -135,7 +136,7 @@ export const dealerServices: DealerService[] = [
   {
     slug: 'web-system',
     nav: '網站／系統',
-    eyebrow: '04 / 網站與專案系統',
+    eyebrow: '07 / 網站與專案系統',
     headline: '原本一群人追的工作，系統做好，兩人就能管。',
     intro: '訂單、報名、交接與進度集中在一套流程裡。老闆看得見，兩個人接得住；員工換了，工作方法也留在系統中。',
     image: '/dealer/web-system.webp',
@@ -144,10 +145,10 @@ export const dealerServices: DealerService[] = [
     cardImageAlt: '已上線的網站與系統介面',
     demoIntro: '看訂單、報到與交接流程，如何從多人手工處理變成兩人掌握。',
     priceLine: '網站 NT$38,000 起',
-    priceNote: '專案系統 NT$150,000 起・未稅',
+    priceNote: '專案系統 NT$50,000 起・未稅',
     options: [
       {name: '銷售型網站', price: 'NT$38,000 起', unit: '／案', detail: '把產品、優勢與詢問入口集中在一頁。', includes: ['一頁式響應式銷售網站', '最多 6 個內容區塊與 1 個聯絡導流', '客供素材整理與基礎 SEO 設定', '1 次上線協助與 2 次集中修改']},
-      {name: '專案型軟體', price: 'NT$150,000 起', unit: '／案', detail: '把原本靠多人交接的工作，做成兩人也能掌握的流程。', includes: ['1 個核心流程的網頁軟體首版', '最多 5 個主要頁面、2 種使用角色', '1 種約定格式的資料匯入／匯出', '部署、操作教學與流程交接文件']},
+      {name: '專案型軟體', price: 'NT$50,000 起', unit: '／案', detail: '把原本靠多人交接的工作，做成兩人也能掌握的流程。', includes: ['1 個核心流程的網頁軟體首版', '主要頁面、使用角色與資料串接範圍依需求報價', '部署、操作教學與流程交接文件']},
     ],
     reasons: [
       {title: '多人工作集中處理', body: '資料、狀態、提醒與下一步放進同一流程，減少人手傳話。'},
@@ -162,18 +163,46 @@ export const dealerServices: DealerService[] = [
     ],
   },
   {
+    slug: 'online-course',
+    nav: '專屬線上課程',
+    eyebrow: '04 / 製作專屬線上課程',
+    headline: '把你的專業，做成能反覆觀看的課程。',
+    intro: '從講稿、畫面素材到分集成片，讓專業知識變成可上架、可交付的線上課程。',
+    image: '/dealer/cards/online-course.webp',
+    imageAlt: '平板展示整套線上課程單元，手機播放完成的課程影片',
+    cardImage: '/dealer/cards/online-course.webp',
+    cardImageAlt: '已完成的線上課程影片與單元列表',
+    priceLine: 'NT$35,000 起',
+    priceNote: '11 集內或 25 集內兩種方案・未稅',
+    options: [
+      {name: '自己講・11 集內', price: 'NT$35,000', unit: '／套', detail: '你寫好講稿、錄好自己的聲音，我們把課程做成影片。', includes: ['最多 11 集，每集 3 分鐘內的課程影片', '客戶提供講稿、聲音錄音與核心資料', '依資料製作基本簡報、圖卡與課程封面', '影片剪輯、字幕、配樂與單元整理']},
+      {name: 'AI 配音・25 集內', price: 'NT$55,000', unit: '／套', detail: '給課程主題和專業資料，我們代寫講稿、製作素材並以 AI 人聲配音。', includes: ['最多 25 集，每集 3 分鐘內的課程影片', '依客戶提供的知識資料規劃分集並代寫講稿', '製作簡報圖卡、示意素材與課程封面', 'AI 人聲配音、影片剪輯、字幕與配樂']},
+    ],
+    notices: ['價格以每集 3 分鐘內、單一課程主題為基礎；超出集數、長度或特殊動畫需求另行報價。', '自己聲音方案由客戶提供可用的錄音檔；AI 配音方案使用一般 AI 人聲，不含聲音複製。', '講稿與專業內容由客戶確認正確性；影片交付格式與修改次數依正式報價確認。'],
+    reasons: [
+      {title: '專業一次整理成套', body: '從零散知識變成有順序的課程單元。'},
+      {title: '聲音方式自由選', body: '可用自己錄好的聲音，或選 AI 人聲配音。'},
+      {title: '交付可上架影片', body: '課程封面、字幕與影片一次備齊。'},
+    ],
+    steps: ['提供課程主題與資料', '確認分集和講稿', '製作素材、配音與成片'],
+    cases: [],
+  },
+  {
     slug: 'website-optimization',
     nav: '網站優化',
-    eyebrow: '05 / 官方網站優化',
+    eyebrow: '03 / 官方網站優化',
     headline: '讓官方網站更會接單。',
     intro: '把既有官網的主視覺、商品重點與行動入口重新整理，讓客戶看得懂、願意往下看，也更容易留下詢問。',
     image: '/dealer/cards/website-optimization.webp',
     imageAlt: '網站優化前後的完成頁面對照',
     cardImage: '/dealer/cards/website-optimization.webp',
     cardImageAlt: '網站優化前後的完成頁面對照',
-    priceLine: '依頁面評估報價',
-    priceNote: '依既有頁面數量與優化範圍確認',
-    options: [{name: '官方網站優化', price: '專案報價', unit: '／案', detail: '針對已上線官網，直接優化最需要成交的一段。', includes: ['首頁或指定頁面的訊息與版面優化', '商品賣點、行動入口與閱讀順序調整', '手機與桌機的響應式檢查', '範圍、頁數與素材整理依正式報價確認']}],
+    priceLine: '商品內文 NT$2,000 起',
+    priceNote: '網站商品內文每品項 NT$2,000 起；官網頁面優化另估',
+    options: [
+      {name: '網站商品內文優化', price: 'NT$2,000 起', unit: '／品項', detail: '把商品頁原有文字改得更好懂、更能凸顯賣點。', includes: ['整理客供商品資料與現有內文', '重寫商品標題、重點賣點與購買引導文字', '實際字數與頁面上稿需求依品項報價']},
+      {name: '官方網站頁面優化', price: '專案報價', unit: '／案', detail: '針對已上線官網，優化最需要成交的頁面。', includes: ['首頁或指定頁面的訊息與版面優化', '商品賣點、行動入口與閱讀順序調整', '手機與桌機的響應式檢查', '範圍、頁數與素材整理依正式報價確認']},
+    ],
     reasons: [],
     steps: [],
     cases: [],
@@ -190,7 +219,7 @@ export const dealerServices: DealerService[] = [
     cardImageAlt: '網紅行銷完成的社群短影音成品',
     priceLine: '口碑開箱 5 位 NT$18,000 起',
     priceNote: '網紅曝光 3–5 位 NT$100,000／組・未稅',
-    accent: 'orange',
+    accent: 'orange' as const,
     options: [
       {name: '口碑開箱 5 人組', price: 'NT$18,000', unit: '／5 支', detail: '不同生活角度的真實口碑，每人 1 支。', includes: ['每支 NT$3,600，粉絲約 1,000–3,000 人', '人選媒合、拍攝與交付管理', '影片發布於品牌官方帳號', '可用於廣告、官網與電商頁等商業用途']},
       {name: '口碑開箱 10 人組', price: 'NT$30,000', unit: '／10 支', detail: '一次取得十種真實使用者視角。', includes: ['每支 NT$3,000，粉絲約 1,000–3,000 人', '人選媒合、拍攝與交付管理', '影片發布於品牌官方帳號', '可用於廣告、官網與電商頁等商業用途']},
@@ -209,7 +238,7 @@ export const dealerServices: DealerService[] = [
       {src: '/dealer/simulated/creator-campaign-3.webp', title: '創作者商品介紹', description: '由創作者示範商品細節。'},
     ],
   },
-];
+].sort((a, b) => serviceOrder.indexOf(a.slug) - serviceOrder.indexOf(b.slug));
 
 export function getDealerService(slug: string) {
   return dealerServices.find(service => service.slug === slug);
