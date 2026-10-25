@@ -142,13 +142,13 @@ export const videos: Video[] = [
 
 /** 老闆的痛點：為什麼要跟我們合作。href 指向對應的價格。
  *  thumb 是排隊時的小圖、image 是輪到它放大後換上的大圖（放在 public/，沒有就用色塊）。 */
-export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; thumb?: string; image?: string; mobileImage?: string; imagePosition?: string; tabletImagePosition?: string };
+export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; thumb?: string; image?: string; mobileImage?: string; imagePosition?: string; tabletImageBottom?: number };
 export const pains: Pain[] = [
-  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', thumb: '/home/pains/thumbs/ai-edit.webp', image: '/home/pains/ai-edit.webp' },
-  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp', mobileImage: '/home/pains/digital-human-mobile.webp' },
-  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp', mobileImage: '/home/pains/thumbs/drama.webp', tabletImagePosition: 'center calc(100% - 140px)' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp', mobileImage: '/home/pains/thumbs/real-review.webp', imagePosition: 'center bottom', tabletImagePosition: 'center calc(100% - 120px)' },
-  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', thumb: '/home/pains/thumbs/store-optimization.webp', image: '/home/pains/store-optimization.webp' },
+  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', thumb: '/home/pains/thumbs/ai-edit.webp', image: '/home/pains/ai-edit.webp', mobileImage: '/home/pains/thumbs/ai-edit.webp' },
+  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human-cat-dance.webp', image: '/home/pains/digital-human.webp', mobileImage: '/home/pains/digital-human-mobile.webp' },
+  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp', mobileImage: '/home/pains/thumbs/drama.webp', tabletImageBottom: 140 },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp', mobileImage: '/home/pains/thumbs/real-review.webp', imagePosition: 'center bottom', tabletImageBottom: 120 },
+  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', thumb: '/home/pains/thumbs/store-optimization.webp', image: '/home/pains/store-optimization-rework.webp', mobileImage: '/home/pains/thumbs/store-optimization.webp' },
 ];
 
 export type Pack = { key: ServiceKey; qty: string; price: number; per: string };
@@ -172,38 +172,6 @@ export const compareRows: [string, string, string][] = [
   ['SEO 文章、月報', '很少做', '包含'],
   ['請假、離職', '內容跟著停', '不中斷'],
   ['新的 AI 技術', '要自己摸索', '自動升級，不加價'],
-];
-
-/** 幫我配方案：需求對應到要做的影片或服務。 */
-export type FinderItem = Video['key'] | Exclude<ServiceKey, 'video'>;
-export const finderGroups: { label: string; options: { label: string; items: FinderItem[] }[] }[] = [
-  {
-    label: '社群經營',
-    options: [
-      { label: '粉專想固定更新', items: ['posts', 'edit'] },
-      { label: '沒有人手做貼文', items: ['posts'] },
-      { label: '熱門話題想趕快出片', items: ['edit'] },
-      { label: '老闆不想露臉', items: ['ugc'] },
-    ],
-  },
-  {
-    label: '商品銷售',
-    options: [
-      { label: '新品上市需要介紹片', items: ['ugc', 'drama'] },
-      { label: '想讓商品被大量轉傳', items: ['drama'] },
-      { label: '電商主圖、詳情頁要重做', items: ['ecommerce'] },
-      { label: '商品很多，素材做不完', items: ['ecommerce', 'posts'] },
-    ],
-  },
-  {
-    label: '搜尋曝光',
-    options: [
-      { label: '想讓 Google 和 AI 找得到', items: ['article', 'optimize'] },
-      { label: '客人進了賣場卻沒買', items: ['optimize'] },
-      { label: '還沒有官網', items: ['website'] },
-      { label: '官網太舊想翻新', items: ['website', 'optimize'] },
-    ],
-  },
 ];
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
