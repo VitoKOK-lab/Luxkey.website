@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, faqs, plans, services } from './_home/home-data';
+import { EMAIL, faqs, packs, plans, services } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
 const description = 'A.C.E. AI 行銷內容訂閱：每月固定產出社群圖文、AI 短影音、SEO 文章並優化網站。標準方案月費 NT$29,800，一個小編的價格、整組 AI 團隊的產量；先嚐鮮 NT$9,800。';
@@ -28,6 +28,12 @@ const org = {
         '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false,
         ...(p.key === 'trial' ? {} : { unitCode: 'MON', unitText: '月' }),
       },
+    })).concat(packs.map(p => {
+      const s = services.find(x => x.key === p.key)!;
+      return {
+        '@type': 'Offer', name: `${s.name} ${p.qty}`, description: `單買套組：${p.per}`, url: `${url}#packs`,
+        priceSpecification: { '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false },
+      };
     })),
   },
 };

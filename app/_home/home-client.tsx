@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, Minus, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, compareRows, faqs, finderGroups, planExcluded, planRules, plans, services, steps, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, compareRows, faqs, finderGroups, packRules, packs, planExcluded, planRules, plans, services, steps, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -181,7 +181,44 @@ function Plans() {
             <strong>方案不包含</strong>
             <ul className="ace-excluded">{planExcluded.map(x => <li key={x}><Minus size={16} />{x}</li>)}</ul>
           </div>
-          <a href="#contact" className="ace-text-link">有特殊需求？先問問 <ArrowRight size={16} /></a>
+          <a href="#packs" className="ace-text-link">只想買單一服務？看單買套組 <ArrowRight size={16} /></a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Packs() {
+  const [copied, setCopied] = useState(false);
+  return (
+    <section id="packs" className="ace-section ace-packs">
+      <div className="ace-wrap">
+        <div className="ace-head-row">
+          <div><p className="ace-kicker">SINGLE PACKS</p><h2 className="ace-h2">只想買一項？<br className="ace-br-sm" />整包單買。</h2></div>
+          <p className="ace-muted">不訂閱也可以，但只賣整包、不拆單件，單價也比訂閱高。每個月都有需求的話，訂閱划算很多。</p>
+        </div>
+        <div className="ace-pack-grid">
+          {packs.map(p => {
+            const s = services.find(x => x.key === p.key)!;
+            const Icon = serviceIcons[p.key];
+            return (
+              <button key={p.key} className="ace-pack" onClick={async () => setCopied(await askOnLine(`你好，我想單買 A.C.E. 的${s.name} ${p.qty}（NT$${money(p.price)}）。`))}>
+                <span className="ace-icon"><Icon size={22} /></span>
+                <span className="ace-pack-body">
+                  <strong>{s.name}<small>{p.qty}</small></strong>
+                  <span className="ace-pack-price">NT${money(p.price)}</span>
+                  <small>{p.per}</small>
+                </span>
+                <ArrowRight size={18} className="ace-pack-arrow" />
+              </button>
+            );
+          })}
+        </div>
+        {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
+        <ul className="ace-pack-rules">{packRules.map(r => <li key={r}><Check size={16} />{r}</li>)}</ul>
+        <div className="ace-pack-compare">
+          <p><strong>算給你看：</strong>單買 AI 短影音 10 支是 NT$42,000；標準方案每月 NT$29,800，就有 6 支短影音、12 則圖文、2 篇文章，還幫你代發、寫月報。</p>
+          <a href="#plans" className="ace-text-link">看訂閱方案 <ArrowRight size={16} /></a>
         </div>
       </div>
     </section>
@@ -278,6 +315,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         <Plans />
 
         <Compare />
+
+        <Packs />
 
         <Finder />
 
