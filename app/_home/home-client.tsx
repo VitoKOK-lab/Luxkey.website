@@ -89,17 +89,6 @@ function offerOf(p: Pain): { market?: number; price: number; unit: string } | nu
   return p.price ? { market: p.market, price: p.price, unit: p.unit ?? '支' } : null;
 }
 
-function PriceLine({ p }: { p: Pain }) {
-  const o = offerOf(p);
-  if (!o) return <span className="ace-strip-price"><em>來聊聊</em></span>;
-  return (
-    <span className="ace-strip-price">
-      {o.market && <s>行情 NT${money(o.market)}</s>}
-      <em>NT${money(o.price)}<small>／{o.unit}</small></em>
-    </span>
-  );
-}
-
 /** 五支 iPhone 並排，每支播示範影片；下方一條服務列，點手機或服務名切換說明。每 6 秒自動換，滑鼠移入時暫停。 */
 function Pains() {
   const [active, setActive] = useState(0);
@@ -180,7 +169,6 @@ function Pains() {
               </button>
               <button className="ace-phone-cap" onClick={() => show(i)} aria-pressed={i === active}>
                 <span className="ace-cap-name"><b>{i + 1}</b>{x.tag}</span>
-                <PriceLine p={x} />
                 {i === active && <i key={active} className={paused || !visible ? 'is-paused' : ''} />}
               </button>
             </div>
