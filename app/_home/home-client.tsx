@@ -109,7 +109,7 @@ function Pains() {
   const bg = (x: Pain, i: number, big: boolean) => {
     const src = big ? x.image ?? x.thumb : x.thumb ?? x.image;
     return { className: src ? big && x.mobileImage ? 'has-mobile-image' : '' : `ace-poster-${i + 1}`, style: src ? big
-      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-position': x.imagePosition ?? 'center', '--stage-tablet-bottom': `${x.tabletImageBottom ?? 40}px` } as CSSProperties
+      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-tablet-bottom': `${x.tabletImageBottom ?? 40}px` } as CSSProperties
       : { backgroundImage: `url(${src})` } : undefined };
   };
   return (
