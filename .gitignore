@@ -32,3 +32,4 @@ next-env.d.ts
 
 # scratch QA scripts
 /_*.mjs
+.claude/
