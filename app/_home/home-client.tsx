@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { EMAIL, LINE_URL, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
@@ -208,7 +208,9 @@ function Pains() {
   const [copied, setCopied] = useState(false);
   const bg = (x: Pain, i: number, big: boolean) => {
     const src = big ? x.image ?? x.thumb : x.thumb ?? x.image;
-    return { className: src ? '' : `ace-poster-${i + 1}`, style: src ? { backgroundImage: `url(${src})` } : undefined };
+    return { className: src ? big && x.mobileImage ? 'has-mobile-image' : '' : `ace-poster-${i + 1}`, style: src ? big
+      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-position': x.imagePosition ?? 'center' } as CSSProperties
+      : { backgroundImage: `url(${src})` } : undefined };
   };
   return (
     <section id="why" className="ace-stage" aria-roledescription="carousel" aria-label="老闆的痛，我們都懂"
