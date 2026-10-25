@@ -158,6 +158,10 @@ body { margin: 0; background: #fbf6f2; }
 /* FAQ */
 .ace-faq { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: clamp(32px, 6vw, 96px); }
 .ace-faq .ace-muted { margin-top: 18px; }
+.ace-faq-side { position: sticky; top: 100px; align-self: start; }
+.ace-faq-side .ace-btn { margin-top: 24px; }
+.ace-faq-tabs { padding-bottom: 0; border-bottom: 0; margin-bottom: 8px; }
+.ace-faq-list { animation: ace-rise .4s var(--ace-ease); }
 .ace-faq-list { border-top: 1px solid var(--ace-line); }
 .ace-faq-item { border-bottom: 1px solid var(--ace-line); }
 .ace-faq-item button { display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%; padding: 24px 0; border: 0; background: none; color: var(--ace-ink); font-weight: 700; font-size: 18px; text-align: left; }

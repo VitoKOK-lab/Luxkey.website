@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, compareRows, faqs, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -333,18 +333,32 @@ function Compare() {
 }
 
 function Faq() {
+  const [tab, setTab] = useState(0);
   const [open, setOpen] = useState(0);
+  const group = faqGroups[tab];
   return (
     <section id="faq" className="ace-section">
       <div className="ace-wrap ace-faq">
-        <div><p className="ace-kicker">FAQ</p><h2 className="ace-h2">常見問題</h2><p className="ace-muted">沒找到答案？直接用 LINE 問我們。</p></div>
-        <div className="ace-faq-list">
-          {faqs.map((f, i) => (
-            <div key={f.q} className={open === i ? 'ace-faq-item is-open' : 'ace-faq-item'}>
-              <button aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}>{f.q}<ChevronDown size={20} /></button>
-              {open === i && <p>{f.a}{i === faqs.length - 1 && <> <Link href="/introduce/">看經銷合作 →</Link></>}</p>}
-            </div>
-          ))}
+        <div className="ace-faq-side">
+          <p className="ace-kicker">FAQ</p>
+          <h2 className="ace-h2">常見問題</h2>
+          <p className="ace-muted">沒找到答案？直接用 LINE 問我們。</p>
+          <a className="ace-btn ace-btn-primary" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} /> LINE 直接問</a>
+        </div>
+        <div>
+          <div className="ace-tabs ace-faq-tabs" role="tablist">
+            {faqGroups.map((g, i) => <button key={g.label} role="tab" aria-selected={tab === i} className={tab === i ? 'is-active' : ''} onClick={() => { setTab(i); setOpen(0); }}>{g.label}</button>)}
+          </div>
+          <div className="ace-faq-list" key={tab}>
+            {group.items.map((f, i) => (
+              <div key={f.q} className={open === i ? 'ace-faq-item is-open' : 'ace-faq-item'}>
+                <button aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}>{f.q}<ChevronDown size={20} /></button>
+                {open === i && (
+                  <p>{f.a}{f.link && <> {f.link.href.startsWith('/') ? <Link href={f.link.href}>{f.link.label} →</Link> : <a href={f.link.href}>{f.link.label} →</a>}</>}</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
