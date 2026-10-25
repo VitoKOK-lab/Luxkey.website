@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, Minus, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, VIDEO_MIN, compareRows, faqs, finderGroups, packRules, packs, planExcluded, planRules, plans, services, steps, videos, type Plan, type ServiceKey } from './home-data';
+import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, Minus, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { EMAIL, LINE_URL, VIDEO_MIN, compareRows, faqs, finderGroups, packRules, packs, pains, planExcluded, planRules, plans, services, steps, videos, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -194,6 +194,55 @@ function useAccordion() {
   return [open, (i: number) => setOpen(open === i ? -1 : i)] as const;
 }
 
+/** 老闆痛點輪播：大舞台顯示目前這一則，右側卡片點了就換上來；每 7 秒自動換，滑鼠移入時暫停。 */
+function Pains() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const n = pains.length;
+  const go = (d: number) => setActive(i => (i + d + n) % n);
+
+  useEffect(() => {
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = window.setInterval(() => setActive(i => (i + 1) % n), 7000);
+    return () => window.clearInterval(t);
+  }, [paused, n]);
+
+  const p = pains[active];
+  const next = Array.from({ length: n - 1 }, (_, k) => (active + 1 + k) % n);
+  return (
+    <section id="why" className="ace-stage" aria-roledescription="carousel" aria-label="老闆的痛點"
+      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      {pains.map((x, i) => <div key={x.tag} className={`ace-stage-bg ace-poster-${i + 1}${i === active ? ' is-on' : ''}`} aria-hidden="true" />)}
+      <div className="ace-wrap ace-stage-grid">
+        <div className="ace-stage-copy" key={active} aria-live="polite">
+          <p className="ace-stage-kicker">老闆的痛，我們都懂 · 痛點 {String(active + 1).padStart(2, '0')}</p>
+          <p className="ace-stage-tag">{p.tag}</p>
+          <h2>{p.title}</h2>
+          <p>{p.body}</p>
+          <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>
+        </div>
+        <div className="ace-stage-side">
+          <div className="ace-stage-cards">
+            {next.map(i => (
+              <button key={pains[i].tag} className={`ace-stage-card ace-poster-${i + 1}`} onClick={() => setActive(i)} aria-label={`看痛點 ${i + 1}：${pains[i].tag}`}>
+                <small>痛點 {String(i + 1).padStart(2, '0')}</small>
+                <b>{pains[i].tag}</b>
+                <span>{pains[i].title}</span>
+              </button>
+            ))}
+          </div>
+          <div className="ace-stage-controls">
+            <button aria-label="上一則" onClick={() => go(-1)}><ChevronLeft size={22} /></button>
+            <button aria-label="下一則" onClick={() => go(1)}><ChevronRight size={22} /></button>
+            <span className="ace-stage-progress"><i style={{ width: `${((active + 1) / n) * 100}%` }} /></span>
+            <span className="ace-stage-num">{String(active + 1).padStart(2, '0')}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Videos() {
   const [open, toggle] = useAccordion();
   const [copied, setCopied] = useState(false);
@@ -373,6 +422,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
             })}
           </div>
         </div>
+
+        <Pains />
 
         <Videos />
 

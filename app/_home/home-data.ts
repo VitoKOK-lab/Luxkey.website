@@ -134,6 +134,15 @@ export const videos: Video[] = [
   },
 ];
 
+/** 老闆的痛點：為什麼要跟我們合作。href 指向對應的價格。 */
+export const pains = [
+  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', href: '#video-edit' },
+  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', href: '#video-ugc' },
+  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', href: '#video-drama' },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact' },
+  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize' },
+];
+
 export type Pack = { key: ServiceKey; qty: string; price: number; per: string };
 
 /** 其他服務單買套組：只賣整包，單價高於訂閱，讓訂閱更划算。 */
