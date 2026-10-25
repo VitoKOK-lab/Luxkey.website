@@ -21,7 +21,7 @@ export const services: Service[] = [
   {
     key: 'posts', name: '社群圖文貼文', short: '每週固定更新，粉專不再斷更',
     pitch: '依品牌調性規劃主題，AI 產圖、文案與排版一次完成，排程代發到 FB、IG，你只要看稿。',
-    quota: 'Pro 每月 16 則・Max 每月 30 則',
+    quota: 'Pro 每月 16 則・Max 每月 24 則',
     includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
     fit: '粉專需要固定更新、但沒有人手的品牌',
     image: '/home/services/posts-wide.webp',
@@ -30,14 +30,14 @@ export const services: Service[] = [
   {
     key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
     pitch: '不用約拍、不用出鏡。拍好的素材幫你剪，沒有素材就用數字人或商品照做成影片，每月依需求換著用。',
-    quota: 'Lite 10＋2 支・Pro 18 支・Max 32 支',
+    quota: 'Lite 12 支・Pro 18 支・Max 25 支',
     includes: ['AI 剪輯：送素材就能出片', 'AI 數字人口播：換腳本就能量產', '商品介紹片、劇情短片'],
     fit: '想經營短影音、但不想一直拍攝出鏡的品牌',
   },
   {
     key: 'article', name: 'SEO／AI 搜尋文章', short: '讓 Google 和 AI 都找得到你',
     pitch: '依客人會搜尋的問題寫成文章，結構清楚、重點明確，Google 搜尋與 ChatGPT 這類 AI 搜尋都讀得懂。',
-    quota: 'Pro 每月 3 篇・Max 每月 6 篇',
+    quota: 'Pro 每月 3 篇・Max 每月 4 篇',
     includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
     fit: '想靠搜尋帶來穩定詢問的品牌',
     image: '/home/services/article-wide.webp',
@@ -46,7 +46,7 @@ export const services: Service[] = [
   {
     key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
     pitch: '換上商品照與賣點，AI 生成情境圖並套上品牌版型，商品再多也做得完。',
-    quota: 'Max 方案每月 8 個品項',
+    quota: 'Max 方案每月 5 個品項',
     includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
     fit: '品項多、需要大量上架素材的電商',
     image: '/home/services/ecommerce-wide.webp',
@@ -55,7 +55,7 @@ export const services: Service[] = [
   {
     key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
     pitch: '改寫商品與服務頁的內文、補上 SEO 與結構化資料，讓現有網站更容易被搜尋、也更容易成交。',
-    quota: 'Max 方案每月 15 頁或品項',
+    quota: 'Max 方案每月 10 頁或品項',
     includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
     fit: '已經有網站、但沒人看也沒詢問的品牌',
     image: '/home/services/optimize-wide.webp',
@@ -100,7 +100,7 @@ export const plans: Plan[] = [
   {
     key: 'growth', name: 'Max', en: '全方位', price: 59800, unit: '／月',
     tagline: '內容、電商、網站一起推進。',
-    items: [['AI 剪片', '20 支'], ['AI 數字人', '8 支'], ['狗血劇商品介紹', '4 支'], ['社群圖文貼文', '30 則'], ['SEO／AI 搜尋文章', '6 篇'], ['電商商品圖文', '8 個品項'], ['網站優化', '15 頁'], ['月報＋雙週線上會議', '包含']],
+    items: [['AI 剪片', '20 支'], ['AI 數字人', '4 支'], ['狗血劇商品介紹', '1 支'], ['社群圖文貼文', '24 則'], ['SEO／AI 搜尋文章', '4 篇'], ['電商商品圖文', '5 個品項'], ['網站優化', '10 頁'], ['月報＋雙週線上會議', '包含']],
     perks: ['年約贈送公版官網，含每月維護', '新技術免費升級'],
   },
 ];
@@ -235,7 +235,7 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,000、狗血劇商品介紹 NT$3,500，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
       { q: '外面行情是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
       { q: '可以只買一種服務嗎？', a: '可以。社群圖文、SEO 文章、電商商品圖文、網站優化、公版官網都能整包單買，例如社群圖文 20 則 NT$28,000。只賣整包、不拆單件，每件含一次修改。', link: { href: '#other', label: '看其他服務' } },
-      { q: '包月方案多少錢？', a: 'Lite NT$9,800（一次、一個月）、Pro NT$29,800／月、Max NT$59,800／月，未稅。全台統一價格，季約、年約同價，不議價也不打折；年約加贈公版官網。', link: { href: '#plans', label: '看包月方案' } },
+      { q: '包月方案多少錢？', a: 'Lite NT$9,800（一次、一個月）、Pro NT$29,800／月、Max NT$59,800／月，未稅。全台統一價格，最少簽一季，季繳 Pro NT$89,400、Max NT$179,400；季約、年約同價，不議價也不打折；年約加贈公版官網。', link: { href: '#plans', label: '看包月方案' } },
       { q: '單買和包月怎麼選？', a: '只有一項需求，單買最簡單。想做的不只一樣、而且每個月都有需求，包月的單價低很多，還包含排程代發和月報。不確定的話，先用 Lite 試一個月。', link: { href: '#finder', label: '幫我配方案' } },
     ],
   },

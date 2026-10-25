@@ -180,6 +180,7 @@ function PlanCard({ plan }: { plan: Plan }) {
       <h3>{plan.name}</h3>
       <p className="ace-plan-tagline">{plan.tagline}</p>
       <p className="ace-plan-price"><small>NT$</small>{money(plan.price)}<span>{plan.unit}</span></p>
+      {plan.key !== 'trial' && <p className="ace-plan-quarter">季繳 NT${money(plan.price * 3)}<small>（三個月，最少簽一季）</small></p>}
       <ul className="ace-plan-items">
         {plan.items.map(([k, v]) => <li key={k}><span>{k}</span><strong>{v}</strong></li>)}
       </ul>
@@ -373,7 +374,7 @@ function Clients() {
   return (
     <section id="clients" ref={ref} className={seen ? 'ace-section ace-clients is-in' : 'ace-section ace-clients'}>
       <div className="ace-wrap ace-head-row">
-        <div><p className="ace-kicker">CLIENTS</p><h2 className="ace-h2">這些品牌，<br className="ace-br-sm" />已經把王牌交給我們。</h2></div>
+        <div><p className="ace-kicker">CLIENTS</p><h2 className="ace-h2">這些品牌，<br className="ace-br-sm" />已經把他們交給王牌。</h2></div>
         <p className="ace-muted">從連鎖品牌到在地店家，近十年累積超過 100 家合作客戶。</p>
       </div>
       <div className="ace-table" aria-label="合作客戶">

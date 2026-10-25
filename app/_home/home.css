@@ -502,3 +502,6 @@ body { margin: 0; background: #fbf6f2; }
   .ace-stage { min-height: 850px; }
   .ace-stage-bg.has-mobile-image { background-size: auto 60%; background-position: var(--stage-tablet-position); }
 }
+
+.ace-plan-quarter { margin: -6px 0 18px; color: var(--ace-ink); font-size: 15px; font-weight: 700; }
+.ace-plan-quarter small { margin-left: 6px; color: var(--ace-muted); font-size: 13px; font-weight: 400; }
