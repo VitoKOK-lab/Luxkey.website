@@ -382,9 +382,8 @@ body { margin: 0; background: #fbf6f2; }
 .ace-stage-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0, 0, 0, .55)); }
 .ace-stage-card > * { position: relative; transition: opacity .2s; }
 .ace-stage-card:hover, .ace-stage-card:focus-visible { border-color: #fff; }
-.ace-stage-card-num { font-family: var(--font-latin), sans-serif; font-size: 64px; font-weight: 800; line-height: .9; color: transparent; -webkit-text-stroke: 2px #fff; }
+.ace-stage-card-num { font-family: var(--font-latin), sans-serif; font-size: 64px; font-weight: 500; line-height: .9; letter-spacing: .04em; }
 .ace-stage-card b { margin-top: auto; padding-top: 10px; border-top: 2px solid rgba(255, 255, 255, .7); font-family: var(--ace-serif); font-size: 20px; line-height: 1.3; }
-.ace-stage-card span:last-child { margin-top: 6px; font-size: 13px; line-height: 1.5; opacity: .9; }
 .ace-stage-card.is-active { z-index: 2; left: 0; top: 0; width: 100%; height: 100%; border-color: transparent; border-radius: 0; box-shadow: none; opacity: 0; cursor: default; pointer-events: none; transition-property: left, top, width, height, border-radius, border-color, opacity; transition-delay: 0s, 0s, 0s, 0s, 0s, 0s, .9s; }
 .ace-stage-card.is-active > * { opacity: 0; }
 .ace-stage-card.is-returning { transition: opacity .5s ease .8s; }
@@ -392,26 +391,29 @@ body { margin: 0; background: #fbf6f2; }
 .ace-stage-copy > * { max-width: min(44%, 520px); animation: ace-rise .6s var(--ace-ease) .45s both; }
 .ace-stage-copy a { pointer-events: auto; margin-top: 8px; }
 .ace-stage-kicker { padding-top: 14px; border-top: 2px solid rgba(255, 255, 255, .7); font-size: 15px; letter-spacing: .08em; opacity: .9; }
-.ace-stage-num-big { font-family: var(--font-latin), sans-serif; font-size: clamp(80px, 9vw, 120px); font-weight: 800; line-height: .9; color: transparent; -webkit-text-stroke: 3px #fff; }
-.ace-stage-tag { font-family: var(--ace-serif); font-size: 22px; font-weight: 700; opacity: .92; }
-.ace-stage-copy h2 { font-family: var(--ace-serif); font-size: clamp(32px, 4vw, 54px); font-weight: 700; line-height: 1.2; }
+.ace-stage-head { display: flex; align-items: center; gap: 18px; }
+.ace-stage-num-big { font-family: var(--font-latin), sans-serif; font-size: clamp(64px, 7vw, 96px); font-weight: 500; line-height: .9; letter-spacing: .04em; }
+.ace-stage-tag { padding-left: 18px; border-left: 2px solid rgba(255, 255, 255, .6); font-family: var(--ace-serif); font-size: 22px; font-weight: 700; }
+.ace-stage-copy h2 { font-family: var(--ace-serif); font-size: clamp(26px, 3.2vw, 44px); font-weight: 700; line-height: 1.2; }
 .ace-stage-copy > p:not([class]) { font-size: 17px; line-height: 1.8; opacity: .92; }
 .ace-stage-controls { position: absolute; z-index: 4; left: var(--rx); right: clamp(16px, 4vw, 48px); bottom: 44px; display: flex; align-items: center; gap: 12px; }
 .ace-stage-controls button { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid rgba(255, 255, 255, .6); border-radius: 999px; color: #fff; cursor: pointer; transition: background .25s, color .25s; }
 .ace-stage-controls button:hover { background: #fff; color: var(--ace-ink); }
 .ace-stage-progress { flex: 1; height: 2px; margin: 0 12px; background: rgba(255, 255, 255, .3); }
 .ace-stage-progress i { display: block; height: 100%; background: #fff; transition: width .6s var(--ace-ease); }
-.ace-stage-num { font-family: var(--font-latin), sans-serif; font-size: clamp(36px, 4vw, 52px); font-weight: 600; line-height: 1; }
+.ace-stage-num { font-family: var(--font-latin), sans-serif; font-size: clamp(36px, 4vw, 52px); font-weight: 500; line-height: 1; letter-spacing: .04em; }
 @media (max-width: 900px) {
-  .ace-stage { --cw: 124px; --ch: 176px; --gap: 12px; --rx: 16px; --rb: 104px; min-height: 800px; }
+  .ace-stage { --cw: 124px; --ch: 176px; --gap: 12px; --rx: 16px; --rb: 104px; min-height: 680px; }
   .ace-stage::after { background: linear-gradient(rgba(0, 0, 0, .4), rgba(0, 0, 0, .15) 60%, rgba(0, 0, 0, .35)); }
   .ace-stage-copy { justify-content: flex-start; padding-block: 40px 0; }
   .ace-stage-copy > * { max-width: 100%; }
   .ace-stage-card { padding: 12px; }
   .ace-stage-card-num { font-size: 46px; }
   .ace-stage-card b { font-size: 17px; }
-  .ace-stage-card span:last-child { display: none; }
   .ace-stage-controls { left: 16px; right: 16px; bottom: 32px; }
   .ace-stage-controls button { width: 46px; height: 46px; }
-  .ace-stage-copy > p:not([class]) { font-size: 16px; }
+  .ace-stage-copy > p:not([class]) { font-size: 15px; line-height: 1.7; }
+  .ace-stage-copy h2 { font-size: 24px; }
+  .ace-stage-num-big { font-size: 56px; }
+  .ace-stage-tag { font-size: 19px; }
 }

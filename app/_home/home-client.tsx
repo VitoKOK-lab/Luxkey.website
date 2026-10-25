@@ -230,14 +230,11 @@ function Pains() {
             onClick={() => show(i)} tabIndex={i === active ? -1 : 0} aria-hidden={i === active} aria-label={`第 ${i + 1} 則：${x.tag}，${x.title}`}>
             <span className="ace-stage-card-num">{i + 1}</span>
             <b>{x.tag}</b>
-            <span>{x.title}</span>
           </button>
         );
       })}
       <div className="ace-wrap ace-stage-copy" key={active} aria-live="polite">
-        <p className="ace-stage-kicker">老闆的痛，我們都懂</p>
-        <p className="ace-stage-num-big" aria-label={`第 ${active + 1} 則`}>{active + 1}</p>
-        <p className="ace-stage-tag">{p.tag}</p>
+        <p className="ace-stage-head"><span className="ace-stage-num-big" aria-label={`第 ${active + 1} 則`}>{active + 1}</span><span className="ace-stage-tag">{p.tag}</span></p>
         <h2>{p.title}</h2>
         <p>{p.body}</p>
         <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>
