@@ -291,7 +291,7 @@ function OtherServices() {
               const I = serviceIcons[q.key];
               return (
                 <button key={q.key} id={`offer-${q.key}`} className={`ace-shelf-card ace-tone-${q.key}`} onClick={() => { setActive(i); setCopied(false); }} aria-label={`看${t.name}`}>
-                  <span className="ace-shelf-photo" style={t.image ? { backgroundImage: `url(${t.image})` } : undefined}>{!t.image && <I size={32} strokeWidth={1.5} />}</span>
+                  <span className="ace-shelf-photo" style={t.thumb || t.image ? { backgroundImage: `url(${t.thumb ?? t.image})` } : undefined}>{!t.thumb && !t.image && <I size={32} strokeWidth={1.5} />}</span>
                   <span className="ace-shelf-label"><b>{t.name}</b><small>{q.qty}・NT${money(q.price)}</small></span>
                 </button>
               );
