@@ -221,7 +221,7 @@ function Pains() {
         const b = bg(x, i, false);
         const state = i === active ? ' is-active' : i === prev ? ' is-returning' : '';
         return (
-          <button key={x.tag} className={`ace-stage-card ${b.className}${state}`} style={{ ...b.style, ['--k' as string]: k }}
+          <button key={x.tag} className={`ace-stage-card ${b.className}${state}`} style={{ ...b.style, ['--k' as string]: k, ['--wide-image' as string]: `url(${x.image ?? x.thumb})` }}
             onClick={() => show(i)} tabIndex={i === active ? -1 : 0} aria-hidden={i === active} aria-label={`第 ${i + 1} 則：${x.tag}，${x.title}`}>
             <span className="ace-stage-card-num">{i + 1}</span>
             <b>{x.tag}</b>
