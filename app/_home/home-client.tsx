@@ -253,10 +253,13 @@ function Pains() {
   );
 }
 
-/** 其他服務：圖卡並排，點一張就展開成照片＋介紹，其餘收窄。 */
+/** 其他服務：左邊一張大卡（照片＋介紹），右邊其餘的小圖卡，點小卡就換到左邊。 */
 function OtherServices() {
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
+  const p = packs[active];
+  const s = services.find(x => x.key === p.key)!;
+  const Icon = serviceIcons[p.key];
   return (
     <section id="other" className="ace-section ace-packs">
       <div className="ace-wrap">
@@ -264,33 +267,36 @@ function OtherServices() {
           <div><p className="ace-kicker">OTHER SERVICES</p><h2 className="ace-h2">其他服務</h2></div>
           <p className="ace-muted">社群圖文、文章、電商、網站，整包單買。每個月都有需求的話，包月划算很多。</p>
         </div>
-        <div className="ace-fan">
-          {packs.map((p, i) => {
-            const s = services.find(x => x.key === p.key)!;
-            const Icon = serviceIcons[p.key];
-            const on = i === active;
-            return (
-              <article key={p.key} id={`offer-${p.key}`} className={`ace-fan-item ace-fan-${p.key}${on ? ' is-on' : ''}`}>
-                <button className={s.image ? 'ace-fan-tab has-image' : 'ace-fan-tab'} onClick={() => setActive(i)} aria-expanded={on} aria-controls={`fan-body-${p.key}`}>
-                  {s.image && <span className="ace-fan-media" style={{ backgroundImage: `url(${s.image})` }} />}
-                  {!(s.image && on) && <Icon className="ace-fan-icon" strokeWidth={1.5} />}
-                  <span className="ace-fan-label"><b>{s.name}</b><small>NT${money(p.price)}</small></span>
+        <div className="ace-shelf">
+          <article key={p.key} id={`offer-${p.key}`} className={`ace-shelf-main ace-tone-${p.key}`}>
+            <div className="ace-shelf-photo" style={s.image ? { backgroundImage: `url(${s.image})` } : undefined}>
+              {!s.image && <Icon size={64} strokeWidth={1.25} />}
+            </div>
+            <div className="ace-shelf-body">
+              <p className="ace-shelf-qty">{p.qty}・<strong>NT${money(p.price)}</strong><small>{p.per}</small></p>
+              <h3>{s.name}</h3>
+              <p className="ace-service-short">{s.short}</p>
+              <p>{s.pitch}</p>
+              <ul>{s.includes.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
+              <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想單買 A.C.E. 的${s.name} ${p.qty}（NT$${money(p.price)}）。`))}>
+                <MessageCircle size={18} /> LINE 詢問
+              </button>
+              {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
+            </div>
+          </article>
+          <div className="ace-shelf-grid">
+            {packs.map((q, i) => {
+              if (i === active) return null;
+              const t = services.find(x => x.key === q.key)!;
+              const I = serviceIcons[q.key];
+              return (
+                <button key={q.key} id={`offer-${q.key}`} className={`ace-shelf-card ace-tone-${q.key}`} onClick={() => { setActive(i); setCopied(false); }} aria-label={`看${t.name}`}>
+                  <span className="ace-shelf-photo" style={t.image ? { backgroundImage: `url(${t.image})` } : undefined}>{!t.image && <I size={32} strokeWidth={1.5} />}</span>
+                  <span className="ace-shelf-label"><b>{t.name}</b><small>{q.qty}・NT${money(q.price)}</small></span>
                 </button>
-                <div className="ace-fan-body" id={`fan-body-${p.key}`} hidden={!on}>
-                  <p className="ace-fan-qty">{p.qty}・<strong>NT${money(p.price)}</strong></p>
-                  <h3>{s.name}</h3>
-                  <p className="ace-service-short">{s.short}</p>
-                  <p>{s.pitch}</p>
-                  <ul>{s.includes.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
-                  <p className="ace-fit"><span>單價</span>{p.per}</p>
-                  <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想單買 A.C.E. 的${s.name} ${p.qty}（NT$${money(p.price)}）。`))}>
-                    <MessageCircle size={18} /> LINE 詢問
-                  </button>
-                  {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
-                </div>
-              </article>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
         <ul className="ace-pack-rules">{packRules.map(r => <li key={r}><Check size={16} />{r}</li>)}</ul>
       </div>
