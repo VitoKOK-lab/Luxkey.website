@@ -365,11 +365,11 @@ body { margin: 0; background: #fbf6f2; }
 @media (max-width: 560px) { .ace-offer-body-video { grid-template-columns: 1fr; } .ace-phone { justify-self: center; width: min(240px, 70%); } }
 
 /* Pain points: stage carousel */
-.ace-poster-1 { background: linear-gradient(150deg, #f37021 0%, #6e2305 100%); }
-.ace-poster-2 { background: linear-gradient(150deg, #2ec4b6 0%, #08403b 100%); }
-.ace-poster-3 { background: linear-gradient(150deg, #c2185b 0%, #34081f 100%); }
-.ace-poster-4 { background: linear-gradient(150deg, #c9a46a 0%, #3f2c12 100%); }
-.ace-poster-5 { background: linear-gradient(150deg, #3f6fb5 0%, #101f3e 100%); }
+.ace-poster-1 { background: linear-gradient(150deg, #f37021 0%, #c9560f 100%); }
+.ace-poster-2 { background: linear-gradient(150deg, #2ec4b6 0%, #13867b 100%); }
+.ace-poster-3 { background: linear-gradient(150deg, #c9560f 0%, #17363c 100%); }
+.ace-poster-4 { background: linear-gradient(150deg, #7ed6d1 0%, #17363c 100%); }
+.ace-poster-5 { background: linear-gradient(150deg, #c9b8a6 0%, #17363c 100%); }
 .ace-stage { --cw: 172px; --ch: 244px; --gap: 16px; --rx: 54%; --rb: 128px; --ease-stage: cubic-bezier(.65, 0, .35, 1);
   position: relative; overflow: hidden; min-height: 660px; margin-top: clamp(64px, 8vw, 104px); color: #fff; background: var(--ace-ink); }
 .ace-stage-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity .3s ease 1.2s; }
