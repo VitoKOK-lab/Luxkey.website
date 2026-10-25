@@ -357,3 +357,9 @@ body { margin: 0; background: #fbf6f2; }
   .ace-offer-price { order: 3; flex-basis: 100%; padding-left: 0; }
   .ace-offer-chev { order: 2; }
 }
+.ace-offer-body-video { grid-template-columns: minmax(180px, 240px) minmax(0, .9fr) minmax(0, 1.1fr); }
+.ace-phone { align-self: start; aspect-ratio: 9 / 19.5; padding: 10px; border-radius: 36px; background: var(--ace-ink); box-shadow: 0 24px 40px -28px rgba(23, 54, 60, .6); }
+.ace-phone video, .ace-phone p { width: 100%; height: 100%; border-radius: 27px; background: #0f2529; object-fit: cover; }
+.ace-phone p { display: grid; place-content: center; justify-items: center; gap: 10px; margin: 0; color: rgba(255, 255, 255, .7); font-size: 15px; text-align: center; line-height: 1.5; }
+@media (max-width: 1080px) { .ace-offer-body-video { grid-template-columns: minmax(160px, 220px) minmax(0, 1fr); } .ace-offer-body-video .ace-offer-detail { grid-column: 1 / -1; } }
+@media (max-width: 560px) { .ace-offer-body-video { grid-template-columns: 1fr; } .ace-phone { justify-self: center; width: min(240px, 70%); } }
