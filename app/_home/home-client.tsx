@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, clients, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, clients, compareRows, faqGroups, packRules, packs, pains, plans, services, steps, videos, type Pain, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -82,89 +82,56 @@ function Header() {
   );
 }
 
-/** 推薦結果用的品項：三種影片＋其他服務的單買套組。 */
-const finderCatalog = [
-  ...videos.map(v => ({ key: v.key as FinderItem, name: v.name, price: `NT$${money(v.price)}／支`, href: '#why', Icon: Film })),
-  ...packs.map(p => ({ key: p.key as FinderItem, name: services.find(s => s.key === p.key)!.name, price: `${p.qty} NT$${money(p.price)}`, href: `#offer-${p.key}`, Icon: serviceIcons[p.key] })),
+const finderPaths: { key: Plan['key']; number: string; title: string; problem: string; outcome: string; highlights: number[] }[] = [
+  { key: 'trial', number: '01', title: '先試做，看看成果', problem: '想開始做內容，但不確定風格合不合。', outcome: '先用一個月，看見實際成品再決定。', highlights: [0, 1, 2, 3] },
+  { key: 'standard', number: '02', title: '每月穩定有人做', problem: '粉專、短影音、文章都想做，團隊卻忙不過來。', outcome: '每月固定產出，社群與搜尋一起經營。', highlights: [0, 1, 2, 3] },
+  { key: 'growth', number: '03', title: '商品與網站一起推', problem: '商品上架、網站內容和行銷素材都需要更新。', outcome: '商品、網站、社群一起推進。', highlights: [6, 5, 3, 2] },
 ];
 
 function Finder() {
-  const [tab, setTab] = useState(0);
-  const [picked, setPicked] = useState<string[]>([]);
-  const [shown, setShown] = useState(false);
+  const [selected, setSelected] = useState<Plan['key']>('standard');
   const [copied, setCopied] = useState(false);
-
-  const recommended = useMemo(() => {
-    const score = new Map<FinderItem, number>();
-    finderGroups.flatMap(g => g.options).filter(o => picked.includes(o.label))
-      .forEach(o => o.items.forEach(k => score.set(k, (score.get(k) ?? 0) + 1)));
-    return finderCatalog.filter(c => score.has(c.key)).sort((a, b) => score.get(b.key)! - score.get(a.key)!);
-  }, [picked]);
-
-  const toggle = (label: string) => {
-    setShown(false);
-    setPicked(p => p.includes(label) ? p.filter(x => x !== label) : [...p, label]);
-  };
-  // 需求越多，包月越划算：1 項單買就好，2–3 項 Pro，4 項以上 Max
-  const plan = recommended.length >= 4 ? plans.find(p => p.key === 'growth')! : recommended.length >= 2 ? plans.find(p => p.key === 'standard')! : null;
-  const brief = `你好，我想了解 A.C.E.${plan ? ` 的 ${plan.name} 方案` : ''}。\n我的需求：${picked.join('、')}\n想做的內容：${recommended.map(c => c.name).join('、')}`;
+  const path = finderPaths.find(p => p.key === selected)!;
+  const plan = plans.find(p => p.key === selected)!;
+  const brief = `你好，我想了解 A.C.E. 的 ${plan.name} 方案（NT$${money(plan.price)}${plan.unit}）。\n目前最需要：${path.title}。\n想請你們幫我評估適合的做法。`;
   const contactLine = async () => setCopied(await askOnLine(brief));
 
   return (
     <section id="finder" className="ace-section ace-finder">
       <div className="ace-wrap">
         <div className="ace-head-row">
-          <div><p className="ace-kicker">FIND YOUR SOLUTION</p><h2 className="ace-h2">現在最想完成什麼？</h2></div>
-          <p className="ace-muted">選出你的需求，我們幫你配好內容與方案。</p>
+          <div><p className="ace-kicker">FIND YOUR SOLUTION</p><h2 className="ace-h2">老闆，現在最卡的是哪一步？</h2></div>
+          <p className="ace-muted">選一個最急的目標，直接看適合的做法、交付內容與價格。</p>
         </div>
-        <div className="ace-card ace-finder-card">
-          <div className="ace-tabs" role="tablist">
-            {finderGroups.map((g, i) => {
-              const count = g.options.filter(o => picked.includes(o.label)).length;
-              return <button key={g.label} role="tab" aria-selected={tab === i} className={tab === i ? 'is-active' : ''} onClick={() => setTab(i)}>{g.label}{count > 0 && <span>{count}</span>}</button>;
-            })}
+        <div className="ace-finder-layout">
+          <div className="ace-finder-choices" aria-label="選擇目前目標">
+            {finderPaths.map(p => (
+              <button key={p.key} type="button" className={p.key === selected ? 'ace-finder-choice is-selected' : 'ace-finder-choice'} aria-pressed={p.key === selected} onClick={() => { setSelected(p.key); setCopied(false); }}>
+                <span className="ace-finder-choice-number">{p.number}</span>
+                <span className="ace-finder-choice-copy"><strong>{p.title}</strong><small>{p.problem}</small></span>
+                <ArrowRight size={20} aria-hidden="true" />
+              </button>
+            ))}
           </div>
-          <div className="ace-options">
-            {finderGroups[tab].options.map(o => {
-              const on = picked.includes(o.label);
-              return (
-                <button key={o.label} className={on ? 'ace-option is-on' : 'ace-option'} aria-pressed={on} onClick={() => toggle(o.label)}>
-                  <span className="ace-check">{on && <Check size={15} />}</span>{o.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="ace-finder-foot">
-            <p className="ace-muted">{picked.length ? `已選 ${picked.length} 項，可跨分類複選` : '可複選不同需求'}</p>
-            <div className="ace-actions">
-              <button className="ace-btn ace-btn-ghost" onClick={() => { setPicked([]); setShown(false); setCopied(false); }}>重新選擇</button>
-              <button className="ace-btn ace-btn-primary" onClick={() => setShown(true)} disabled={!picked.length}>查看推薦 <ArrowRight size={18} /></button>
+          <div className="ace-finder-recommendation" aria-live="polite">
+            <p className="ace-finder-recommendation-label">依你選的目標，先看這個方案</p>
+            <div className="ace-finder-recommendation-head">
+              <div><h3>{plan.name}<span> 方案</span></h3><p>{path.outcome}</p></div>
+              <p className="ace-finder-price"><strong>NT${money(plan.price)}</strong><span>{plan.unit}</span></p>
             </div>
-          </div>
-          {shown && recommended.length > 0 && (
-            <div className="ace-result" aria-live="polite">
-              <div className="ace-result-plan">
-                {plan
-                  ? <><span><small>建議方案</small><strong>{plan.name} 包月</strong></span>
-                      <span className="ace-result-price">NT${money(plan.price)}<small>{plan.unit}</small></span>
-                      <p>想做的不只一樣，包月最全面。不確定的話，先用 Lite NT$9,800 試一個月。</p></>
-                  : <><span><small>建議做法</small><strong>單買就好</strong></span>
-                      <p>只有一項需求，直接單買最簡單。之後需求變多，再考慮包月。</p></>}
-              </div>
-              <p className="ace-result-title">建議你做這些：</p>
-              <div className="ace-result-grid">
-                {recommended.map(c => (
-                  <a key={c.key} href={c.href} className="ace-result-item"><span className="ace-icon"><c.Icon size={20} /></span><span><strong>{c.name}</strong><small>{c.price}</small></span></a>
-                ))}
-              </div>
-              <div className="ace-actions">
-                <button className="ace-btn ace-btn-primary" onClick={contactLine}><MessageCircle size={18} /> 帶著需求到 LINE 詢問</button>
-                <a className="ace-btn ace-btn-ghost" href="#plans">看包月方案</a>
-              </div>
-              {copied && <p className="ace-muted ace-small">需求已複製，到 LINE 對話框貼上即可。</p>}
+            <p className="ace-finder-includes-label">實際包含</p>
+            <ul className="ace-finder-includes">
+              {path.highlights.map(i => <li key={i}><Check size={18} aria-hidden="true" /><span>{plan.items[i][0]}</span><strong>{plan.items[i][1]}</strong></li>)}
+            </ul>
+            {selected === 'trial' && <p className="ace-finder-trial-note">每品牌限一次；14 天內簽約，試做費用全額折抵首月。</p>}
+            <div className="ace-finder-cta">
+              <button className="ace-btn ace-btn-primary" onClick={contactLine}><MessageCircle size={18} /> 詢問 {plan.name} 方案 <ArrowRight size={17} /></button>
+              <a href="#plans" className="ace-text-link">比較完整方案 <ArrowRight size={17} /></a>
             </div>
-          )}
+            {copied && <p className="ace-finder-copy-note">詢問內容已複製，到 LINE 對話框貼上即可。</p>}
+          </div>
         </div>
+        <p className="ace-finder-single">只需要單做一項？<a href="#other">看單買服務與價格 <ArrowRight size={16} /></a></p>
       </div>
     </section>
   );

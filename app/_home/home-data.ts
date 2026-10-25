@@ -174,38 +174,6 @@ export const compareRows: [string, string, string][] = [
   ['新的 AI 技術', '要自己摸索', '自動升級，不加價'],
 ];
 
-/** 幫我配方案：需求對應到要做的影片或服務。 */
-export type FinderItem = Video['key'] | Exclude<ServiceKey, 'video'>;
-export const finderGroups: { label: string; options: { label: string; items: FinderItem[] }[] }[] = [
-  {
-    label: '社群經營',
-    options: [
-      { label: '粉專想固定更新', items: ['posts', 'edit'] },
-      { label: '沒有人手做貼文', items: ['posts'] },
-      { label: '熱門話題想趕快出片', items: ['edit'] },
-      { label: '老闆不想露臉', items: ['ugc'] },
-    ],
-  },
-  {
-    label: '商品銷售',
-    options: [
-      { label: '新品上市需要介紹片', items: ['ugc', 'drama'] },
-      { label: '想讓商品被大量轉傳', items: ['drama'] },
-      { label: '電商主圖、詳情頁要重做', items: ['ecommerce'] },
-      { label: '商品很多，素材做不完', items: ['ecommerce', 'posts'] },
-    ],
-  },
-  {
-    label: '搜尋曝光',
-    options: [
-      { label: '想讓 Google 和 AI 找得到', items: ['article', 'optimize'] },
-      { label: '客人進了賣場卻沒買', items: ['optimize'] },
-      { label: '還沒有官網', items: ['website'] },
-      { label: '官網太舊想翻新', items: ['website', 'optimize'] },
-    ],
-  },
-];
-
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
 export const clients: { slug: string; name: string }[] = [
   { slug: 'mcdonalds', name: '麥當勞' }, { slug: 'familymart', name: '全家便利商店' }, { slug: 'lays', name: "Lay's 樂事" },
