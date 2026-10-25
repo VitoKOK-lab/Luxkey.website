@@ -195,6 +195,19 @@ export const finderGroups: { label: string; options: { label: string; items: Fin
   },
 ];
 
+/** 合作客戶 logo，檔案在 public/home/clients/。 */
+export const clients: { slug: string; name: string }[] = [
+  { slug: 'mcdonalds', name: '麥當勞' }, { slug: 'familymart', name: '全家便利商店' }, { slug: 'lays', name: "Lay's 樂事" },
+  { slug: 'haagen-dazs', name: 'Häagen-Dazs' }, { slug: 'foreo', name: 'FOREO' }, { slug: 'hotel-nikko', name: '高雄日航酒店' },
+  { slug: 'hohos', name: 'HOHOS' }, { slug: 'azio', name: 'AZIO' }, { slug: 'laoxiezhen', name: '老協珍' },
+  { slug: 'redhair', name: '紅髮' }, { slug: 'yakiniku', name: '上吉燒肉' }, { slug: 'shanjian-xiaomao', name: '山間小貓' },
+  { slug: 'chuan-peng', name: 'Chuan Peng' }, { slug: 'trend', name: '趨勢商品開發' }, { slug: 'mazupu-tofu', name: '媽祖埔豆腐張' },
+  { slug: 'amos', name: 'AMOS' }, { slug: 'things', name: 'things' }, { slug: 'laojing', name: '老井' },
+  { slug: 'wooden-door-cafe', name: 'Wooden Door Cafe' }, { slug: 'tahir-zainab', name: 'Tahir Zainab' }, { slug: 'yiye-machinery', name: '憶燁機械' },
+  { slug: 'la-re-wang', name: 'La Re Wang' }, { slug: 'client-2', name: '合作客戶' }, { slug: 'client-5', name: '合作客戶' },
+  { slug: 'client-6', name: '合作客戶' }, { slug: 'client-9', name: '合作客戶' },
+];
+
 export const steps = [
   { title: '先試 Lite', body: 'NT$9,800 做一個月，先看成品，再決定要不要訂閱。' },
   { title: '選方案', body: 'Pro 或 Max，季約、年約同價。14 天內簽約，Lite 費用折抵首月。' },

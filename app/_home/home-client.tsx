@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, clients, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -18,6 +18,26 @@ async function askOnLine(text: string) {
   try { await navigator.clipboard.writeText(text); copied = true; } catch { /* 忽略 */ }
   window.open(LINE_URL, '_blank', 'noopener');
   return copied;
+}
+
+/** 價格從 0 跑到定價；使用者關閉動畫時直接顯示。 */
+function CountUp({ to, delay = 0 }: { to: number; delay?: number }) {
+  const [n, setN] = useState(() => to);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    setN(0);
+    let raf = 0;
+    const start = performance.now() + delay;
+    const tick = (t: number) => {
+      const k = Math.min(1, Math.max(0, (t - start) / 900));
+      setN(Math.round(to * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(tick); else setReady(true);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to, delay]);
+  return <span className={ready ? 'ace-count is-done' : 'ace-count'}>{money(n)}</span>;
 }
 
 export function Brand() {
@@ -197,6 +217,12 @@ function Pains() {
   const go = (d: number) => setActive(a => { setPrev(a); return (a + d + n) % n; });
 
   useEffect(() => {
+    const onJump = (e: Event) => show((e as CustomEvent<number>).detail);
+    window.addEventListener('ace:pain', onJump);
+    return () => window.removeEventListener('ace:pain', onJump);
+  }, []);
+
+  useEffect(() => {
     if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const t = window.setInterval(() => go(1), 7000);
     return () => window.clearInterval(t);
@@ -332,6 +358,43 @@ function Compare() {
   );
 }
 
+/** 合作客戶：三排 logo 卡片像牌桌一樣對向滑動，捲到這裡時先發牌進場；滑鼠移上去會停。 */
+function Clients() {
+  const ref = useRef<HTMLElement>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, { threshold: .25 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const rows = [clients.slice(0, 9), clients.slice(9, 18), clients.slice(18)];
+  return (
+    <section id="clients" ref={ref} className={seen ? 'ace-section ace-clients is-in' : 'ace-section ace-clients'}>
+      <div className="ace-wrap ace-head-row">
+        <div><p className="ace-kicker">CLIENTS</p><h2 className="ace-h2">這些品牌，<br className="ace-br-sm" />已經把王牌交給我們。</h2></div>
+        <p className="ace-muted">從連鎖品牌到在地店家，近十年累積超過 100 家合作客戶。</p>
+      </div>
+      <div className="ace-table" aria-label="合作客戶">
+        {rows.map((row, r) => (
+          <div key={r} className={`ace-table-row ace-table-row-${r + 1}`} style={{ ['--n' as string]: row.length }}>
+            {[0, 1].map(copy => (
+              <div key={copy} className="ace-table-track" aria-hidden={copy === 1}>
+                {row.map((c, i) => (
+                  <figure key={c.slug} className="ace-chip" style={{ ['--i' as string]: r * 9 + i, ['--tilt' as string]: `${((i * 7 + r * 3) % 7) - 3}deg` }}>
+                    <img src={`/home/clients/${c.slug}.webp`} alt={copy === 0 ? c.name : ''} loading="lazy" decoding="async" />
+                  </figure>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Faq() {
   const [tab, setTab] = useState(0);
   const [open, setOpen] = useState(0);
@@ -365,6 +428,9 @@ function Faq() {
   );
 }
 
+/** 首頁王牌卡片點了之後，要讓痛點輪播切到那一支影片 */
+const setPain = (i: number) => window.dispatchEvent(new CustomEvent('ace:pain', { detail: i }));
+
 export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
   return (
     <div className={`ace ${fontClass}`}>
@@ -379,12 +445,20 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
             <div className="ace-hero-copy">
               <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>
               <h1 className="ace-h1"><span>讓 AI 成為</span><span>每個品牌的 <em>王牌</em></span></h1>
-              <p className="ace-lead">用 AI 創造更多好內容，<br />讓每個品牌都能被看見、被記住、被喜歡。</p>
-              <p className="ace-muted">AI 剪片、AI 數字人、狗血劇商品介紹。外面一支要幾千到幾萬，用 AI 只要零頭。</p>
-              <p className="ace-hero-price"><span>AI 剪片每支</span><strong>NT$300</strong><span>起</span></p>
+              <p className="ace-lead">品牌影音、社群圖文、搜尋文章、網站，<br />外面一支要幾千到幾萬，我們只需要零頭。</p>
+              <div className="ace-aces" aria-label="三種 AI 影片的價格">
+                {videos.map((v, i) => (
+                  <a key={v.key} href="#why" className="ace-ace-card" style={{ animationDelay: `${.55 + i * .13}s` }} onClick={() => setPain(i)}>
+                    <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
+                    <b>{v.name}</b>
+                    <strong><small>NT$</small><CountUp to={v.price} delay={700 + i * 130} /><small>／支</small></strong>
+                    <s>外面 NT${money(v.market)}</s>
+                  </a>
+                ))}
+              </div>
               <div className="ace-actions">
-                <a href="#why" className="ace-btn ace-btn-primary ace-btn-lg">看影音價格 <ArrowRight size={20} /></a>
-                <a href="#plans" className="ace-btn ace-btn-ghost ace-btn-lg">包月方案</a>
+                <a href="#why" className="ace-btn ace-btn-primary ace-btn-lg">看影片價格 <ArrowRight size={20} /></a>
+                <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="ace-btn ace-btn-ghost ace-btn-lg"><MessageCircle size={20} /> LINE 直接聊</a>
               </div>
             </div>
           </div>
@@ -406,6 +480,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         <Plans />
 
         <Compare />
+
+        <Clients />
 
         <Finder />
 
