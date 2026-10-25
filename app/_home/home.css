@@ -311,7 +311,7 @@ body { margin: 0; background: #fbf6f2; }
 .ace-phones-arrows button { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--ace-line); border-radius: 999px; background: #fff; color: var(--ace-ink); cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
 .ace-phones-arrows button:hover { background: var(--ace-orange); border-color: var(--ace-orange); color: #fff; }
 .ace-phone-row { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: clamp(12px, 2vw, 28px); padding: 24px 6px 10px; }
-.ace-phone { display: grid; gap: 16px; align-content: start; min-width: 0; opacity: .7; transform: scale(.97); transition: transform .5s var(--ace-ease), opacity .4s; }
+.ace-phone { display: block; min-width: 0; opacity: .7; transform: scale(.97); transition: transform .5s var(--ace-ease), opacity .4s; }
 .ace-phone:hover { opacity: 1; }
 .ace-phone.is-active { opacity: 1; transform: translateY(-12px); }
 .ace-phone-btn { display: block; cursor: pointer; }
@@ -324,13 +324,6 @@ body { margin: 0; background: #fbf6f2; }
 .ace-iphone-screen video { width: 100%; height: 100%; object-fit: cover; background: #05090a; }
 .ace-iphone-glare { position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, .16) 0%, transparent 32%); pointer-events: none; }
 .ace-iphone-island { position: absolute; top: 3.6%; left: 50%; width: 30%; height: 2.7%; border-radius: 999px; background: #05090a; transform: translateX(-50%); }
-.ace-phone-cap { position: relative; display: block; padding: 14px 16px 16px; overflow: hidden; border: 1px solid var(--ace-line); border-radius: 18px; background: #fff; color: var(--ace-ink); text-align: left; cursor: pointer; transition: border-color .25s, box-shadow .3s; }
-.ace-phone-cap:hover { border-color: #e6b494; }
-.ace-phone.is-active .ace-phone-cap { border-color: var(--ace-orange); box-shadow: 0 18px 30px -24px rgba(243, 112, 33, .55); }
-.ace-cap-name { display: flex; align-items: baseline; gap: 8px; font-family: var(--ace-serif); font-size: 18px; font-weight: 700; line-height: 1.3; }
-.ace-cap-name b { color: var(--ace-orange); font-family: var(--font-latin), sans-serif; font-size: 22px; font-weight: 500; }
-.ace-phone-cap i { position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--ace-orange); transform-origin: left; animation: ace-fill 6s linear forwards; }
-.ace-phone-cap i.is-paused { animation-play-state: paused; }
 @keyframes ace-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .ace-phones-hint { display: none; margin: 14px 0 0; color: var(--ace-muted); font-size: 13px; }
 .ace-phone-detail { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; margin-top: 40px; padding: clamp(24px, 3vw, 36px); border-radius: 26px; background: #fff; border: 1px solid var(--ace-line); animation: ace-rise .5s var(--ace-ease); }
@@ -354,7 +347,7 @@ body { margin: 0; background: #fbf6f2; }
   .ace-phone-offer { padding-left: 0; padding-top: 20px; border-left: 0; border-top: 1px solid var(--ace-line); }
   .ace-phone-detail p { font-size: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .ace-phone, .ace-phone.is-active { transition: none; } .ace-phone-cap i { animation: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ace-phone, .ace-phone.is-active { transition: none; } .ace-iphone-name i { animation: none; transform: none; } }
 
 /* Other services: kept small, just to show they exist */
 .ace-other { padding: 8px 0 clamp(40px, 5vw, 64px); background: var(--ace-bg-soft); }
@@ -364,3 +357,8 @@ body { margin: 0; background: #fbf6f2; }
 .ace-other-list li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border: 1px solid var(--ace-line); border-radius: 999px; background: #fff; color: var(--ace-ink); font-size: 15px; }
 .ace-other-list svg { color: var(--ace-orange-deep); }
 .ace-other .ace-text-link { font-size: 15px; }
+
+.ace-iphone-name { position: absolute; left: 7%; right: 7%; bottom: 5.5%; display: flex; align-items: baseline; justify-content: center; gap: 8px; overflow: hidden; padding: 9px 8px 10px; border-radius: 12px; background: #fff; color: var(--ace-ink); font-family: var(--ace-serif); font-size: clamp(13px, 1.25vw, 17px); font-weight: 700; line-height: 1.3; text-align: center; box-shadow: 0 8px 18px -8px rgba(0, 0, 0, .5); }
+.ace-iphone-name b { color: var(--ace-orange); font-family: var(--font-latin), sans-serif; font-size: 1.2em; font-weight: 600; }
+.ace-iphone-name i { position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: var(--ace-orange); transform-origin: left; animation: ace-fill 6s linear forwards; }
+.ace-iphone-name i.is-paused { animation-play-state: paused; }

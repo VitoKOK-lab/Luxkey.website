@@ -163,13 +163,10 @@ function Pains() {
                     <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} muted loop playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
                       onLoadedMetadata={e => { const t = e.currentTarget; if (t.duration) t.currentTime = (i * t.duration / n) % t.duration; }} onLoadedData={e => sync(e.currentTarget)} />
                     <span className="ace-iphone-glare" />
+                    <span className="ace-iphone-name"><b>{i + 1}</b>{x.tag}{i === active && <i key={active} className={paused || !visible ? 'is-paused' : ''} />}</span>
                   </span>
                   <span className="ace-iphone-island" />
                 </span>
-              </button>
-              <button className="ace-phone-cap" onClick={() => show(i)} aria-pressed={i === active}>
-                <span className="ace-cap-name"><b>{i + 1}</b>{x.tag}</span>
-                {i === active && <i key={active} className={paused || !visible ? 'is-paused' : ''} />}
               </button>
             </div>
           ))}
