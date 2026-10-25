@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, clients, faqGroups, packRules, packs, pains, services, videos, type Pain, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, packRules, packs, pains, services, videos, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -82,14 +82,35 @@ function Header() {
   );
 }
 
-/** 老闆痛點輪播：排隊的小圖往左前進，第一張放大成整個舞台，再換成大圖。每 7 秒自動換，滑鼠移入時暫停。 */
+/** 每一項的外面行情與我們的價格；影片取影片單價，其餘用自己的 market／price。 */
+function offerOf(p: Pain): { market?: number; price: number; unit: string } | null {
+  const v = videos.find(x => x.key === p.video);
+  if (v) return { market: v.market, price: v.price, unit: '支' };
+  return p.price ? { market: p.market, price: p.price, unit: p.unit ?? '支' } : null;
+}
+
+function PriceLine({ p }: { p: Pain }) {
+  const o = offerOf(p);
+  if (!o) return <span className="ace-strip-price"><em>來聊聊</em></span>;
+  return (
+    <span className="ace-strip-price">
+      {o.market && <s>行情 NT${money(o.market)}</s>}
+      <em>NT${money(o.price)}<small>／{o.unit}</small></em>
+    </span>
+  );
+}
+
+/** 五支 iPhone 並排，每支播示範影片；下方一條服務列，點手機或服務名切換說明。每 6 秒自動換，滑鼠移入時暫停。 */
 function Pains() {
   const [active, setActive] = useState(0);
-  const [prev, setPrev] = useState(-1);
   const [paused, setPaused] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const n = pains.length;
-  const show = (i: number) => setActive(a => { if (i !== a) setPrev(a); return i; });
-  const go = (d: number) => setActive(a => { setPrev(a); return (a + d + n) % n; });
+  const show = (i: number) => { setActive(i); setCopied(false); };
 
   useEffect(() => {
     const onJump = (e: Event) => show((e as CustomEvent<number>).detail);
@@ -98,57 +119,92 @@ function Pains() {
   }, []);
 
   useEffect(() => {
-    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = window.setInterval(() => go(1), 7000);
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: .15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // 看得到這一區才播，離開就停，省流量也省電；使用者關閉動畫時只顯示封面
+  const visibleRef = useRef(false);
+  const sync = (v: HTMLVideoElement | null) => {
+    if (!v) return;
+    v.muted = true;
+    if (visibleRef.current && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause();
+  };
+  useEffect(() => { visibleRef.current = visible; videoRefs.current.forEach(sync); }, [visible]);
+
+  useEffect(() => {
+    if (paused || !visible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const t = window.setInterval(() => setActive(a => (a + 1) % n), 6000);
     return () => window.clearInterval(t);
-  }, [paused, active]);
+  }, [paused, visible, active, n]);
+
+  // 手機版手機列可以橫滑，切換時把目前這支捲到中間
+  useEffect(() => {
+    const row = rowRef.current;
+    const item = row?.children[active] as HTMLElement | undefined;
+    if (!row || !item || row.scrollWidth <= row.clientWidth + 1) return;
+    row.scrollTo({ left: item.offsetLeft - (row.clientWidth - item.clientWidth) / 2, behavior: 'smooth' });
+  }, [active]);
 
   const p = pains[active];
-  const v = videos.find(x => x.key === p.video);
-  const offer = v ?? (p.market && p.price ? { name: p.tag, market: p.market, price: p.price } : null);
-  const bg = (x: Pain, i: number, big: boolean) => {
-    const src = big ? x.image ?? x.thumb : x.thumb ?? x.image;
-    return { className: src ? big && x.mobileImage ? 'has-mobile-image' : '' : `ace-poster-${i + 1}`, style: src ? big
-      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-tablet-bottom': `${x.tabletImageBottom ?? 40}px` } as CSSProperties
-      : { backgroundImage: `url(${src})` } : undefined };
-  };
+  const offer = offerOf(p);
   return (
-    <section id="why" className="ace-stage" aria-roledescription="carousel" aria-label="老闆的痛，我們都懂"
+    <section id="why" ref={sectionRef} className="ace-phones" aria-label="老闆的痛，我們都懂"
       onMouseEnter={() => { if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPaused(true); }}
       onMouseLeave={() => setPaused(false)}
       onFocus={e => { if (e.target.matches(':focus-visible')) setPaused(true); }}
       onBlur={() => setPaused(false)}>
-      {pains.map((x, i) => {
-        const b = bg(x, i, true);
-        return <div key={x.tag} className={`ace-stage-bg ${b.className}${i === active ? ' is-on' : ''}`} style={b.style} aria-hidden="true" />;
-      })}
-      {pains.map((x, i) => {
-        const k = (i - active - 1 + n) % n;
-        const b = bg(x, i, false);
-        const state = i === active ? ' is-active' : i === prev ? ' is-returning' : '';
-        return (
-          <button key={x.tag} className={`ace-stage-card ${b.className}${state}`} style={{ ...b.style, ['--k' as string]: k, ['--wide-image' as string]: `url(${x.image ?? x.thumb})` }}
-            onClick={() => show(i)} tabIndex={i === active ? -1 : 0} aria-hidden={i === active} aria-label={`第 ${i + 1} 則：${x.tag}，${x.title}`}>
-            <span className="ace-stage-card-num">{i + 1}</span>
-            <b>{x.tag}</b>
-          </button>
-        );
-      })}
-      <div className="ace-wrap ace-stage-copy" key={active} aria-live="polite">
-        <p className="ace-stage-head"><span className="ace-stage-num-big" aria-label={`第 ${active + 1} 則`}>{active + 1}</span><span className="ace-stage-tag">{p.tag}</span></p>
-        <h2>{p.title}</h2>
-        <p>{p.body}</p>
-        {offer && (
-          <p className="ace-stage-price">
-            <span>外面行情 <s>NT${money(offer.market)}</s></span>
-            <span>我們只需要 <strong>NT${money(offer.price)}</strong><small>／支</small></span>
-          </p>
-        )}
-        {!offer && <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
-      </div>
-      <div className="ace-stage-controls">
-        <span className="ace-stage-progress"><i style={{ width: `${((active + 1) / n) * 100}%` }} /></span>
-        <span className="ace-stage-num">{active + 1}</span>
+      <div className="ace-wrap">
+        <div className="ace-phones-head">
+          <div><p className="ace-kicker">WHY WORK WITH US</p><h2 className="ace-h2">老闆的痛，<br className="ace-br-sm" />我們都懂。</h2></div>
+          <div className="ace-phones-arrows">
+            <button aria-label="上一個" onClick={() => show((active - 1 + n) % n)}><ChevronLeft size={20} /></button>
+            <button aria-label="下一個" onClick={() => show((active + 1) % n)}><ChevronRight size={20} /></button>
+          </div>
+        </div>
+        <div className="ace-phone-row" ref={rowRef}>
+          {pains.map((x, i) => (
+            <div key={x.tag} className={i === active ? 'ace-phone is-active' : 'ace-phone'}>
+              <button className="ace-phone-btn" onClick={() => show(i)} aria-label={`看第 ${i + 1} 支：${x.tag}`}>
+                <span className="ace-iphone">
+                  <span className="ace-iphone-screen">
+                    <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} muted loop playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
+                      onLoadedMetadata={e => { const t = e.currentTarget; if (t.duration) t.currentTime = (i * t.duration / n) % t.duration; }} onLoadedData={e => sync(e.currentTarget)} />
+                    <span className="ace-iphone-glare" />
+                  </span>
+                  <span className="ace-iphone-island" />
+                </span>
+              </button>
+              <button className="ace-phone-cap" onClick={() => show(i)} aria-pressed={i === active}>
+                <span className="ace-cap-name"><b>{i + 1}</b>{x.tag}</span>
+                <PriceLine p={x} />
+                {i === active && <i key={active} className={paused || !visible ? 'is-paused' : ''} />}
+              </button>
+            </div>
+          ))}
+        </div>
+        <p className="ace-phones-hint">左右滑動查看更多影片</p>
+        <div className="ace-phone-detail" key={active} aria-live="polite">
+          <div>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </div>
+          <div className="ace-phone-offer">
+            {offer && (
+              <p className="ace-stage-price">
+                {offer.market && <span>外面行情 <s>NT${money(offer.market)}</s></span>}
+                <span>我們只需要 <strong>NT${money(offer.price)}</strong><small>／{offer.unit}</small></span>
+              </p>
+            )}
+            {offer
+              ? <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${p.tag}（NT$${money(offer.price)}／${offer.unit}）。`))}><MessageCircle size={18} /> LINE 詢問</button>
+              : <a href={p.href} className="ace-btn ace-btn-primary">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
+            {copied && <p className="ace-stage-copied">詢問內容已複製，到 LINE 貼上即可。</p>}
+          </div>
+        </div>
       </div>
     </section>
   );
