@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { EMAIL, LINE_URL, clients, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
@@ -201,7 +201,7 @@ function Plans() {
           <p className="ace-muted">季約、年約同價，不議價、不打折。年約加贈公版官網，新技術免費升級。</p>
         </div>
         <div className="ace-plan-grid">{plans.map(p => <PlanCard key={p.key} plan={p} />)}</div>
-        <p className="ace-note">價格皆未稅。短影音形式可在 AI 剪輯、數字人口播、商品介紹片、劇情短片之間任選。</p>
+        <p className="ace-note">價格皆未稅。狗血劇商品介紹只在 Max 方案；Lite、Pro 的影片是 AI 剪片和 AI 數字人。</p>
       </div>
     </section>
   );
@@ -230,14 +230,19 @@ function Pains() {
 
   const p = pains[active];
   const v = videos.find(x => x.key === p.video);
-  const [copied, setCopied] = useState(false);
+  const offer = v ?? (p.market && p.price ? { name: p.tag, market: p.market, price: p.price } : null);
   const bg = (x: Pain, i: number, big: boolean) => {
     const src = big ? x.image ?? x.thumb : x.thumb ?? x.image;
-    return { className: src ? '' : `ace-poster-${i + 1}`, style: src ? { backgroundImage: `url(${src})` } : undefined };
+    return { className: src ? big && x.mobileImage ? 'has-mobile-image' : '' : `ace-poster-${i + 1}`, style: src ? big
+      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-position': x.imagePosition ?? 'center', '--stage-tablet-position': x.tabletImagePosition ?? 'center calc(100% - 40px)' } as CSSProperties
+      : { backgroundImage: `url(${src})` } : undefined };
   };
   return (
     <section id="why" className="ace-stage" aria-roledescription="carousel" aria-label="老闆的痛，我們都懂"
-      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPaused(true); }}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={e => { if (e.target.matches(':focus-visible')) setPaused(true); }}
+      onBlur={() => setPaused(false)}>
       {pains.map((x, i) => {
         const b = bg(x, i, true);
         return <div key={x.tag} className={`ace-stage-bg ${b.className}${i === active ? ' is-on' : ''}`} style={b.style} aria-hidden="true" />;
@@ -258,20 +263,15 @@ function Pains() {
         <p className="ace-stage-head"><span className="ace-stage-num-big" aria-label={`第 ${active + 1} 則`}>{active + 1}</span><span className="ace-stage-tag">{p.tag}</span></p>
         <h2>{p.title}</h2>
         <p>{p.body}</p>
-        {v && (
+        {offer && (
           <p className="ace-stage-price">
-            <span>外面行情 <s>NT${money(v.market)}</s></span>
-            <span>我們只需要 <strong>NT${money(v.price)}</strong><small>／支</small></span>
+            <span>外面行情 <s>NT${money(offer.market)}</s></span>
+            <span>我們只需要 <strong>NT${money(offer.price)}</strong><small>／支</small></span>
           </p>
         )}
-        {v
-          ? <button className="ace-btn ace-btn-light" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${v.name}（NT$${money(v.price)}／支）。`))}><MessageCircle size={18} /> LINE 詢問</button>
-          : <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
-        {copied && <p className="ace-stage-copied">詢問內容已複製，到 LINE 貼上即可。</p>}
+        {!offer && <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
       </div>
       <div className="ace-stage-controls">
-        <button aria-label="上一則" onClick={() => go(-1)}><ChevronLeft size={22} /></button>
-        <button aria-label="下一則" onClick={() => go(1)}><ChevronRight size={22} /></button>
         <span className="ace-stage-progress"><i style={{ width: `${((active + 1) / n) * 100}%` }} /></span>
         <span className="ace-stage-num">{active + 1}</span>
       </div>
@@ -432,15 +432,25 @@ function Faq() {
 const setPain = (i: number) => window.dispatchEvent(new CustomEvent('ace:pain', { detail: i }));
 
 export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
+  const [heroVideoReady, setHeroVideoReady] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (heroVideoRef.current && heroVideoRef.current.readyState >= 2) setHeroVideoReady(true);
+  }, []);
   return (
     <div className={`ace ${fontClass}`}>
       <Header />
       <main>
         <section className="ace-hero">
-          <picture className="ace-hero-bg">
-            <source media="(max-width: 820px)" srcSet="/home/hero-mobile.webp" />
-            <img src="/home/hero-wide.webp" srcSet="/home/hero-wide-1100.webp 1100w, /home/hero-wide.webp 1672w" sizes="100vw" alt="手持透明黑桃 A 王牌、被孔雀藍與橘色絲帶環繞的品牌代言人" width={1672} height={941} fetchPriority="high" />
-          </picture>
+          <div className="ace-hero-bg">
+            <picture className="ace-hero-poster">
+              <source media="(max-width: 820px)" srcSet="/home/hero-mobile.webp" />
+              <img src="/home/hero-wide.webp" srcSet="/home/hero-wide-1100.webp 1100w, /home/hero-wide.webp 1672w" sizes="100vw" alt="手持透明黑桃 A 王牌、被孔雀藍與橘色絲帶環繞的品牌代言人" width={1672} height={941} fetchPriority="high" />
+            </picture>
+            <video ref={heroVideoRef} className={`ace-hero-video${heroVideoReady ? ' is-ready' : ''}`} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" onLoadedData={() => setHeroVideoReady(true)}>
+              <source src="/home/hero-motion.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+            </video>
+          </div>
           <div className="ace-wrap">
             <div className="ace-hero-copy">
               <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>

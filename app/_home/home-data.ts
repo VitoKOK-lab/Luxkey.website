@@ -21,7 +21,7 @@ export const services: Service[] = [
   {
     key: 'posts', name: '社群圖文貼文', short: '每週固定更新，粉專不再斷更',
     pitch: '依品牌調性規劃主題，AI 產圖、文案與排版一次完成，排程代發到 FB、IG，你只要看稿。',
-    quota: 'Pro 每月 12 則・Max 每月 24 則',
+    quota: 'Pro 每月 16 則・Max 每月 30 則',
     includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
     fit: '粉專需要固定更新、但沒有人手的品牌',
     image: '/home/services/posts-wide.webp',
@@ -30,14 +30,14 @@ export const services: Service[] = [
   {
     key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
     pitch: '不用約拍、不用出鏡。拍好的素材幫你剪，沒有素材就用數字人或商品照做成影片，每月依需求換著用。',
-    quota: 'Pro 每月 6 支・Max 每月 14 支',
+    quota: 'Lite 10＋2 支・Pro 18 支・Max 32 支',
     includes: ['AI 剪輯：送素材就能出片', 'AI 數字人口播：換腳本就能量產', '商品介紹片、劇情短片'],
     fit: '想經營短影音、但不想一直拍攝出鏡的品牌',
   },
   {
     key: 'article', name: 'SEO／AI 搜尋文章', short: '讓 Google 和 AI 都找得到你',
     pitch: '依客人會搜尋的問題寫成文章，結構清楚、重點明確，Google 搜尋與 ChatGPT 這類 AI 搜尋都讀得懂。',
-    quota: 'Pro 每月 2 篇・Max 每月 4 篇',
+    quota: 'Pro 每月 3 篇・Max 每月 6 篇',
     includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
     fit: '想靠搜尋帶來穩定詢問的品牌',
     image: '/home/services/article-wide.webp',
@@ -46,7 +46,7 @@ export const services: Service[] = [
   {
     key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
     pitch: '換上商品照與賣點，AI 生成情境圖並套上品牌版型，商品再多也做得完。',
-    quota: 'Max 方案每月 5 個品項',
+    quota: 'Max 方案每月 8 個品項',
     includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
     fit: '品項多、需要大量上架素材的電商',
     image: '/home/services/ecommerce-wide.webp',
@@ -55,7 +55,7 @@ export const services: Service[] = [
   {
     key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
     pitch: '改寫商品與服務頁的內文、補上 SEO 與結構化資料，讓現有網站更容易被搜尋、也更容易成交。',
-    quota: 'Max 方案每月 10 頁或品項',
+    quota: 'Max 方案每月 15 頁或品項',
     includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
     fit: '已經有網站、但沒人看也沒詢問的品牌',
     image: '/home/services/optimize-wide.webp',
@@ -88,19 +88,19 @@ export const plans: Plan[] = [
   {
     key: 'trial', name: 'Lite', en: '入門', price: 9800, unit: '一次・一個月',
     tagline: '先看成品，再決定要不要訂閱。',
-    items: [['社群圖文貼文', '4 則'], ['AI 短影音', '2 支'], ['SEO／AI 搜尋文章', '1 篇'], ['品牌健檢與方向建議', '1 份']],
+    items: [['AI 剪片', '10 支'], ['AI 數字人', '2 支'], ['社群圖文貼文', '4 則'], ['SEO／AI 搜尋文章', '1 篇'], ['品牌健檢與方向建議', '1 份']],
     perks: ['每個品牌限一次', '14 天內簽約，費用全額折抵首月'],
   },
   {
     key: 'standard', name: 'Pro', en: '標準', price: 29800, unit: '／月', featured: true,
     tagline: '一個小編的價格，整組 AI 團隊的產量。',
-    items: [['社群圖文貼文', '12 則'], ['AI 短影音', '6 支'], ['SEO／AI 搜尋文章', '2 篇'], ['FB、IG 排程代發', '包含'], ['每月成效月報', '包含']],
+    items: [['AI 剪片', '10 支'], ['AI 數字人', '8 支'], ['社群圖文貼文', '16 則'], ['SEO／AI 搜尋文章', '3 篇'], ['FB、IG 排程代發', '包含'], ['每月成效月報', '包含']],
     perks: ['年約贈送公版官網', '新技術免費升級'],
   },
   {
     key: 'growth', name: 'Max', en: '全方位', price: 59800, unit: '／月',
     tagline: '內容、電商、網站一起推進。',
-    items: [['社群圖文貼文', '24 則'], ['AI 短影音', '14 支'], ['SEO／AI 搜尋文章', '4 篇'], ['電商商品圖文', '5 個品項'], ['網站優化', '10 頁'], ['月報＋雙週線上會議', '包含']],
+    items: [['AI 剪片', '20 支'], ['AI 數字人', '8 支'], ['狗血劇商品介紹', '4 支'], ['社群圖文貼文', '30 則'], ['SEO／AI 搜尋文章', '6 篇'], ['電商商品圖文', '8 個品項'], ['網站優化', '15 頁'], ['月報＋雙週線上會議', '包含']],
     perks: ['年約贈送公版官網，含每月維護', '新技術免費升級'],
   },
 ];
@@ -142,12 +142,12 @@ export const videos: Video[] = [
 
 /** 老闆的痛點：為什麼要跟我們合作。href 指向對應的價格。
  *  thumb 是排隊時的小圖、image 是輪到它放大後換上的大圖（放在 public/，沒有就用色塊）。 */
-export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; thumb?: string; image?: string };
+export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; thumb?: string; image?: string; mobileImage?: string; imagePosition?: string; tabletImagePosition?: string };
 export const pains: Pain[] = [
   { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', thumb: '/home/pains/thumbs/ai-edit.webp', image: '/home/pains/ai-edit.webp' },
-  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp' },
-  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp' },
+  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp', mobileImage: '/home/pains/digital-human-mobile.webp' },
+  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp', mobileImage: '/home/pains/thumbs/drama.webp', tabletImagePosition: 'center calc(100% - 140px)' },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp', mobileImage: '/home/pains/thumbs/real-review.webp', imagePosition: 'center bottom', tabletImagePosition: 'center calc(100% - 120px)' },
   { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', thumb: '/home/pains/thumbs/store-optimization.webp', image: '/home/pains/store-optimization.webp' },
 ];
 
@@ -167,7 +167,7 @@ export const packRules = ['只賣整包，不拆單件', '一次付清，每件�
 
 export const compareRows: [string, string, string][] = [
   ['每月成本', '約 NT$35,000（月薪加勞健保）', 'NT$29,800'],
-  ['每月產量', '看個人能力與狀態', '20 件內容，固定交付'],
+  ['每月產量', '看個人能力與狀態', '37 件內容，固定交付'],
   ['短影音、數字人', '通常要另外外包', '包含'],
   ['SEO 文章、月報', '很少做', '包含'],
   ['請假、離職', '內容跟著停', '不中斷'],
