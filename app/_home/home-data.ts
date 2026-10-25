@@ -10,9 +10,6 @@ export type Service = {
   pitch: string;
   includes: string[];
   fit: string;
-  /** 服務大圖與小圖（放在 public/），還沒有就用品牌色塊 */
-  image?: string;
-  thumb?: string;
 };
 
 export const services: Service[] = [
@@ -21,8 +18,6 @@ export const services: Service[] = [
     pitch: '依品牌調性規劃主題，AI 產圖、文案與排版一次完成，排程代發到 FB、IG，你只要看稿。',
     includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
     fit: '粉專需要固定更新、但沒有人手的品牌',
-    image: '/home/services/posts-wide.webp',
-    thumb: '/home/services/posts-thumb.webp',
   },
   {
     key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
@@ -35,32 +30,24 @@ export const services: Service[] = [
     pitch: '依客人會搜尋的問題寫成文章，結構清楚、重點明確，Google 搜尋與 ChatGPT 這類 AI 搜尋都讀得懂。',
     includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
     fit: '想靠搜尋帶來穩定詢問的品牌',
-    image: '/home/services/article-wide.webp',
-    thumb: '/home/services/article-thumb.webp',
   },
   {
     key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
     pitch: '換上商品照與賣點，AI 生成情境圖並套上品牌版型，商品再多也做得完。',
     includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
     fit: '品項多、需要大量上架素材的電商',
-    image: '/home/services/ecommerce-wide.webp',
-    thumb: '/home/services/ecommerce-thumb.webp',
   },
   {
     key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
     pitch: '改寫商品與服務頁的內文、補上 SEO 與結構化資料，讓現有網站更容易被搜尋、也更容易成交。',
     includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
     fit: '已經有網站、但沒人看也沒詢問的品牌',
-    image: '/home/services/optimize-wide.webp',
-    thumb: '/home/services/optimize-thumb.webp',
   },
   {
     key: 'website', name: '公版官網', short: '年約直接送，不另外收費',
     pitch: '從精選版型挑一款，換上你的文字、照片與聯絡方式就上線。手機好看，搜尋引擎與 AI 都讀得懂。',
     includes: ['精選響應式版型', '基礎 SEO 與結構化資料', 'LINE、表單詢問導流'],
     fit: '還沒有官網，或官網已經太舊的品牌',
-    image: '/home/services/website-wide.webp',
-    thumb: '/home/services/website-thumb.webp',
   },
 ];
 
@@ -109,22 +96,7 @@ export const pains: Pain[] = [
   { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc' },
   { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
   { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500 },
-  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', price: 1500, unit: '頁' },
 ];
-
-export type Pack = { key: ServiceKey; qty: string; price: number; per: string };
-
-/** 其他服務單買套組：只賣整包、不拆單件。 */
-export const packs: Pack[] = [
-  { key: 'posts', qty: '20 則', price: 28000, per: '每則 NT$1,400' },
-  { key: 'article', qty: '6 篇', price: 12000, per: '每篇 NT$2,000' },
-  { key: 'ecommerce', qty: '10 個品項', price: 32000, per: '每品項 NT$3,200' },
-  { key: 'optimize', qty: '20 頁', price: 30000, per: '每頁 NT$1,500' },
-  { key: 'website', qty: '1 套', price: 48000, per: '年約訂閱免費送' },
-];
-
-export const packRules = ['只賣整包，不拆單件', '一次付清，每件含一次修改', '不含排程代發與月報'];
-
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
 export const clients: { slug: string; name: string }[] = [
@@ -147,7 +119,7 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
     items: [
       { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,000、狗血劇商品介紹 NT$3,500，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
       { q: '外面行情是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
-      { q: '可以只買一種服務嗎？', a: '可以。社群圖文、SEO 文章、電商商品圖文、網站優化、公版官網都能整包單買，例如社群圖文 20 則 NT$28,000。只賣整包、不拆單件，每件含一次修改。', link: { href: '#other', label: '看其他服務' } },
+      { q: '還有做其他服務嗎？', a: '有。社群圖文、SEO／AI 搜尋文章、電商商品圖文、網站優化、公版官網都能做，需要的話用 LINE 告訴我們，我們回覆做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
       { q: '價格含稅嗎？', a: '網站上所有價格都是未稅價。全台統一價格，不議價也不打折。' },
     ],
   },
