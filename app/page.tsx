@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, faqs, packs, plans, services } from './_home/home-data';
+import { EMAIL, VIDEO_MIN, faqs, packs, plans, services, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
-const description = 'A.C.E. AI 行銷內容訂閱：每月固定產出社群圖文、AI 短影音、SEO 文章並優化網站。標準方案月費 NT$29,800，一個小編的價格、整組 AI 團隊的產量；先嚐鮮 NT$9,800。';
+const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI UGC 商品介紹每支 NT$2,000、狗血劇商品介紹每支 NT$3,500，10 支起訂。另有社群圖文、SEO 文章、電商與網站服務，以及月費 NT$29,800 起的包月方案。';
 const url = 'https://luxkey.com.tw/';
 
 export const metadata: Metadata = {
@@ -21,17 +21,21 @@ const org = {
   address: { '@type': 'PostalAddress', streetAddress: '信義路四段458號6樓', addressLocality: '臺北市信義區', addressCountry: 'TW' },
   areaServed: 'TW',
   hasOfferCatalog: {
-    '@type': 'OfferCatalog', name: 'A.C.E. 內容訂閱方案',
-    itemListElement: plans.map(p => ({
+    '@type': 'OfferCatalog', name: 'A.C.E. 服務與價格',
+    itemListElement: videos.map(v => ({
+      '@type': 'Offer', name: v.name, description: `${v.pitch}一次 ${VIDEO_MIN} 支起訂。`, url: `${url}#video-${v.key}`,
+      priceSpecification: { '@type': 'UnitPriceSpecification', price: v.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false, unitText: '支' },
+      eligibleQuantity: { '@type': 'QuantitativeValue', minValue: VIDEO_MIN, unitText: '支' },
+    }) as Record<string, unknown>).concat(plans.map(p => ({
       '@type': 'Offer', name: `${p.name}方案`, description: p.tagline, url: `${url}#plans`,
       priceSpecification: {
         '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false,
         ...(p.key === 'trial' ? {} : { unitCode: 'MON', unitText: '月' }),
       },
-    })).concat(packs.map(p => {
+    }))).concat(packs.map(p => {
       const s = services.find(x => x.key === p.key)!;
       return {
-        '@type': 'Offer', name: `${s.name} ${p.qty}`, description: `單買套組：${p.per}`, url: `${url}#packs`,
+        '@type': 'Offer', name: `${s.name} ${p.qty}`, description: `單買套組：${p.per}`, url: `${url}#offer-${p.key}`,
         priceSpecification: { '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false },
       };
     })),
@@ -42,9 +46,13 @@ const schema = {
   '@graph': [
     org,
     { '@type': 'WebSite', '@id': `${url}#site`, url, name: 'A.C.E.', inLanguage: 'zh-Hant-TW', publisher: { '@id': `${url}#org` } },
-    ...services.map(s => ({
-      '@type': 'Service', name: s.name, description: `${s.short}。${s.pitch}（${s.quota}）`, serviceType: s.name,
-      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#service-${s.key}`, audience: { '@type': 'Audience', audienceType: s.fit },
+    ...services.filter(s => s.key !== 'video').map(s => ({
+      '@type': 'Service', name: s.name, description: `${s.short}。${s.pitch}`, serviceType: s.name,
+      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#offer-${s.key}`, audience: { '@type': 'Audience', audienceType: s.fit },
+    })),
+    ...videos.map(v => ({
+      '@type': 'Service', name: v.name, description: v.pitch, serviceType: 'AI 影音製作',
+      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#video-${v.key}`, audience: { '@type': 'Audience', audienceType: v.fit },
     })),
     { '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
   ],

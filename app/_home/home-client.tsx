@@ -3,13 +3,13 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, Minus, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, compareRows, faqs, finderGroups, packRules, packs, planExcluded, planRules, plans, services, steps, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, VIDEO_MIN, compareRows, faqs, finderGroups, packRules, packs, planExcluded, planRules, plans, services, steps, videos, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
   posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate,
 };
-const nav = [['#plans', '方案價格'], ['#compare', '為什麼訂閱'], ['#services', '服務內容'], ['#finder', '幫我配方案'], ['#faq', '常見問題']] as const;
+const nav = [['#videos', '影音價格'], ['#other', '其他服務'], ['#plans', '包月方案'], ['#finder', '幫我配方案'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -125,7 +125,7 @@ function Finder() {
               <div className="ace-result-grid">
                 {recommended.map(s => {
                   const Icon = serviceIcons[s.key];
-                  return <a key={s.key} href={`#service-${s.key}`} className="ace-result-item"><span className="ace-icon"><Icon size={20} /></span><span><strong>{s.name}</strong><small>{s.short}</small></span></a>;
+                  return <a key={s.key} href={s.key === 'video' ? '#videos' : `#offer-${s.key}`} className="ace-result-item"><span className="ace-icon"><Icon size={20} /></span><span><strong>{s.name}</strong><small>{s.short}</small></span></a>;
                 })}
               </div>
               <div className="ace-actions">
@@ -168,7 +168,7 @@ function Plans() {
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
         <div className="ace-head-row">
-          <div><p className="ace-kicker">PLANS & PRICING</p><h2 className="ace-h2">價格一次到底，<br className="ace-br-sm" />全台同一價。</h2></div>
+          <div><p className="ace-kicker">MONTHLY PLANS</p><h2 className="ace-h2">每月都要內容？<br className="ace-br-sm" />包月最划算。</h2></div>
           <p className="ace-muted">季約、年約同價，不議價、不打折。年約加贈公版官網，新技術免費升級。</p>
         </div>
         <div className="ace-plan-grid">{plans.map(p => <PlanCard key={p.key} plan={p} />)}</div>
@@ -181,45 +181,108 @@ function Plans() {
             <strong>方案不包含</strong>
             <ul className="ace-excluded">{planExcluded.map(x => <li key={x}><Minus size={16} />{x}</li>)}</ul>
           </div>
-          <a href="#packs" className="ace-text-link">只想買單一服務？看單買套組 <ArrowRight size={16} /></a>
+          <a href="#other" className="ace-text-link">只想買單一服務？看其他服務 <ArrowRight size={16} /></a>
         </div>
       </div>
     </section>
   );
 }
 
-function Packs() {
+/** 點標題展開內容；同一區一次只開一項。 */
+function useAccordion() {
+  const [open, setOpen] = useState(-1);
+  return [open, (i: number) => setOpen(open === i ? -1 : i)] as const;
+}
+
+function Videos() {
+  const [open, toggle] = useAccordion();
   const [copied, setCopied] = useState(false);
   return (
-    <section id="packs" className="ace-section ace-packs">
+    <section id="videos" className="ace-section ace-videos">
       <div className="ace-wrap">
         <div className="ace-head-row">
-          <div><p className="ace-kicker">SINGLE PACKS</p><h2 className="ace-h2">只想買一項？<br className="ace-br-sm" />整包單買。</h2></div>
-          <p className="ace-muted">不訂閱也可以，但只賣整包、不拆單件，單價也比訂閱高。每個月都有需求的話，訂閱划算很多。</p>
+          <div><p className="ace-kicker">AI VIDEO</p><h2 className="ace-h2">品牌影音，<br className="ace-br-sm" />用 AI 做只要零頭。</h2></div>
+          <p className="ace-muted">點開看外面行情和我們的價格。每種影片一次 {VIDEO_MIN} 支起訂，確保角色、風格與品牌調性一致。</p>
         </div>
-        <div className="ace-pack-grid">
-          {packs.map(p => {
+        <div className="ace-offer-list">
+          {videos.map((v, i) => (
+            <article key={v.key} id={`video-${v.key}`} className={open === i ? 'ace-offer is-open' : 'ace-offer'}>
+              <button className="ace-offer-head" aria-expanded={open === i} onClick={() => toggle(i)}>
+                <span className="ace-offer-index">{String(i + 1).padStart(2, '0')}</span>
+                <span className="ace-offer-name">{v.name}</span>
+                <span className="ace-offer-price"><small>NT$</small>{money(v.price)}<small>／支</small></span>
+                <ChevronDown size={24} className="ace-offer-chev" />
+              </button>
+              {open === i && (
+                <div className="ace-offer-body">
+                  <div className="ace-deal">
+                    <p className="ace-deal-was"><span>{v.marketNote}</span><s>NT${money(v.market)}</s></p>
+                    <p className="ace-deal-now"><span>不用！用 AI 只要</span><strong>NT${money(v.price)}<small>／支</small></strong></p>
+                    <p className="ace-deal-min">一次 {VIDEO_MIN} 支 <strong>NT${money(v.price * VIDEO_MIN)}</strong></p>
+                  </div>
+                  <div className="ace-offer-detail">
+                    <p>{v.pitch}</p>
+                    <ul>{v.includes.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
+                    <p className="ace-fit"><span>適合</span>{v.fit}</p>
+                    <p className="ace-fit"><span>起訂</span>每次 {VIDEO_MIN} 支，同一批沿用同一組角色與風格，品牌看起來才一致。</p>
+                    <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想訂 A.C.E. 的${v.name} ${VIDEO_MIN} 支（NT$${money(v.price * VIDEO_MIN)}）。`))}>
+                      <MessageCircle size={18} /> 訂 {VIDEO_MIN} 支，LINE 詢問
+                    </button>
+                    {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
+                  </div>
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+        <p className="ace-note">價格皆未稅。外面行情為一般外包製作的參考價格，實際依廠商而異。</p>
+      </div>
+    </section>
+  );
+}
+
+function OtherServices() {
+  const [open, toggle] = useAccordion();
+  const [copied, setCopied] = useState(false);
+  return (
+    <section id="other" className="ace-section ace-packs">
+      <div className="ace-wrap">
+        <div className="ace-head-row">
+          <div><p className="ace-kicker">OTHER SERVICES</p><h2 className="ace-h2">其他服務</h2></div>
+          <p className="ace-muted">社群圖文、文章、電商、網站，整包單買。每個月都有需求的話，包月划算很多。</p>
+        </div>
+        <div className="ace-offer-list">
+          {packs.map((p, i) => {
             const s = services.find(x => x.key === p.key)!;
             const Icon = serviceIcons[p.key];
             return (
-              <button key={p.key} className="ace-pack" onClick={async () => setCopied(await askOnLine(`你好，我想單買 A.C.E. 的${s.name} ${p.qty}（NT$${money(p.price)}）。`))}>
-                <span className="ace-icon"><Icon size={22} /></span>
-                <span className="ace-pack-body">
-                  <strong>{s.name}<small>{p.qty}</small></strong>
-                  <span className="ace-pack-price">NT${money(p.price)}</span>
-                  <small>{p.per}</small>
-                </span>
-                <ArrowRight size={18} className="ace-pack-arrow" />
-              </button>
+              <article key={p.key} id={`offer-${p.key}`} className={open === i ? 'ace-offer is-open' : 'ace-offer'}>
+                <button className="ace-offer-head" aria-expanded={open === i} onClick={() => toggle(i)}>
+                  <span className="ace-icon"><Icon size={22} /></span>
+                  <span className="ace-offer-name">{s.name}<small>{p.qty}</small></span>
+                  <span className="ace-offer-price"><small>NT$</small>{money(p.price)}</span>
+                  <ChevronDown size={24} className="ace-offer-chev" />
+                </button>
+                {open === i && (
+                  <div className="ace-offer-body ace-offer-body-single">
+                    <div className="ace-offer-detail">
+                      <p className="ace-service-short">{s.short}</p>
+                      <p>{s.pitch}</p>
+                      <ul>{s.includes.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
+                      <p className="ace-fit"><span>適合</span>{s.fit}</p>
+                      <p className="ace-fit"><span>單價</span>{p.per}</p>
+                      <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想單買 A.C.E. 的${s.name} ${p.qty}（NT$${money(p.price)}）。`))}>
+                        <MessageCircle size={18} /> LINE 詢問
+                      </button>
+                      {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
+                    </div>
+                  </div>
+                )}
+              </article>
             );
           })}
         </div>
-        {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
         <ul className="ace-pack-rules">{packRules.map(r => <li key={r}><Check size={16} />{r}</li>)}</ul>
-        <div className="ace-pack-compare">
-          <p><strong>算給你看：</strong>單買 AI 短影音 10 支是 NT$42,000；標準方案每月 NT$29,800，就有 6 支短影音、12 則圖文、2 篇文章，還幫你代發、寫月報。</p>
-          <a href="#plans" className="ace-text-link">看訂閱方案 <ArrowRight size={16} /></a>
-        </div>
       </div>
     </section>
   );
@@ -287,11 +350,11 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
               <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>
               <h1 className="ace-h1"><span>讓 AI 成為</span><span>每個品牌的 <em>王牌</em></span></h1>
               <p className="ace-lead">用 AI 創造更多好內容，<br />讓每個品牌都能被看見、被記住、被喜歡。</p>
-              <p className="ace-muted">社群圖文、短影音、搜尋文章、網站優化，每月固定交付。一個小編的價格，整組 AI 團隊的產量，技術永遠是最新的。</p>
-              <p className="ace-hero-price"><span>月費</span><strong>NT$29,800</strong><span>起</span><span className="ace-hero-trial">先嚐鮮 NT$9,800</span></p>
+              <p className="ace-muted">AI 剪片、AI UGC 商品介紹、狗血劇商品介紹。外面一支要幾千到幾萬，用 AI 只要零頭。</p>
+              <p className="ace-hero-price"><span>AI 剪片每支</span><strong>NT$300</strong><span>起</span><span className="ace-hero-trial">{VIDEO_MIN} 支起訂</span></p>
               <div className="ace-actions">
-                <a href="#plans" className="ace-btn ace-btn-primary ace-btn-lg">看方案與價格 <ArrowRight size={20} /></a>
-                <a href="#finder" className="ace-btn ace-btn-ghost ace-btn-lg">幫我配方案</a>
+                <a href="#videos" className="ace-btn ace-btn-primary ace-btn-lg">看影音價格 <ArrowRight size={20} /></a>
+                <a href="#plans" className="ace-btn ace-btn-ghost ace-btn-lg">包月方案</a>
               </div>
             </div>
           </div>
@@ -304,49 +367,17 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
               return <div key={t as string}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t as string}</strong><small>{s as string}</small></span></div>;
             })}
           </div>
-          <div className="ace-card ace-service-strip">
-            {services.map(s => {
-              const Icon = serviceIcons[s.key];
-              return <a key={s.key} href={`#service-${s.key}`}><span className="ace-icon ace-icon-lg"><Icon size={26} /></span><strong>{s.name}</strong><small>看內容</small></a>;
-            })}
-          </div>
         </div>
+
+        <Videos />
+
+        <OtherServices />
 
         <Plans />
 
         <Compare />
 
-        <Packs />
-
         <Finder />
-
-        <section id="services" className="ace-section ace-services">
-          <div className="ace-wrap">
-            <div className="ace-head-row">
-              <div><p className="ace-kicker">WHAT'S INSIDE</p><h2 className="ace-h2">六張王牌，<br className="ace-br-sm" />都在月費裡。</h2></div>
-              <p className="ace-muted">版型、角色、流程都做好了，你只要提供品牌資料，每月照排程交付。</p>
-            </div>
-            <div className="ace-service-list">
-              {services.map((s, i) => {
-                const Icon = serviceIcons[s.key];
-                return (
-                  <article key={s.key} id={`service-${s.key}`} className="ace-service">
-                    <div className="ace-service-top">
-                      <span className="ace-icon ace-icon-lg"><Icon size={26} /></span>
-                      <p className="ace-index">{String(i + 1).padStart(2, '0')}</p>
-                    </div>
-                    <h3>{s.name}</h3>
-                    <p className="ace-service-short">{s.short}</p>
-                    <p className="ace-muted">{s.pitch}</p>
-                    <ul>{s.includes.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
-                    <p className="ace-fit"><span>適合</span>{s.fit}</p>
-                    <p className="ace-template"><span>份量</span>{s.quota}</p>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </section>
 
         <section id="about" className="ace-section ace-about">
           <div className="ace-wrap ace-about-grid">
@@ -381,7 +412,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
             <div>
               <p className="ace-kicker">LET'S TALK</p>
               <h2 className="ace-h2">把你的下一張王牌，<br />交給我們。</h2>
-              <p>先用 NT$9,800 嚐鮮一個月，看到成品再決定。告訴我們品牌現在最想完成的事，我們回覆建議做法。</p>
+              <p>告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。</p>
             </div>
             <div className="ace-contact-actions">
               <a className="ace-btn ace-btn-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
