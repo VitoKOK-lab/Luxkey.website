@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { EMAIL, LINE_URL, compareRows, faqGroups, finderGroups, packRules, packs, pains, plans, services, steps, videos, type FinderItem, type Pain, type Plan, type ServiceKey } from './home-data';
 import './home.css';
 
@@ -205,16 +205,18 @@ function Pains() {
   const p = pains[active];
   const v = videos.find(x => x.key === p.video);
   const offer = v ?? (p.market && p.price ? { name: p.tag, market: p.market, price: p.price } : null);
-  const [copied, setCopied] = useState(false);
   const bg = (x: Pain, i: number, big: boolean) => {
     const src = big ? x.image ?? x.thumb : x.thumb ?? x.image;
     return { className: src ? big && x.mobileImage ? 'has-mobile-image' : '' : `ace-poster-${i + 1}`, style: src ? big
-      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-position': x.imagePosition ?? 'center' } as CSSProperties
+      ? { '--stage-image': `url(${src})`, '--stage-mobile-image': `url(${x.mobileImage ?? src})`, '--stage-position': x.imagePosition ?? 'center', '--stage-tablet-position': x.tabletImagePosition ?? 'center calc(100% - 40px)' } as CSSProperties
       : { backgroundImage: `url(${src})` } : undefined };
   };
   return (
     <section id="why" className="ace-stage" aria-roledescription="carousel" aria-label="老闆的痛，我們都懂"
-      onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
+      onMouseEnter={() => { if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPaused(true); }}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={e => { if (e.target.matches(':focus-visible')) setPaused(true); }}
+      onBlur={() => setPaused(false)}>
       {pains.map((x, i) => {
         const b = bg(x, i, true);
         return <div key={x.tag} className={`ace-stage-bg ${b.className}${i === active ? ' is-on' : ''}`} style={b.style} aria-hidden="true" />;
@@ -241,14 +243,9 @@ function Pains() {
             <span>我們只需要 <strong>NT${money(offer.price)}</strong><small>／支</small></span>
           </p>
         )}
-        {offer
-          ? <button className="ace-btn ace-btn-light" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${offer.name}（NT$${money(offer.price)}／支）。`))}><MessageCircle size={18} /> LINE 詢問</button>
-          : <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
-        {copied && <p className="ace-stage-copied">詢問內容已複製，到 LINE 貼上即可。</p>}
+        {!offer && <a href={p.href} className="ace-btn ace-btn-light">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
       </div>
       <div className="ace-stage-controls">
-        <button aria-label="上一則" onClick={() => go(-1)}><ChevronLeft size={22} /></button>
-        <button aria-label="下一則" onClick={() => go(1)}><ChevronRight size={22} /></button>
         <span className="ace-stage-progress"><i style={{ width: `${((active + 1) / n) * 100}%` }} /></span>
         <span className="ace-stage-num">{active + 1}</span>
       </div>

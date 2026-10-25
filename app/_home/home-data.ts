@@ -142,12 +142,12 @@ export const videos: Video[] = [
 
 /** 老闆的痛點：為什麼要跟我們合作。href 指向對應的價格。
  *  thumb 是排隊時的小圖、image 是輪到它放大後換上的大圖（放在 public/，沒有就用色塊）。 */
-export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; thumb?: string; image?: string; mobileImage?: string; imagePosition?: string };
+export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; thumb?: string; image?: string; mobileImage?: string; imagePosition?: string; tabletImagePosition?: string };
 export const pains: Pain[] = [
   { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', thumb: '/home/pains/thumbs/ai-edit.webp', image: '/home/pains/ai-edit.webp' },
-  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp' },
-  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp', mobileImage: '/home/pains/thumbs/drama.webp' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp', mobileImage: '/home/pains/thumbs/real-review.webp', imagePosition: 'center bottom' },
+  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp', mobileImage: '/home/pains/digital-human-mobile.webp' },
+  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp', mobileImage: '/home/pains/thumbs/drama.webp', tabletImagePosition: 'center calc(100% - 140px)' },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp', mobileImage: '/home/pains/thumbs/real-review.webp', imagePosition: 'center bottom', tabletImagePosition: 'center calc(100% - 120px)' },
   { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', thumb: '/home/pains/thumbs/store-optimization.webp', image: '/home/pains/store-optimization.webp' },
 ];
 
