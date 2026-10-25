@@ -369,15 +369,25 @@ function Faq() {
 }
 
 export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
+  const [heroVideoReady, setHeroVideoReady] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (heroVideoRef.current && heroVideoRef.current.readyState >= 2) setHeroVideoReady(true);
+  }, []);
   return (
     <div className={`ace ${fontClass}`}>
       <Header />
       <main>
         <section className="ace-hero">
-          <picture className="ace-hero-bg">
-            <source media="(max-width: 820px)" srcSet="/home/hero-mobile.webp" />
-            <img src="/home/hero-wide.webp" srcSet="/home/hero-wide-1100.webp 1100w, /home/hero-wide.webp 1672w" sizes="100vw" alt="手持透明黑桃 A 王牌、被孔雀藍與橘色絲帶環繞的品牌代言人" width={1672} height={941} fetchPriority="high" />
-          </picture>
+          <div className="ace-hero-bg">
+            <picture className="ace-hero-poster">
+              <source media="(max-width: 820px)" srcSet="/home/hero-mobile.webp" />
+              <img src="/home/hero-wide.webp" srcSet="/home/hero-wide-1100.webp 1100w, /home/hero-wide.webp 1672w" sizes="100vw" alt="手持透明黑桃 A 王牌、被孔雀藍與橘色絲帶環繞的品牌代言人" width={1672} height={941} fetchPriority="high" />
+            </picture>
+            <video ref={heroVideoRef} className={`ace-hero-video${heroVideoReady ? ' is-ready' : ''}`} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" onLoadedData={() => setHeroVideoReady(true)}>
+              <source src="/home/hero-motion.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+            </video>
+          </div>
           <div className="ace-wrap">
             <div className="ace-hero-copy">
               <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>
