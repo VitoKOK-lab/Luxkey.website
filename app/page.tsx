@@ -4,7 +4,7 @@ import HomePage from './_home/home-client';
 import { EMAIL, VIDEO_MIN, faqs, packs, plans, services, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
-const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 素人推薦開箱影片每支 NT$2,000、狗血劇商品介紹每支 NT$3,500。另有社群圖文、SEO 文章、電商與網站服務，以及月費 NT$29,800 起的包月方案。';
+const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,000、狗血劇商品介紹每支 NT$3,500。另有社群圖文、SEO 文章、電商與網站服務，以及月費 NT$29,800 起的包月方案。';
 const url = 'https://luxkey.com.tw/';
 
 export const metadata: Metadata = {

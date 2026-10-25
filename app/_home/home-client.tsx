@@ -404,7 +404,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
               <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>
               <h1 className="ace-h1"><span>讓 AI 成為</span><span>每個品牌的 <em>王牌</em></span></h1>
               <p className="ace-lead">用 AI 創造更多好內容，<br />讓每個品牌都能被看見、被記住、被喜歡。</p>
-              <p className="ace-muted">AI 剪片、AI 素人推薦開箱影片、狗血劇商品介紹。外面一支要幾千到幾萬，用 AI 只要零頭。</p>
+              <p className="ace-muted">AI 剪片、AI 數字人、狗血劇商品介紹。外面一支要幾千到幾萬，用 AI 只要零頭。</p>
               <p className="ace-hero-price"><span>AI 剪片每支</span><strong>NT$300</strong><span>起</span></p>
               <div className="ace-actions">
                 <a href="#videos" className="ace-btn ace-btn-primary ace-btn-lg">看影音價格 <ArrowRight size={20} /></a>
