@@ -92,10 +92,10 @@ export const DEMO_POSTER = '/home/demo/poster.webp';
 /** 老闆的痛點：五支手機並排，每支一個服務。video 對應影片價格；market／price 是沒有影片單價時的行情對照。 */
 export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; unit?: string; demo?: string; poster?: string };
 export const pains: Pain[] = [
-  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit' },
+  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', demo: '/home/demo/ai-edit.mp4', poster: '/home/demo/ai-edit-poster.webp' },
   { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', demo: '/home/demo/digital-human.mp4', poster: '/home/demo/digital-human-poster.webp' },
   { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500 },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
 ];
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
