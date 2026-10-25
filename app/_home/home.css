@@ -341,7 +341,7 @@ body { margin: 0; background: #fbf6f2; }
 .ace-stage-card.is-active > * { opacity: 0; }
 .ace-stage-card.is-returning { transition: opacity .5s ease .8s; }
 .ace-stage-copy { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding-block: 56px 150px; pointer-events: none; }
-.ace-stage-copy > * { max-width: min(44%, 520px); animation: ace-rise .6s var(--ace-ease) .45s both; }
+.ace-stage-copy > * { max-width: min(44%, 520px); }
 .ace-stage-copy a, .ace-stage-copy button { pointer-events: auto; margin-top: 8px; }
 .ace-stage-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 22px; }
 .ace-stage-price span { font-size: 15px; opacity: .92; }
@@ -488,8 +488,9 @@ body { margin: 0; background: #fbf6f2; }
 }
 @media (max-width: 900px) {
   .ace-stage { min-height: 1000px; background: #092f38; }
-  .ace-stage-bg { background-image: var(--stage-mobile-image); background-size: auto 50%; background-position: 72% bottom; }
-  .ace-stage-bg.has-mobile-image { background-position: center calc(100% - 115px); }
+  .ace-stage-bg { background-image: none; }
+  .ace-stage-bg::before { content: ''; position: absolute; inset: -48px; background-image: var(--stage-mobile-image); background-size: cover; background-position: center; filter: blur(38px); opacity: .48; }
+  .ace-stage-bg::after { content: ''; position: absolute; left: 50%; bottom: 115px; height: 50%; aspect-ratio: 3 / 4; transform: translateX(-50%); background-image: var(--stage-mobile-image); background-size: cover; background-position: center; background-repeat: no-repeat; mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent), linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent); mask-composite: intersect; }
   .ace-stage::after { background: linear-gradient(180deg, #092f38 0%, #092f38 30%, rgba(9, 47, 56, .1) 52%, rgba(3, 22, 27, .45) 100%); }
   .ace-stage-copy { justify-content: flex-start; gap: 8px; padding-block: 92px 0; }
   .ace-stage-copy > * { max-width: min(100%, 540px); }
@@ -500,5 +501,5 @@ body { margin: 0; background: #fbf6f2; }
 }
 @media (min-width: 601px) and (max-width: 900px) {
   .ace-stage { min-height: 850px; }
-  .ace-stage-bg.has-mobile-image { background-size: auto 60%; background-position: var(--stage-tablet-position); }
+  .ace-stage-bg::after { height: 60%; bottom: var(--stage-tablet-bottom); }
 }
