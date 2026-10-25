@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, VIDEO_MIN, faqs, packs, plans, services, videos } from './_home/home-data';
+import { EMAIL, faqs, packs, plans, services, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
 const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,000、狗血劇商品介紹每支 NT$3,500。另有社群圖文、SEO 文章、電商與網站服務，以及月費 NT$29,800 起的包月方案。';
@@ -23,11 +23,10 @@ const org = {
   hasOfferCatalog: {
     '@type': 'OfferCatalog', name: 'A.C.E. 服務與價格',
     itemListElement: videos.map(v => ({
-      '@type': 'Offer', name: v.name, description: `${v.pitch}一次 ${VIDEO_MIN} 支起訂。`, url: `${url}#video-${v.key}`,
+      '@type': 'Offer', name: v.name, description: v.pitch, url: `${url}#why`,
       priceSpecification: { '@type': 'UnitPriceSpecification', price: v.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false, unitText: '支' },
-      eligibleQuantity: { '@type': 'QuantitativeValue', minValue: VIDEO_MIN, unitText: '支' },
     }) as Record<string, unknown>).concat(plans.map(p => ({
-      '@type': 'Offer', name: `${p.name}方案`, description: p.tagline, url: `${url}#plans`,
+      '@type': 'Offer', name: `${p.name} 方案`, description: p.tagline, url: `${url}#plans`,
       priceSpecification: {
         '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false,
         ...(p.key === 'trial' ? {} : { unitCode: 'MON', unitText: '月' }),
@@ -52,7 +51,7 @@ const schema = {
     })),
     ...videos.map(v => ({
       '@type': 'Service', name: v.name, description: v.pitch, serviceType: 'AI 影音製作',
-      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#video-${v.key}`, audience: { '@type': 'Audience', audienceType: v.fit },
+      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#why`, audience: { '@type': 'Audience', audienceType: v.fit },
     })),
     { '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
   ],
