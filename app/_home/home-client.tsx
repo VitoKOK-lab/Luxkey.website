@@ -271,10 +271,9 @@ function OtherServices() {
             const on = i === active;
             return (
               <article key={p.key} id={`offer-${p.key}`} className={`ace-fan-item ace-fan-${p.key}${on ? ' is-on' : ''}`}>
-                <button className="ace-fan-tab" onClick={() => setActive(i)} aria-expanded={on} aria-controls={`fan-body-${p.key}`}>
-                  <span className="ace-fan-media" style={s.image ? { backgroundImage: `url(${s.image})` } : undefined}>
-                    {!s.image && <Icon size={on ? 56 : 30} strokeWidth={1.5} />}
-                  </span>
+                <button className={s.image ? 'ace-fan-tab has-image' : 'ace-fan-tab'} onClick={() => setActive(i)} aria-expanded={on} aria-controls={`fan-body-${p.key}`}>
+                  {s.image && <span className="ace-fan-media" style={{ backgroundImage: `url(${s.image})` }} />}
+                  {!(s.image && on) && <Icon className="ace-fan-icon" strokeWidth={1.5} />}
                   <span className="ace-fan-label"><b>{s.name}</b><small>NT${money(p.price)}</small></span>
                 </button>
                 <div className="ace-fan-body" id={`fan-body-${p.key}`} hidden={!on}>
