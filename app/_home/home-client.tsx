@@ -247,7 +247,7 @@ function Pains() {
         const b = bg(x, i, false);
         const state = i === active ? ' is-active' : i === prev ? ' is-returning' : '';
         return (
-          <button key={x.tag} className={`ace-stage-card ${b.className}${state}`} style={{ ...b.style, ['--k' as string]: k }}
+          <button key={x.tag} className={`ace-stage-card ${b.className}${state}`} style={{ ...b.style, ['--k' as string]: k, ['--wide-image' as string]: `url(${x.image ?? x.thumb})` }}
             onClick={() => show(i)} tabIndex={i === active ? -1 : 0} aria-hidden={i === active} aria-label={`第 ${i + 1} 則：${x.tag}，${x.title}`}>
             <span className="ace-stage-card-num">{i + 1}</span>
             <b>{x.tag}</b>
@@ -317,7 +317,7 @@ function OtherServices() {
               const I = serviceIcons[q.key];
               return (
                 <button key={q.key} id={`offer-${q.key}`} className={`ace-shelf-card ace-tone-${q.key}`} onClick={() => { setActive(i); setCopied(false); }} aria-label={`看${t.name}`}>
-                  <span className="ace-shelf-photo" style={t.image ? { backgroundImage: `url(${t.image})` } : undefined}>{!t.image && <I size={32} strokeWidth={1.5} />}</span>
+                  <span className="ace-shelf-photo" style={t.thumb || t.image ? { backgroundImage: `url(${t.thumb ?? t.image})` } : undefined}>{!t.thumb && !t.image && <I size={32} strokeWidth={1.5} />}</span>
                   <span className="ace-shelf-label"><b>{t.name}</b><small>{q.qty}・NT${money(q.price)}</small></span>
                 </button>
               );

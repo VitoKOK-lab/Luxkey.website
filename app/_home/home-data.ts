@@ -12,8 +12,9 @@ export type Service = {
   quota: string;
   includes: string[];
   fit: string;
-  /** 服務照片（放在 public/），還沒有就用品牌色塊 */
+  /** 服務大圖與小圖（放在 public/），還沒有就用品牌色塊 */
   image?: string;
+  thumb?: string;
 };
 
 export const services: Service[] = [
@@ -23,6 +24,8 @@ export const services: Service[] = [
     quota: 'Pro 每月 12 則・Max 每月 24 則',
     includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
     fit: '粉專需要固定更新、但沒有人手的品牌',
+    image: '/home/services/posts-wide.webp',
+    thumb: '/home/services/posts-thumb.webp',
   },
   {
     key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
@@ -37,6 +40,8 @@ export const services: Service[] = [
     quota: 'Pro 每月 2 篇・Max 每月 4 篇',
     includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
     fit: '想靠搜尋帶來穩定詢問的品牌',
+    image: '/home/services/article-wide.webp',
+    thumb: '/home/services/article-thumb.webp',
   },
   {
     key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
@@ -44,6 +49,8 @@ export const services: Service[] = [
     quota: 'Max 方案每月 5 個品項',
     includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
     fit: '品項多、需要大量上架素材的電商',
+    image: '/home/services/ecommerce-wide.webp',
+    thumb: '/home/services/ecommerce-thumb.webp',
   },
   {
     key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
@@ -51,6 +58,8 @@ export const services: Service[] = [
     quota: 'Max 方案每月 10 頁或品項',
     includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
     fit: '已經有網站、但沒人看也沒詢問的品牌',
+    image: '/home/services/optimize-wide.webp',
+    thumb: '/home/services/optimize-thumb.webp',
   },
   {
     key: 'website', name: '公版官網', short: '年約直接送，不另外收費',
@@ -58,6 +67,8 @@ export const services: Service[] = [
     quota: '年約贈送・Max 方案含每月維護',
     includes: ['精選響應式版型', '基礎 SEO 與結構化資料', 'LINE、表單詢問導流'],
     fit: '還沒有官網，或官網已經太舊的品牌',
+    image: '/home/services/website-wide.webp',
+    thumb: '/home/services/website-thumb.webp',
   },
 ];
 
@@ -133,11 +144,11 @@ export const videos: Video[] = [
  *  thumb 是排隊時的小圖、image 是輪到它放大後換上的大圖（放在 public/，沒有就用色塊）。 */
 export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; thumb?: string; image?: string };
 export const pains: Pain[] = [
-  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit' },
-  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc' },
-  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact' },
-  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize' },
+  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', thumb: '/home/pains/thumbs/ai-edit.webp', image: '/home/pains/ai-edit.webp' },
+  { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', thumb: '/home/pains/thumbs/digital-human.webp', image: '/home/pains/digital-human.webp' },
+  { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama', thumb: '/home/pains/thumbs/drama.webp', image: '/home/pains/drama.webp' },
+  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', thumb: '/home/pains/thumbs/real-review.webp', image: '/home/pains/real-review.webp' },
+  { tag: '網站優化', title: '廣告、KOL 把人帶進賣場，客人卻走了', body: '看不懂你在賣什麼、文不對題、圖也不好看。我們把網站內容改到客人看得懂、願意買。', href: '#offer-optimize', thumb: '/home/pains/thumbs/store-optimization.webp', image: '/home/pains/store-optimization.webp' },
 ];
 
 export type Pack = { key: ServiceKey; qty: string; price: number; per: string };
