@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, faqs, packs, plans, services, videos } from './_home/home-data';
+import { EMAIL, faqs, packs, services, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
-const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,000、狗血劇商品介紹每支 NT$3,500。另有社群圖文、SEO 文章、電商與網站服務，以及月費 NT$29,800 起的包月方案。';
+const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,000、狗血劇商品介紹每支 NT$3,500。另有社群圖文、SEO 文章、電商與網站服務。';
 const url = 'https://luxkey.com.tw/';
 
 export const metadata: Metadata = {
@@ -25,13 +25,7 @@ const org = {
     itemListElement: videos.map(v => ({
       '@type': 'Offer', name: v.name, description: v.pitch, url: `${url}#why`,
       priceSpecification: { '@type': 'UnitPriceSpecification', price: v.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false, unitText: '支' },
-    }) as Record<string, unknown>).concat(plans.map(p => ({
-      '@type': 'Offer', name: `${p.name} 方案`, description: p.tagline, url: `${url}#plans`,
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification', price: p.price, priceCurrency: 'TWD', valueAddedTaxIncluded: false,
-        ...(p.key === 'trial' ? {} : { unitCode: 'MON', unitText: '月' }),
-      },
-    }))).concat(packs.map(p => {
+    }) as Record<string, unknown>).concat(packs.map(p => {
       const s = services.find(x => x.key === p.key)!;
       return {
         '@type': 'Offer', name: `${s.name} ${p.qty}`, description: `單買套組：${p.per}`, url: `${url}#offer-${p.key}`,

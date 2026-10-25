@@ -2,14 +2,12 @@ export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'luxkey.tw@gmail.com';
 
 export type ServiceKey = 'posts' | 'video' | 'article' | 'ecommerce' | 'optimize' | 'website';
-export type PlanKey = 'trial' | 'standard' | 'growth';
 
 export type Service = {
   key: ServiceKey;
   name: string;
   short: string;
   pitch: string;
-  quota: string;
   includes: string[];
   fit: string;
   /** 服務大圖與小圖（放在 public/），還沒有就用品牌色塊 */
@@ -21,7 +19,6 @@ export const services: Service[] = [
   {
     key: 'posts', name: '社群圖文貼文', short: '每週固定更新，粉專不再斷更',
     pitch: '依品牌調性規劃主題，AI 產圖、文案與排版一次完成，排程代發到 FB、IG，你只要看稿。',
-    quota: 'Pro 每月 16 則・Max 每月 24 則',
     includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
     fit: '粉專需要固定更新、但沒有人手的品牌',
     image: '/home/services/posts-wide.webp',
@@ -30,14 +27,12 @@ export const services: Service[] = [
   {
     key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
     pitch: '不用約拍、不用出鏡。拍好的素材幫你剪，沒有素材就用數字人或商品照做成影片，每月依需求換著用。',
-    quota: 'Lite 12 支・Pro 18 支・Max 25 支',
     includes: ['AI 剪輯：送素材就能出片', 'AI 數字人口播：換腳本就能量產', '商品介紹片、劇情短片'],
     fit: '想經營短影音、但不想一直拍攝出鏡的品牌',
   },
   {
     key: 'article', name: 'SEO／AI 搜尋文章', short: '讓 Google 和 AI 都找得到你',
     pitch: '依客人會搜尋的問題寫成文章，結構清楚、重點明確，Google 搜尋與 ChatGPT 這類 AI 搜尋都讀得懂。',
-    quota: 'Pro 每月 3 篇・Max 每月 4 篇',
     includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
     fit: '想靠搜尋帶來穩定詢問的品牌',
     image: '/home/services/article-wide.webp',
@@ -46,7 +41,6 @@ export const services: Service[] = [
   {
     key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
     pitch: '換上商品照與賣點，AI 生成情境圖並套上品牌版型，商品再多也做得完。',
-    quota: 'Max 方案每月 5 個品項',
     includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
     fit: '品項多、需要大量上架素材的電商',
     image: '/home/services/ecommerce-wide.webp',
@@ -55,7 +49,6 @@ export const services: Service[] = [
   {
     key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
     pitch: '改寫商品與服務頁的內文、補上 SEO 與結構化資料，讓現有網站更容易被搜尋、也更容易成交。',
-    quota: 'Max 方案每月 10 頁或品項',
     includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
     fit: '已經有網站、但沒人看也沒詢問的品牌',
     image: '/home/services/optimize-wide.webp',
@@ -64,47 +57,12 @@ export const services: Service[] = [
   {
     key: 'website', name: '公版官網', short: '年約直接送，不另外收費',
     pitch: '從精選版型挑一款，換上你的文字、照片與聯絡方式就上線。手機好看，搜尋引擎與 AI 都讀得懂。',
-    quota: '年約贈送・Max 方案含每月維護',
     includes: ['精選響應式版型', '基礎 SEO 與結構化資料', 'LINE、表單詢問導流'],
     fit: '還沒有官網，或官網已經太舊的品牌',
     image: '/home/services/website-wide.webp',
     thumb: '/home/services/website-thumb.webp',
   },
 ];
-
-export type Plan = {
-  key: PlanKey;
-  name: string;
-  en: string;
-  price: number;
-  unit: string;
-  tagline: string;
-  items: [string, string][];
-  perks: string[];
-  featured?: boolean;
-};
-
-export const plans: Plan[] = [
-  {
-    key: 'trial', name: 'Lite', en: '入門', price: 9800, unit: '一次・一個月',
-    tagline: '先看成品，再決定要不要訂閱。',
-    items: [['AI 剪片', '10 支'], ['AI 數字人', '2 支'], ['社群圖文貼文', '4 則'], ['SEO／AI 搜尋文章', '1 篇'], ['品牌健檢與方向建議', '1 份']],
-    perks: ['每個品牌限一次', '14 天內簽約，費用全額折抵首月'],
-  },
-  {
-    key: 'standard', name: 'Pro', en: '標準', price: 29800, unit: '／月', featured: true,
-    tagline: '一個小編的價格，整組 AI 團隊的產量。',
-    items: [['AI 剪片', '10 支'], ['AI 數字人', '8 支'], ['社群圖文貼文', '16 則'], ['SEO／AI 搜尋文章', '3 篇'], ['FB、IG 排程代發', '包含'], ['每月成效月報', '包含']],
-    perks: ['年約贈送公版官網', '新技術免費升級'],
-  },
-  {
-    key: 'growth', name: 'Max', en: '全方位', price: 59800, unit: '／月',
-    tagline: '內容、電商、網站一起推進。',
-    items: [['AI 剪片', '20 支'], ['AI 數字人', '4 支'], ['狗血劇商品介紹', '1 支'], ['社群圖文貼文', '24 則'], ['SEO／AI 搜尋文章', '4 篇'], ['電商商品圖文', '5 個品項'], ['網站優化', '10 頁'], ['月報＋雙週線上會議', '包含']],
-    perks: ['年約贈送公版官網，含每月維護', '新技術免費升級'],
-  },
-];
-
 
 export type Video = {
   key: 'edit' | 'ugc' | 'drama';
@@ -153,7 +111,7 @@ export const pains: Pain[] = [
 
 export type Pack = { key: ServiceKey; qty: string; price: number; per: string };
 
-/** 其他服務單買套組：只賣整包，單價高於訂閱，讓訂閱更划算。 */
+/** 其他服務單買套組：只賣整包、不拆單件。 */
 export const packs: Pack[] = [
   { key: 'posts', qty: '20 則', price: 28000, per: '每則 NT$1,400' },
   { key: 'article', qty: '6 篇', price: 12000, per: '每篇 NT$2,000' },
@@ -164,15 +122,6 @@ export const packs: Pack[] = [
 
 export const packRules = ['只賣整包，不拆單件', '一次付清，每件含一次修改', '不含排程代發與月報'];
 
-
-export const compareRows: [string, string, string][] = [
-  ['每月成本', '約 NT$35,000（月薪加勞健保）', 'NT$29,800'],
-  ['每月產量', '看個人能力與狀態', '37 件內容，固定交付'],
-  ['短影音、數字人', '通常要另外外包', '包含'],
-  ['SEO 文章、月報', '很少做', '包含'],
-  ['請假、離職', '內容跟著停', '不中斷'],
-  ['新的 AI 技術', '要自己摸索', '自動升級，不加價'],
-];
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
 export const clients: { slug: string; name: string }[] = [
@@ -187,13 +136,6 @@ export const clients: { slug: string; name: string }[] = [
   { slug: 'client-6', name: '合作客戶' }, { slug: 'client-9', name: '合作客戶' },
 ];
 
-export const steps = [
-  { title: '先試 Lite', body: 'NT$9,800 做一個月，先看成品，再決定要不要訂閱。' },
-  { title: '選方案', body: 'Pro 或 Max，季約、年約同價。14 天內簽約，Lite 費用折抵首月。' },
-  { title: '每月排程', body: '月初確認主題與份量，依排程交付，圖文直接代發。' },
-  { title: '月報調整', body: '看數據、調方向；有新的 AI 技術，直接用在你的內容上。' },
-];
-
 /** 常見問題：依主題分組；經銷那題要放最後，元件會接上經銷頁連結。 */
 export type Faq = { q: string; a: string; link?: { href: string; label: string } };
 export const faqGroups: { label: string; items: Faq[] }[] = [
@@ -203,24 +145,22 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,000、狗血劇商品介紹 NT$3,500，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
       { q: '外面行情是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
       { q: '可以只買一種服務嗎？', a: '可以。社群圖文、SEO 文章、電商商品圖文、網站優化、公版官網都能整包單買，例如社群圖文 20 則 NT$28,000。只賣整包、不拆單件，每件含一次修改。', link: { href: '#other', label: '看其他服務' } },
-      { q: '包月方案多少錢？', a: 'Lite NT$9,800（一次、一個月）、Pro NT$29,800／月、Max NT$59,800／月，未稅。全台統一價格，最少簽一季，季繳 Pro NT$89,400、Max NT$179,400；季約、年約同價，不議價也不打折；年約加贈公版官網。', link: { href: '#plans', label: '看包月方案' } },
-      { q: '單買和包月怎麼選？', a: '只有一項需求，單買最簡單。想做的不只一樣、而且每個月都有需求，包月的單價低很多，還包含排程代發和月報。不確定的話，先用 Lite 試一個月。', link: { href: '#finder', label: '幫我配方案' } },
+      { q: '價格含稅嗎？', a: '網站上所有價格都是未稅價。全台統一價格，不議價也不打折。' },
     ],
   },
   {
     label: '合作方式',
     items: [
-      { q: 'Lite 之後一定要包月嗎？', a: '不用。Lite 就是讓你先看成品。如果滿意，14 天內簽約，Lite 費用全額折抵首月。' },
-      { q: '和請一個小編差在哪？', a: '價格比一位小編的月薪加勞健保更低，但每月產量固定，還包含短影音、SEO 文章與月報。不會因為請假或離職而停更，新的 AI 技術也會直接升級到你的方案裡。', link: { href: '#compare', label: '看比較' } },
       { q: '我需要準備什麼？', a: '品牌資料、商品照片和你想講的重點就夠了。腳本、AI 製作、剪輯、字幕都由我們處理，每一件成品都由專人檢查後才交付。' },
       { q: '有包含留言、私訊回覆嗎？', a: '不包含。留言、私訊與客服需要即時的人力，我們專注在內容產出，才能把價格壓到最低。廣告投放代操可以另外加購。' },
-      { q: '可以完全客製嗎？', a: '我們的方案以 AI 與公版流程為主，才能維持低價。實拍、完全客製與網紅合作需另外報價，費用明顯較高，且每月只承接少量案件。' },
+      { q: '可以完全客製嗎？', a: '我們以 AI 與公版流程為主，才能維持低價。實拍、完全客製與網紅合作需另外報價，費用明顯較高，且每月只承接少量案件。' },
+      { q: '怎麼開始？', a: '用 LINE 告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
     ],
   },
   {
     label: 'AI 與授權',
     items: [
-      { q: 'A.C.E. 是什麼？', a: 'A.C.E.（AI · Creative · Execution）是金曜石國際（LUXKEY）的 AI 創意行銷品牌。用 AI 做品牌影音、社群圖文、搜尋文章與網站，可以單次訂購，也可以包月。' },
+      { q: 'A.C.E. 是什麼？', a: 'A.C.E.（AI · Creative · Execution）是金曜石國際（LUXKEY）的 AI 創意行銷品牌。用 AI 做品牌影音、社群圖文、搜尋文章與網站。' },
       { q: 'AI 做的影片看得出來嗎？', a: '看得出來是 AI 製作沒關係，重點是內容有沒有人看、有沒有帶來詢問。我們會控制角色、口吻和品牌調性，讓每一支都像同一個品牌在說話。' },
       { q: 'AI 做的影片和圖片可以商業使用嗎？', a: '交付的成品可供你的品牌商業使用，例如社群、廣告與官網。實際授權範圍會在合約中寫清楚。' },
       { q: '我是行銷公司或顧問，可以經銷合作嗎？', a: '可以。全台同一價格，經銷商賣同一套服務，依成交抽成。合作方式請看經銷合作頁面。', link: { href: '/introduce/', label: '看經銷合作' } },

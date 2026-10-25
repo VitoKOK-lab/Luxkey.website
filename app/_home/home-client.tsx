@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, clients, compareRows, faqGroups, packRules, packs, pains, plans, services, steps, videos, type Pain, type Plan, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, clients, faqGroups, packRules, packs, pains, services, videos, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
   posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate,
 };
-const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#plans', '包月方案'], ['#finder', '幫我配方案'], ['#faq', '常見問題']] as const;
+const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -79,99 +79,6 @@ function Header() {
         </button>
       </div>
     </header>
-  );
-}
-
-const finderPaths: { key: Plan['key']; number: string; title: string; problem: string; outcome: string; highlights: number[] }[] = [
-  { key: 'trial', number: '01', title: '先試做，看看成果', problem: '想開始做內容，但不確定風格合不合。', outcome: '先用一個月，看見實際成品再決定。', highlights: [0, 1, 2, 3] },
-  { key: 'standard', number: '02', title: '每月穩定有人做', problem: '粉專、短影音、文章都想做，團隊卻忙不過來。', outcome: '每月固定產出，社群與搜尋一起經營。', highlights: [0, 1, 2, 3] },
-  { key: 'growth', number: '03', title: '商品與網站一起推', problem: '商品上架、網站內容和行銷素材都需要更新。', outcome: '商品、網站、社群一起推進。', highlights: [6, 5, 3, 2] },
-];
-
-function Finder() {
-  const [selected, setSelected] = useState<Plan['key']>('standard');
-  const [copied, setCopied] = useState(false);
-  const path = finderPaths.find(p => p.key === selected)!;
-  const plan = plans.find(p => p.key === selected)!;
-  const brief = `你好，我想了解 A.C.E. 的 ${plan.name} 方案（NT$${money(plan.price)}${plan.unit}）。\n目前最需要：${path.title}。\n想請你們幫我評估適合的做法。`;
-  const contactLine = async () => setCopied(await askOnLine(brief));
-
-  return (
-    <section id="finder" className="ace-section ace-finder">
-      <div className="ace-wrap">
-        <div className="ace-head-row">
-          <div><p className="ace-kicker">FIND YOUR SOLUTION</p><h2 className="ace-h2">老闆，現在最卡的是哪一步？</h2></div>
-          <p className="ace-muted">選一個最急的目標，直接看適合的做法、交付內容與價格。</p>
-        </div>
-        <div className="ace-finder-layout">
-          <div className="ace-finder-choices" aria-label="選擇目前目標">
-            {finderPaths.map(p => (
-              <button key={p.key} type="button" className={p.key === selected ? 'ace-finder-choice is-selected' : 'ace-finder-choice'} aria-pressed={p.key === selected} onClick={() => { setSelected(p.key); setCopied(false); }}>
-                <span className="ace-finder-choice-number">{p.number}</span>
-                <span className="ace-finder-choice-copy"><strong>{p.title}</strong><small>{p.problem}</small></span>
-                <ArrowRight size={20} aria-hidden="true" />
-              </button>
-            ))}
-          </div>
-          <div className="ace-finder-recommendation" aria-live="polite">
-            <p className="ace-finder-recommendation-label">依你選的目標，先看這個方案</p>
-            <div className="ace-finder-recommendation-head">
-              <div><h3>{plan.name}<span> 方案</span></h3><p>{path.outcome}</p></div>
-              <p className="ace-finder-price"><strong>NT${money(plan.price)}</strong><span>{plan.unit}</span></p>
-            </div>
-            <p className="ace-finder-includes-label">實際包含</p>
-            <ul className="ace-finder-includes">
-              {path.highlights.map(i => <li key={i}><Check size={18} aria-hidden="true" /><span>{plan.items[i][0]}</span><strong>{plan.items[i][1]}</strong></li>)}
-            </ul>
-            {selected === 'trial' && <p className="ace-finder-trial-note">每品牌限一次；14 天內簽約，試做費用全額折抵首月。</p>}
-            <div className="ace-finder-cta">
-              <button className="ace-btn ace-btn-primary" onClick={contactLine}><MessageCircle size={18} /> 詢問 {plan.name} 方案 <ArrowRight size={17} /></button>
-              <a href="#plans" className="ace-text-link">比較完整方案 <ArrowRight size={17} /></a>
-            </div>
-            {copied && <p className="ace-finder-copy-note">詢問內容已複製，到 LINE 對話框貼上即可。</p>}
-          </div>
-        </div>
-        <p className="ace-finder-single">只需要單做一項？<a href="#other">看單買服務與價格 <ArrowRight size={16} /></a></p>
-      </div>
-    </section>
-  );
-}
-
-function PlanCard({ plan }: { plan: Plan }) {
-  const [copied, setCopied] = useState(false);
-  const ask = async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的 ${plan.name} 方案（NT$${money(plan.price)}${plan.unit}）。`));
-  return (
-    <article className={plan.featured ? 'ace-plan is-featured' : 'ace-plan'}>
-      {plan.featured && <p className="ace-plan-badge">最多品牌選擇</p>}
-      <p className="ace-plan-en">{plan.en}</p>
-      <h3>{plan.name}</h3>
-      <p className="ace-plan-tagline">{plan.tagline}</p>
-      <p className="ace-plan-price"><small>NT$</small>{money(plan.price)}<span>{plan.unit}</span></p>
-      {plan.key !== 'trial' && <p className="ace-plan-quarter">季繳 NT${money(plan.price * 3)}<small>（三個月，最少簽一季）</small></p>}
-      <ul className="ace-plan-items">
-        {plan.items.map(([k, v]) => <li key={k}><span>{k}</span><strong>{v}</strong></li>)}
-      </ul>
-      <ul className="ace-plan-perks">{plan.perks.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
-      <button className={plan.featured ? 'ace-btn ace-btn-primary' : 'ace-btn ace-btn-ghost'} onClick={ask}>
-        {plan.key === 'trial' ? '我要試 Lite' : `諮詢 ${plan.name} 方案`} <ArrowRight size={18} />
-      </button>
-      {copied && <p className="ace-small ace-muted" aria-live="polite">詢問內容已複製，到 LINE 貼上即可。</p>}
-    </article>
-  );
-}
-
-function Plans() {
-  return (
-    <section id="plans" className="ace-section ace-plans">
-      <div className="ace-wrap">
-        <div className="ace-head-row">
-          <div><p className="ace-kicker">MONTHLY PLANS</p><h2 className="ace-h2">都想要？<br className="ace-br-sm" />包月最全面。</h2></div>
-          <p className="ace-muted">季約、年約同價，不議價、不打折。年約加贈公版官網，新技術免費升級。</p>
-        </div>
-        <div className="ace-plan-grid">{plans.map(p => <PlanCard key={p.key} plan={p} />)}</div>
-        <p className="ace-note">價格皆未稅。狗血劇商品介紹只在 Max 方案；Lite、Pro 的影片是 AI 剪片和 AI 數字人。</p>
-      </div>
-    </section>
   );
 }
 
@@ -259,7 +166,7 @@ function OtherServices() {
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">OTHER SERVICES</p><h2 className="ace-h2">其他服務</h2></div>
-          <p className="ace-muted">社群圖文、文章、電商、網站，整包單買。每個月都有需求的話，包月划算很多。</p>
+          <p className="ace-muted">社群圖文、文章、電商、網站，整包單買，每件含一次修改。</p>
         </div>
         <div className="ace-shelf">
           <article key={p.key} id={`offer-${p.key}`} className={`ace-shelf-main ace-tone-${p.key}`}>
@@ -298,34 +205,6 @@ function OtherServices() {
   );
 }
 
-function Compare() {
-  return (
-    <section id="compare" className="ace-section ace-compare-section">
-      <div className="ace-wrap">
-        <div className="ace-head-row">
-          <div><p className="ace-kicker">WHY SUBSCRIBE</p><h2 className="ace-h2">比請一個小編，<br className="ace-br-sm" />更省也更穩。</h2></div>
-          <p className="ace-muted">AI 不是讓你省錢，是讓你的每一分錢，獲得加倍的效果。</p>
-        </div>
-        <div className="ace-compare" role="table" aria-label="請一位小編與 A.C.E. Pro 方案比較">
-          <div className="ace-compare-row is-head" role="row">
-            <span role="columnheader"><span className="ace-sr">項目</span></span>
-            <span role="columnheader">請一位小編</span>
-            <span role="columnheader">A.C.E. Pro 方案</span>
-          </div>
-          {compareRows.map(([k, a, b]) => (
-            <div key={k} className="ace-compare-row" role="row">
-              <span role="rowheader">{k}</span>
-              <span role="cell">{a}</span>
-              <span role="cell"><Check size={16} />{b}</span>
-            </div>
-          ))}
-        </div>
-        <p className="ace-note">小編成本以月薪約 3 萬元加勞健保估算，實際依地區與資歷而異。</p>
-      </div>
-    </section>
-  );
-}
-
 /** 合作客戶：三排 logo 卡片像牌桌一樣對向滑動，捲到這裡時先發牌進場；滑鼠移上去會停。 */
 function Clients() {
   const ref = useRef<HTMLElement>(null);
@@ -341,7 +220,7 @@ function Clients() {
   return (
     <section id="clients" ref={ref} className={seen ? 'ace-section ace-clients is-in' : 'ace-section ace-clients'}>
       <div className="ace-wrap ace-head-row">
-        <div><p className="ace-kicker">CLIENTS</p><h2 className="ace-h2">這些品牌，<br className="ace-br-sm" />已經把他們交給王牌。</h2></div>
+        <div><p className="ace-kicker">CLIENTS</p><h2 className="ace-h2">合作品牌</h2></div>
         <p className="ace-muted">從連鎖品牌到在地店家，近十年累積超過 100 家合作客戶。</p>
       </div>
       <div className="ace-table" aria-label="合作客戶">
@@ -455,13 +334,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
 
         <OtherServices />
 
-        <Plans />
-
-        <Compare />
-
         <Clients />
-
-        <Finder />
 
         <section id="about" className="ace-section ace-about">
           <div className="ace-wrap ace-about-grid">
@@ -479,23 +352,13 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
           </div>
         </section>
 
-        <section className="ace-section ace-steps-section">
-          <div className="ace-wrap">
-            <p className="ace-kicker">HOW IT WORKS</p>
-            <h2 className="ace-h2">合作流程</h2>
-            <ol className="ace-steps">
-              {steps.map((s, i) => <li key={s.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{s.title}</strong><p>{s.body}</p></li>)}
-            </ol>
-          </div>
-        </section>
-
         <Faq />
 
         <section id="contact" className="ace-section ace-contact">
           <div className="ace-wrap ace-contact-card">
             <div>
               <p className="ace-kicker">LET'S TALK</p>
-              <h2 className="ace-h2">把你的下一張王牌，<br />交給我們。</h2>
+              <h2 className="ace-h2">把你的影音行銷，<br />交給王牌。</h2>
               <p>告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。</p>
             </div>
             <div className="ace-contact-actions">
