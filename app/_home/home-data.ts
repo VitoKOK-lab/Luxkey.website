@@ -1,3 +1,5 @@
+/** 方案：每個服務每月 10 支起算 */
+export const PLAN_QTY = 10;
 export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'info@luxkey.com.tw';
 
@@ -129,7 +131,8 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: 'AI 數字人一支多少錢？', a: 'AI 數字人統一 NT$2,800 一支，未稅。', link: { href: '#why', label: '看影片價格' } },
       { q: '外面行情是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
       { q: '還有做其他服務嗎？費用怎麼算？', a: '有。社群圖文貼文 20 則 NT$28,000、SEO／AI 搜尋文章 6 篇 NT$12,000、電商商品圖文 10 個品項 NT$32,000、網站優化 20 頁 NT$30,000、公版官網 1 套 NT$48,000、老師線上課程製作 10 集 NT$20,000（20 集 NT$35,000），價格皆未稅。這些只賣整包、不拆單件，需要的話用 LINE 告訴我們，我們回覆做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
-      { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以月繳價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
+      { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以單月價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
+      { q: '方案怎麼選？', a: `AI 剪片、AI 數字人、狗血劇商品介紹各自獨立，每個月買 ${PLAN_QTY} 支起算。想要天天上片，三種都買就是全家桶，每月 ${PLAN_QTY * 3} 支。年約最便宜，季約次之，單月最貴。其他服務只有單價，沒有季約、年約。`, link: { href: '#plans', label: '看方案選擇' } },
       { q: '價格含稅嗎？', a: '網站上所有價格都是未稅價。全台統一價格，不議價也不打折。' },
     ],
   },
@@ -200,4 +203,21 @@ export const whyProof = [
   { title: '市場還在觀望，我們已經在做了。', body: '2019 年，當大家還覺得抖音沒什麼用的時候，我們已經在拍短影音和教課；當市場開始討論 AI，我們已經把它用在每一支影片裡。這些年來，我們一直比市場早一步。' },
   { title: '我們不是來割韭菜的。', body: '這幾年，太多老闆被行銷公司當成肥羊：收了錢，做出來的影片沒人看，一個月幾十萬換了一間又一間，錢花了，生意卻沒有起色。作為資深短影音行銷人，我們看過太多這樣的故事跟災難，所以黑桃A只做一件事：用合理的價格，給你真正有用的短影音。' },
   { title: '行銷本行出身，自己的帳號就是證明。', body: '我們不是半路轉行做影片。創辦人有超過十年的行銷經驗，曾與政府單位合作，自己經營的帳號和頻道，全網累積超過 10 萬粉絲。我們怎麼幫自己做，就怎麼幫你做。' },
+];
+
+/** 方案選擇：三個主要服務各自獨立，每月 10 支起算；全家桶＝三種都買，每月 30 支。年約最便宜，季約 ×1.3、單月 ×1.7（取整到百位）。其他服務只有單價，沒有季約、年約。 */
+export type PlanTerm = 'year' | 'quarter' | 'month';
+export const planTerms: { key: PlanTerm; label: string; ratio: number }[] = [
+  { key: 'year', label: '年約', ratio: 1 }, { key: 'quarter', label: '季約', ratio: 1.3 }, { key: 'month', label: '單月', ratio: 1.7 },
+];
+const roundHundred = (n: number) => Math.round(n / 100) * 100;
+const planBase = [
+  { key: 'edit', name: 'AI 剪片', unit: 300 },
+  { key: 'ugc', name: 'AI 數字人', unit: 2800 },
+  { key: 'drama', name: '狗血劇商品介紹', unit: 3900 },
+] as const;
+const monthly = (year: number) => Object.fromEntries(planTerms.map(t => [t.key, roundHundred(year * t.ratio)])) as Record<PlanTerm, number>;
+export const plans = [
+  ...planBase.map(b => ({ key: b.key as string, name: b.name, qty: PLAN_QTY, unit: b.unit, note: `每月 ${PLAN_QTY} 支`, price: monthly(b.unit * PLAN_QTY) })),
+  { key: 'all', name: '全家桶', qty: PLAN_QTY * 3, unit: 0, note: `三種都買，每月 ${PLAN_QTY * 3} 支`, price: monthly(planBase.reduce((n, b) => n + b.unit * PLAN_QTY, 0)) },
 ];

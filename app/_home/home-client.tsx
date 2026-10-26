@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type Work, type WorkGroup } from './home-data';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, planTerms, plans, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type PlanTerm, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
   posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate, course: GraduationCap,
 };
-const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
+const nav = [['#why', '影音價格'], ['#plans', '方案選擇'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -228,6 +228,49 @@ function Pains() {
   );
 }
 
+/** 方案選擇：先選服務（三個主要服務各自獨立，或三種都買的全家桶），再選年約、季約、單月；年約預設選好、標最划算。其他服務沒有季約年約，只有單價。 */
+function Plans() {
+  const [svc, setSvc] = useState(0);
+  const [term, setTerm] = useState<PlanTerm>('year');
+  const [copied, setCopied] = useState(false);
+  const p = plans[svc];
+  const price = p.price[term];
+  const t = planTerms.find(x => x.key === term)!;
+  const saveYear = (p.price.month - p.price.year) * 12;
+  const save = term === 'year' ? `相較單月，一年省 NT$${money(saveYear)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
+  return (
+    <section id="plans" className="ace-section ace-plans">
+      <div className="ace-wrap">
+        <div className="ace-head-row">
+          <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
+          <p className="ace-muted">每個服務獨立購買，每月 {plans[0].qty} 支起算。年約最便宜；其他服務只有單價，沒有季約、年約。</p>
+        </div>
+        <div className="ace-tabs ace-plan-tabs" role="tablist" aria-label="選擇服務">
+          {plans.map((x, i) => <button key={x.key} role="tab" aria-selected={i === svc} className={i === svc ? 'is-active' : ''} onClick={() => { setSvc(i); setCopied(false); }}>{x.name}</button>)}
+        </div>
+        <div className="pl-box">
+          <div className="pl-tiers" role="radiogroup" aria-label="選擇年約、季約或單月">
+            {planTerms.map(x => (
+              <button key={x.key} role="radio" aria-checked={x.key === term} className={`pl-tier${x.key === term ? ' is-on' : ''}${x.key === 'year' ? ' is-best' : ''}`} onClick={() => { setTerm(x.key); setCopied(false); }}>
+                {x.key === 'year' && <span className="pl-best">最划算</span>}
+                <span>{x.label}</span>
+                <b><small>NT$</small>{money(p.price[x.key])}<em>／月</em></b>
+              </button>
+            ))}
+          </div>
+          <div className="pl-sum" key={`${svc}-${term}`}>
+            <p className="pl-sum-title">{p.name}・{p.note}</p>
+            <p className="pl-sum-price"><small>NT$</small>{money(price)}<em>／月・{t.label}・未稅</em></p>
+            <p className="pl-sum-save">{save}</p>
+            <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${p.name}（${p.note}，${t.label} NT$${money(price)}／月）。`))}><MessageCircle size={18} /> LINE 詢問這個方案</button>
+            {copied && <p className="ace-stage-copied">詢問內容已複製，到 LINE 貼上即可。</p>}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** 其他服務：收到最小，只讓客人知道除了主要影音之外，這些我們也做。 */
 function OtherServices() {
   const others = services.filter(s => s.key !== 'video');
@@ -435,6 +478,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         </div>
 
         <Pains />
+
+        <Plans />
 
         <OtherServices />
 
