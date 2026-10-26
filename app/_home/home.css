@@ -259,8 +259,6 @@ body { margin: 0; background: #fbf6f2; }
 .ace-ace-card:nth-child(3) .ace-ace-suit { animation-delay: 1.2s; }
 .ace-count { display: inline-block; font-variant-numeric: tabular-nums; }
 .ace-count { transform-origin: left center; }
-.ace-count.is-done { animation: ace-land 1.2s var(--ace-ease); }
-@keyframes ace-land { 0% { transform: scale(1); color: inherit; } 30% { transform: scale(1.4); color: var(--ace-orange); } 65% { transform: scale(1.4); color: var(--ace-orange); } 100% { transform: scale(1); color: inherit; } }
 .ace-ace-card:hover .ace-ace-suit { animation: ace-pop .4s var(--ace-ease); }
 .ace-trust { animation: ace-up .8s var(--ace-ease) 1.15s both; }
 
@@ -421,3 +419,13 @@ body { margin: 0; background: #fbf6f2; }
 @media (max-width: 640px) { .ace-vs { grid-template-columns: 1fr; gap: 12px; } .ace-vs-card { grid-template-columns: 1fr auto; align-items: center; padding: 18px 20px; } .ace-vs-card span { font-size: 20px; } }
 .ace-stage-price strong .ace-count { font-size: inherit; }
 .ace-stage-price strong small { margin: 0 6px 0 0; color: var(--ace-orange-deep); font-family: var(--font-latin), sans-serif; font-size: 18px; font-weight: 600; }
+
+/* 價格落定：衝出來放大並上色，再慢慢退回原本的大小與顏色 */
+.ace-count { transform-origin: left center; }
+.ace-count.is-done { animation: ace-land 2.2s both; }
+@keyframes ace-land {
+  0% { transform: scale(1); color: inherit; text-shadow: 0 0 0 rgba(243, 112, 33, 0); animation-timing-function: cubic-bezier(.05, .95, .15, 1); }
+  9% { transform: scale(1.5); color: var(--ace-orange); text-shadow: 0 6px 22px rgba(243, 112, 33, .45); animation-timing-function: cubic-bezier(.45, 0, .25, 1); }
+  100% { transform: scale(1); color: inherit; text-shadow: 0 0 0 rgba(243, 112, 33, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .ace-count.is-done { animation: none; } }
