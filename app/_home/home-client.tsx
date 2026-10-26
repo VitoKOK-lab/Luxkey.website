@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, type Pain, type ServiceKey } from './home-data';
+import { ArrowRight, Check, ChevronDown, Film, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, Star, X } from 'lucide-react';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, EDITOR_COST, bundlePlans, bundleTiers, clients, cutPlan, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, type Pain, type ServiceKey, type Tiers } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
   posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate,
 };
-const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
+const nav = [['#why', '影音價格'], ['#plans', '價格方案'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -228,6 +228,71 @@ function Pains() {
   );
 }
 
+/** 年繳、季繳、月繳三種價格（每月金額）：年繳放最大、標最划算，季繳、月繳列在旁邊對照 */
+function PriceTiers({ tiers }: { tiers: Tiers }) {
+  const rows = [['年繳', tiers.year, true], ['季繳', tiers.quarter, false], ['月繳', tiers.month, false]] as const;
+  return (
+    <div className="pl-tiers">
+      {rows.map(([label, price, best]) => (
+        <div key={label} className={best ? 'pl-tier is-best' : 'pl-tier'}>
+          {best && <span className="pl-best">最划算</span>}
+          <span>{label}</span>
+          <b><small>NT$</small>{money(price)}<em>／月</em></b>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** 價格方案：一次買一個服務，綁年約最划算 */
+function Plans() {
+  const saving = (bundleTiers.month - bundleTiers.year) * 12;
+  const ask = (name: string, tiers: Tiers) => askOnLine(`你好，我想了解 A.C.E. 的${name}（年繳 NT$${money(tiers.year)}／月）。`);
+  return (
+    <section id="plans" className="ace-section ace-plans">
+      <div className="ace-wrap">
+        <div className="ace-head-row">
+          <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">每月固定交片，<br className="ace-br-sm" />讓你的帳號天天有新影片</h2></div>
+          <p className="ace-muted">一次買一個服務，價格是每月金額、未稅。年繳最便宜，綁年約最划算。</p>
+        </div>
+
+        <article className="pl-cut">
+          <div className="pl-cut-copy">
+            <p className="pl-qty">{cutPlan.name}｜每月 {cutPlan.qty} 支</p>
+            <h3>{cutPlan.hook}</h3>
+            <p>{cutPlan.body}</p>
+            <button className="ace-btn ace-btn-primary" onClick={() => ask(cutPlan.name, cutPlan.tiers)}><MessageCircle size={18} /> LINE 詢問</button>
+          </div>
+          <PriceTiers tiers={cutPlan.tiers} />
+        </article>
+
+        <div className="pl-editor">
+          <h3>一個小編的價格，給你一整套短影音</h3>
+          <p>請一位小編，加上勞健保，一個月就要 NT${money(EDITOR_COST)} 以上。同樣的價格，我們每個月給你：</p>
+        </div>
+        <div className="pl-bundles">
+          {bundlePlans.map(b => (
+            <article key={b.name} className={b.best ? 'pl-bundle is-best' : 'pl-bundle'}>
+              {b.best && <span className="pl-star"><Star size={14} fill="currentColor" />最推薦</span>}
+              <p className="pl-qty">{b.qty}</p>
+              <h3>{b.name}</h3>
+              <p>{b.body}</p>
+            </article>
+          ))}
+        </div>
+        <PriceTiers tiers={bundleTiers} />
+        <div className="pl-save">
+          <div>
+            <h3>簽年約最划算</h3>
+            <p>狗血劇、數字人、雙主打方案，簽年約一年省 <strong>NT${money(saving)}</strong>。前 3 個月不滿意，可以直接解約。</p>
+          </div>
+          <button className="ace-btn ace-btn-primary" onClick={() => ask('雙主打方案', bundleTiers)}><MessageCircle size={18} /> LINE 詢問年約</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /** 其他服務：收到最小，只讓客人知道除了主要影音之外，這些我們也做。 */
 function OtherServices() {
   const others = services.filter(s => s.key !== 'video');
@@ -413,6 +478,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         </div>
 
         <Pains />
+
+        <Plans />
 
         <OtherServices />
 
