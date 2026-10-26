@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, planTerms, plans, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type PlanTerm, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type AddOnKey, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
-const serviceIcons: Record<ServiceKey, typeof Film> = {
-  posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate, course: GraduationCap,
+const addOnIcons: Record<AddOnKey, typeof Film> = {
+  motion: Film, copy: FileText, website: LayoutTemplate, course: GraduationCap, reviews: Images, influencer: Sparkles,
 };
-const nav = [['#why', '影音價格'], ['#plans', '方案選擇'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
+const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -261,8 +261,9 @@ function Plans() {
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
-          <p className="ace-muted">每個服務獨立購買，每月 {plans[0].qty} 支起算。價格是每月金額、未稅。其他服務只有單價，沒有季約、年約。</p>
+          <p className="ace-muted">看過作品，選一種影片開始；三種都要，就選全家桶。先選合作期間，再看每月價格。</p>
         </div>
+        <p className="pc-switch-label">選擇合作期間</p>
         <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
           <i aria-hidden="true" />
           {planTerms.map(x => (
@@ -276,34 +277,48 @@ function Plans() {
             const price = p.price[term];
             const save = term === 'year' ? `相較單月，一年省 NT$${money((p.price.month - p.price.year) * 12)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
             return (
-              <div key={p.key} className={p.key === 'all' ? 'pc-col is-all' : 'pc-col'}>
-                <h3>{p.name}</h3>
-                <p className="pc-note">{p.note}</p>
-                <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
-                <p className="pc-save">{save}</p>
+              <article key={p.key} className={p.key === 'all' ? 'pc-col is-all' : 'pc-col'}>
+                <div className="pc-main">
+                  <p className="pc-eyebrow">{p.key === 'all' ? '三種服務一次做' : '單項影片服務'}</p>
+                  <h3>{p.name}</h3>
+                  <p className="pc-note">{p.note}</p>
+                  <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
+                  <p className="pc-save">{save}</p>
+                </div>
                 <ul>{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
-                <button className="pc-btn" onClick={() => ask(p.name, p.note, price)}><MessageCircle size={16} /> LINE 詢問</button>
-              </div>
+                <button className="pc-btn" onClick={() => ask(p.name, p.note, price)}><MessageCircle size={16} /> 詢問{p.name}方案</button>
+              </article>
             );
           })}
         </div>
-        <p className="pc-foot">{t.label}價格，未稅。{copied && <span aria-live="polite">　{copied}的詢問內容已複製，到 LINE 貼上即可。</span>}</p>
+        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起；全家桶每月 {plans[3].qty} 支。以上為{t.label}每月價格，未稅。{copied && <span aria-live="polite">　{copied}的詢問內容已複製，到 LINE 貼上即可。</span>}</p>
       </div>
     </section>
   );
 }
 
-/** 其他服務：收到最小，只讓客人知道除了主要影音之外，這些我們也做。 */
-function OtherServices() {
-  const others = services.filter(s => s.key !== 'video');
+/** 訂閱用戶的附加選購；公開價格與 Super5 的相同項目對齊。 */
+function AddOns() {
   return (
     <section id="other" className="ace-other">
-      <div className="ace-wrap ace-other-row">
-        <p className="ace-other-label">也提供</p>
-        <ul className="ace-other-list">
-          {others.map(s => { const Icon = serviceIcons[s.key]; return <li key={s.key} title={s.short}><Icon size={16} strokeWidth={1.75} />{s.name}</li>; })}
+      <div className="ace-wrap">
+        <div className="ace-other-head">
+          <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
+          <p className="ace-muted">僅開放訂閱用戶加購。主方案先做好影片，再依品牌需求擴充內容與曝光。</p>
+        </div>
+        <ul className="ace-other-grid">
+          {addOns.map(a => { const Icon = addOnIcons[a.key]; return <li key={a.key}>
+            <span className="ace-other-icon" aria-hidden="true"><Icon size={22} strokeWidth={1.75} /></span>
+            <h3>{a.name}</h3>
+            <p>{a.detail}</p>
+            <div className="ace-other-price"><strong>{a.price}</strong><span>{a.unit}</span></div>
+            {a.more && <small>{a.more}</small>}
+          </li>; })}
         </ul>
-        <a href="#contact" className="ace-text-link">需要其他服務？告訴我們 <ArrowRight size={16} /></a>
+        <div className="ace-other-foot">
+          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅參考價。</p>
+          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="ace-btn ace-btn-primary"><MessageCircle size={18} /> LINE 詢問加購</a>
+        </div>
       </div>
     </section>
   );
@@ -487,10 +502,6 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
 
         <Pains />
 
-        <Plans />
-
-        <OtherServices />
-
         <Clients />
 
         <section id="about" className="ace-section ace-why">
@@ -517,6 +528,10 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         </section>
 
         <Works />
+
+        <Plans />
+
+        <AddOns />
 
         <Process />
 

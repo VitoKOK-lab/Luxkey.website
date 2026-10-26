@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, faqs, services, videos } from './_home/home-data';
+import { EMAIL, addOns, faqs, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
 const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,800、狗血劇商品介紹每支 NT$3,900。另有社群圖文、SEO 文章、電商與網站服務。';
@@ -33,9 +33,9 @@ const schema = {
   '@graph': [
     org,
     { '@type': 'WebSite', '@id': `${url}#site`, url, name: 'A.C.E.', inLanguage: 'zh-Hant-TW', publisher: { '@id': `${url}#org` } },
-    ...services.filter(s => s.key !== 'video').map(s => ({
-      '@type': 'Service', name: s.name, description: `${s.short}。${s.pitch}`, serviceType: s.name,
-      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#other`, audience: { '@type': 'Audience', audienceType: s.fit },
+    ...addOns.map(a => ({
+      '@type': 'Service', name: a.name, description: a.detail, serviceType: a.name,
+      provider: { '@id': `${url}#org` }, areaServed: 'TW', url: `${url}#other`, audience: { '@type': 'Audience', audienceType: 'A.C.E. 訂閱用戶' },
     })),
     ...videos.map(v => ({
       '@type': 'Service', name: v.name, description: v.pitch, serviceType: 'AI 影音製作',

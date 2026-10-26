@@ -3,60 +3,16 @@ export const PLAN_QTY = 10;
 export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'info@luxkey.com.tw';
 
-export type ServiceKey = 'posts' | 'video' | 'article' | 'ecommerce' | 'optimize' | 'website' | 'course';
-
-export type Service = {
-  key: ServiceKey;
-  name: string;
-  short: string;
-  pitch: string;
-  includes: string[];
-  fit: string;
-};
-
-export const services: Service[] = [
-  {
-    key: 'posts', name: '社群圖文貼文', short: '每週固定更新，粉專不再斷更',
-    pitch: '依品牌調性規劃主題，AI 產圖、文案與排版一次完成，排程代發到 FB、IG，你只要看稿。',
-    includes: ['每月主題規劃', 'AI 圖像、文案與品牌排版', 'FB、IG 排程代發'],
-    fit: '粉專需要固定更新、但沒有人手的品牌',
-  },
-  {
-    key: 'video', name: 'AI 短影音', short: '剪輯、數字人、商品片、劇情短片任選',
-    pitch: '不用約拍、不用出鏡。拍好的素材幫你剪，沒有素材就用數字人或商品照做成影片，每月依需求換著用。',
-    includes: ['AI 剪輯：送素材就能出片', 'AI 數字人口播：換腳本就能量產', '商品介紹片、劇情短片'],
-    fit: '想經營短影音、但不想一直拍攝出鏡的品牌',
-  },
-  {
-    key: 'article', name: 'SEO／AI 搜尋文章', short: '讓 Google 和 AI 都找得到你',
-    pitch: '依客人會搜尋的問題寫成文章，結構清楚、重點明確，Google 搜尋與 ChatGPT 這類 AI 搜尋都讀得懂。',
-    includes: ['關鍵字與客人提問研究', '可直接上架的完整文章', '標題、摘要與結構化重點'],
-    fit: '想靠搜尋帶來穩定詢問的品牌',
-  },
-  {
-    key: 'ecommerce', name: '電商商品圖文', short: '主圖、情境圖、詳情頁一次做好',
-    pitch: '換上商品照與賣點，AI 生成情境圖並套上品牌版型，商品再多也做得完。',
-    includes: ['商品主圖與 AI 情境圖', '詳情頁圖文', '活動視覺'],
-    fit: '品項多、需要大量上架素材的電商',
-  },
-  {
-    key: 'optimize', name: '網站優化', short: '舊網站不用重做，內容先變好',
-    pitch: '改寫商品與服務頁的內文、補上 SEO 與結構化資料，讓現有網站更容易被搜尋、也更容易成交。',
-    includes: ['頁面與商品內文改寫', 'SEO 標題與描述', 'AI 搜尋結構化資料'],
-    fit: '已經有網站、但沒人看也沒詢問的品牌',
-  },
-  {
-    key: 'website', name: '公版官網', short: '年約直接送，不另外收費',
-    pitch: '從精選版型挑一款，換上你的文字、照片與聯絡方式就上線。手機好看，搜尋引擎與 AI 都讀得懂。',
-    includes: ['精選響應式版型', '基礎 SEO 與結構化資料', 'LINE、表單詢問導流'],
-    fit: '還沒有官網，或官網已經太舊的品牌',
-  },
-  {
-    key: 'course', name: '老師線上課程製作', short: '把老師的專業，做成可以上架的線上課程',
-    pitch: '老師講課，我們負責製作成一集一集的線上課程影片。',
-    includes: ['10 集　NT$20,000', '20 集　NT$35,000'],
-    fit: '老師、講師，想把專業做成線上課程的人',
-  },
+/** 附加選購：價格與項目以 Super5 的 service-data.ts 為參考；只列有明確對應價格的服務。 */
+export type AddOnKey = 'motion' | 'copy' | 'website' | 'course' | 'reviews' | 'influencer';
+export type AddOn = { key: AddOnKey; name: string; detail: string; price: string; unit: string; more?: string };
+export const addOns: AddOn[] = [
+  { key: 'motion', name: 'AI 動態短片', detail: '客供少量照片，製作 AI 人聲動畫短片。', price: 'NT$12,800', unit: '／4 支' },
+  { key: 'copy', name: '網站商品內文優化', detail: '重寫商品標題、賣點與購買引導。', price: 'NT$2,000 起', unit: '／品項' },
+  { key: 'website', name: '銷售型網站', detail: '一頁式網站，整理賣點與詢問入口。', price: 'NT$38,000 起', unit: '／案' },
+  { key: 'course', name: '線上課程製作', detail: '將專業內容整理成可上架的分集影片。', price: 'NT$35,000', unit: '／自己講・11 集內', more: 'AI 配音・25 集內 NT$55,000' },
+  { key: 'reviews', name: '口碑開箱影片', detail: '五位創作者各拍一支真實使用分享。', price: 'NT$18,000', unit: '／5 支', more: '10 人組 NT$30,000' },
+  { key: 'influencer', name: '網紅曝光合作', detail: '媒合創作者在自己的帳號發布。', price: 'NT$100,000', unit: '／組 3–5 位' },
 ];
 
 export type Video = {
@@ -130,10 +86,10 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,800、狗血劇商品介紹 NT$3,900，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
       { q: 'AI 數字人一支多少錢？', a: 'AI 數字人統一 NT$2,800 一支，未稅。', link: { href: '#why', label: '看影片價格' } },
       { q: '業界平均收費是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
-      { q: '還有做其他服務嗎？費用怎麼算？', a: '有。社群圖文貼文 20 則 NT$28,000、SEO／AI 搜尋文章 6 篇 NT$12,000、電商商品圖文 10 個品項 NT$32,000、網站優化 20 頁 NT$30,000、公版官網 1 套 NT$48,000、老師線上課程製作 10 集 NT$20,000（20 集 NT$35,000），價格皆未稅。這些只賣整包、不拆單件，需要的話用 LINE 告訴我們，我們回覆做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
+      { q: '附加選購有哪些？費用怎麼算？', a: '附加選購只開放訂閱用戶。AI 動態短片 4 支 NT$12,800、網站商品內文優化每品項 NT$2,000 起、銷售型網站 NT$38,000 起、線上課程自己講 11 集內 NT$35,000（AI 配音 25 集內 NT$55,000）、口碑開箱 5 支 NT$18,000（10 支 NT$30,000）、網紅曝光合作 3–5 位 NT$100,000／組。社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上價格未稅。', link: { href: '#other', label: '看附加選購' } },
       { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以單月價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
-      { q: '方案怎麼選？', a: `AI 剪片、AI 數字人、狗血劇商品介紹各自獨立，每個月買 ${PLAN_QTY} 支起算。想要天天上片，三種都買就是全家桶，每月 ${PLAN_QTY * 3} 支。年約最便宜，季約次之，單月最貴。其他服務只有單價，沒有季約、年約。`, link: { href: '#plans', label: '看方案選擇' } },
-      { q: '價格含稅嗎？', a: '網站上所有價格都是未稅價。全台統一價格，不議價也不打折。' },
+      { q: '方案怎麼選？', a: `AI 剪片、AI 數字人、狗血劇商品介紹各自獨立，每個月買 ${PLAN_QTY} 支起算。想要天天上片，三種都買就是全家桶，每月 ${PLAN_QTY * 3} 支。年約最便宜，季約次之，單月最貴。附加選購限訂閱用戶，按項目計價。`, link: { href: '#plans', label: '看方案選擇' } },
+      { q: '價格含稅嗎？', a: '網站標示的價格均為未稅價。附加選購若標示「起」，會依實際製作範圍提供正式報價。' },
     ],
   },
   {
