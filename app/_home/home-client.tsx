@@ -173,7 +173,7 @@ function Pains() {
             {offer && (
               <p className="ace-stage-price">
                 {offer.market && <span>外面行情 <s>NT${money(offer.market)}</s></span>}
-                <span className="ace-stage-now">我們只需要 <strong>NT$<CountUp from={offer.market ?? offer.price} to={offer.price} delay={250} /></strong><small>／{offer.unit}</small><em>年約最低價</em></span>
+                <span className="ace-stage-now">我們只需要 <strong><small>NT$</small><CountUp from={offer.market ?? offer.price} to={offer.price} delay={250} /></strong><small>／{offer.unit}</small><em>年約最低價</em></span>
               </p>
             )}
             {offer

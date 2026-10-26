@@ -419,3 +419,5 @@ body { margin: 0; background: #fbf6f2; }
 .ace-why-proof p { margin: 0; color: var(--ace-text); font-size: 16px; line-height: 1.85; }
 @media (max-width: 1080px) { .ace-vs { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ace-vs-us { grid-column: 1 / -1; } .ace-why-proof { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .ace-vs { grid-template-columns: 1fr; gap: 12px; } .ace-vs-card { grid-template-columns: 1fr auto; align-items: center; padding: 18px 20px; } .ace-vs-card span { font-size: 20px; } }
+.ace-stage-price strong .ace-count { font-size: inherit; }
+.ace-stage-price strong small { margin: 0 6px 0 0; color: var(--ace-orange-deep); font-family: var(--font-latin), sans-serif; font-size: 18px; font-weight: 600; }
