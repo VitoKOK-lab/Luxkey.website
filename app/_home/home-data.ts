@@ -154,7 +154,6 @@ const worksBase = pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, pos
 /** AI 剪片的示範：緊跟在 AI 剪片那張後面 */
 const cutDemos: Work[] = [
   { type: 'AI 剪片', title: '牛排・幾分熟怎麼分', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
-  { type: 'AI 剪片', title: '重力消失 5 秒', demo: '/home/demo/cut-gravity.mp4', poster: '/home/demo/cut-gravity-poster.webp' },
   { type: 'AI 剪片', title: '保養・換季三個錯', demo: '/home/demo/cut-skincare.mp4', poster: '/home/demo/cut-skincare-poster.webp' },
   { type: 'AI 剪片', title: '台北・下午三點咖啡', demo: '/home/demo/cut-coffee.mp4', poster: '/home/demo/cut-coffee-poster.webp' },
   { type: 'AI 剪片', title: 'MC-001', demo: '/home/demo/cut-mc001.mp4', poster: '/home/demo/cut-mc001-poster.webp' },
@@ -162,7 +161,9 @@ const cutDemos: Work[] = [
 export const works: Work[] = [
   ...worksBase.slice(0, 1),
   ...cutDemos,
-  ...worksBase.slice(1),
+  worksBase[1],
+  { type: 'AI 數字人', title: '卡通數字人', demo: '/home/demo/cartoon-human.mp4', poster: '/home/demo/cartoon-human-poster.webp' },
+  ...worksBase.slice(2),
   { type: '線上課程', demo: '/home/demo/course.mp4', poster: '/home/demo/course-poster.webp' },
   { type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
 ];
