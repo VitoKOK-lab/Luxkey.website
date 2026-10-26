@@ -252,13 +252,13 @@ function Works() {
         </div>
         <div className="ace-works-row" style={{ ['--n' as string]: works.length }}>
           {works.map((w, i) => (
-            <figure key={w.type} className={playing === i ? 'ace-work is-playing' : 'ace-work'}>
+            <figure key={`${w.type}-${i}`} className={playing === i ? 'ace-work is-playing' : 'ace-work'}>
               <div className="ace-work-screen">
                 {playing === i
                   ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(-1)} />
                   : <button onClick={() => setPlaying(i)} aria-label={`播放：${w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
               </div>
-              <figcaption><b>{w.brand ?? w.type}</b><small>{w.brand ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
             </figure>
           ))}
         </div>

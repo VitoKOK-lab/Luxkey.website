@@ -149,10 +149,11 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
 export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
 
 /** 作品案例：先用示範影片，品牌名與成效數字等有真實資料再補（brand、result）。 */
-export type Work = { type: string; brand?: string; result?: string; demo: string; poster: string };
+export type Work = { type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
 export const works: Work[] = [
   ...pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER })),
   { type: '線上課程', demo: '/home/demo/course.mp4', poster: '/home/demo/course-poster.webp' },
+  { type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
 ];
 
 /** 合作流程：交期與修改次數先不寫，重點是「生成之前」就確認好。 */
