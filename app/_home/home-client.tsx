@@ -346,7 +346,7 @@ function Clients() {
   );
 }
 
-/** 作品案例：AI 剪片、AI 數字人、狗血劇各一個分頁，點開播放；其他作品只列文字、不放照片。一次只播一支。 */
+/** 作品案例：各分頁都以影片卡片呈現，一次只播一支。 */
 function Works() {
   const [tab, setTab] = useState<WorkGroup>('cut');
   const [playing, setPlaying] = useState<Work | null>(null);
@@ -364,32 +364,18 @@ function Works() {
             <button key={g.key} role="tab" aria-selected={tab === g.key} className={tab === g.key ? 'is-active' : ''} onClick={() => pick(g.key)}>{g.label}<span>{works.filter(w => w.group === g.key).length}</span></button>
           ))}
         </div>
-        {tab === 'other' ? (
-          <ul className="ace-works-list">
-            {list.map(w => (
-              <li key={w.demo} className={playing === w ? 'is-playing' : ''}>
-                <button className="ace-works-item" onClick={() => setPlaying(playing === w ? null : w)} aria-expanded={playing === w}>
-                  <span className="ace-works-ico"><Play size={16} fill="currentColor" /></span>
-                  <b>{w.title ?? w.type}</b>{w.title && <small>{w.type}</small>}
-                </button>
-                {playing === w && <video src={w.demo} autoPlay controls playsInline onEnded={() => setPlaying(null)} />}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="ace-works-row" key={tab}>
-            {list.map(w => (
-              <figure key={w.demo} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
-                <div className="ace-work-screen">
-                  {playing === w
-                    ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(null)} />
-                    : <button onClick={() => setPlaying(w)} aria-label={`播放：${w.title ?? w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
-                </div>
-                <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
-              </figure>
-            ))}
-          </div>
-        )}
+        <div className={tab === 'other' ? 'ace-works-row is-other' : 'ace-works-row'} key={tab}>
+          {list.map(w => (
+            <figure key={w.demo} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
+              <div className="ace-work-screen">
+                {playing === w
+                  ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(null)} />
+                  : <button onClick={() => setPlaying(w)} aria-label={`播放：${w.title ?? w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
+              </div>
+              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );

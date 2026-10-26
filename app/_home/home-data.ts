@@ -166,7 +166,7 @@ export type Work = { group: WorkGroup; type: string; title?: string; brand?: str
 const demoOf = (key: string) => pains.find(p => p.video === key || p.tag === key);
 const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人推薦影片')!;
 const asWork = (group: WorkGroup, p: (typeof pains)[number], title?: string): Work => ({ group, type: p.tag, title, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER });
-/** 作品案例：AI 剪片、AI 數字人、狗血劇為主，各自一個分頁；其他作品只列文字、不放照片。品牌名與成效數字有真實資料再補（brand、result）。 */
+/** 作品案例：各分頁都顯示影片卡片；品牌名與成效數字有真實資料再補（brand、result）。 */
 export const worksGroups: { key: WorkGroup; label: string }[] = [
   { key: 'cut', label: 'AI 剪片' }, { key: 'human', label: 'AI 數字人' }, { key: 'drama', label: '狗血劇' }, { key: 'other', label: '其他作品' },
 ];
