@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, type Pain, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -281,28 +281,50 @@ function Clients() {
   );
 }
 
-/** 作品案例：點開播放，一次只播一支；品牌名和成效數字有真實資料再補。 */
+/** 作品案例：AI 剪片、AI 數字人、狗血劇各一個分頁，點開播放；其他作品只列文字、不放照片。一次只播一支。 */
 function Works() {
-  const [playing, setPlaying] = useState(-1);
+  const [tab, setTab] = useState<WorkGroup>('cut');
+  const [playing, setPlaying] = useState<Work | null>(null);
+  const list = works.filter(w => w.group === tab);
+  const pick = (g: WorkGroup) => { setTab(g); setPlaying(null); };
   return (
     <section id="works" className="ace-section ace-works">
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">OUR WORK</p><h2 className="ace-h2">作品案例</h2></div>
-          <p className="ace-muted">實際作品陸續更新，點擊播放，左右滑動看更多。</p>
+          <p className="ace-muted">實際作品陸續更新，點擊播放。</p>
         </div>
-        <div className="ace-works-row" style={{ ['--n' as string]: works.length }}>
-          {works.map((w, i) => (
-            <figure key={`${w.type}-${i}`} className={playing === i ? 'ace-work is-playing' : 'ace-work'}>
-              <div className="ace-work-screen">
-                {playing === i
-                  ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(-1)} />
-                  : <button onClick={() => setPlaying(i)} aria-label={`播放：${w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
-              </div>
-              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
-            </figure>
+        <div className="ace-tabs ace-works-tabs" role="tablist">
+          {worksGroups.map(g => (
+            <button key={g.key} role="tab" aria-selected={tab === g.key} className={tab === g.key ? 'is-active' : ''} onClick={() => pick(g.key)}>{g.label}<span>{works.filter(w => w.group === g.key).length}</span></button>
           ))}
         </div>
+        {tab === 'other' ? (
+          <ul className="ace-works-list">
+            {list.map(w => (
+              <li key={w.demo} className={playing === w ? 'is-playing' : ''}>
+                <button className="ace-works-item" onClick={() => setPlaying(playing === w ? null : w)} aria-expanded={playing === w}>
+                  <span className="ace-works-ico"><Play size={16} fill="currentColor" /></span>
+                  <b>{w.title ?? w.type}</b>{w.title && <small>{w.type}</small>}
+                </button>
+                {playing === w && <video src={w.demo} autoPlay controls playsInline onEnded={() => setPlaying(null)} />}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="ace-works-row" key={tab}>
+            {list.map(w => (
+              <figure key={w.demo} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
+                <div className="ace-work-screen">
+                  {playing === w
+                    ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(null)} />
+                    : <button onClick={() => setPlaying(w)} aria-label={`播放：${w.title ?? w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
+                </div>
+                <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

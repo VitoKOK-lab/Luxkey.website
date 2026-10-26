@@ -158,23 +158,27 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
 export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
 
 /** 作品案例：先用示範影片，品牌名與成效數字等有真實資料再補（brand、result）。 */
-export type Work = { type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
-const worksBase = pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER }));
-/** AI 剪片的示範：緊跟在 AI 剪片那張後面 */
-const cutDemos: Work[] = [
-  { type: 'AI 剪片', title: '牛排・幾分熟怎麼分', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
-  { type: 'AI 剪片', title: '保養・換季三個錯', demo: '/home/demo/cut-skincare.mp4', poster: '/home/demo/cut-skincare-poster.webp' },
-  { type: 'AI 剪片', title: '台北・下午三點咖啡', demo: '/home/demo/cut-coffee.mp4', poster: '/home/demo/cut-coffee-poster.webp' },
-  { type: 'AI 剪片', title: 'MC-001', demo: '/home/demo/cut-mc001.mp4', poster: '/home/demo/cut-mc001-poster.webp' },
+export type WorkGroup = 'cut' | 'human' | 'drama' | 'other';
+export type Work = { group: WorkGroup; type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
+const demoOf = (key: string) => pains.find(p => p.video === key || p.tag === key);
+const cut0 = demoOf('edit')!, human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人推薦影片')!;
+const asWork = (group: WorkGroup, p: (typeof pains)[number], title?: string): Work => ({ group, type: p.tag, title, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER });
+/** 作品案例：AI 剪片、AI 數字人、狗血劇為主，各自一個分頁；其他作品只列文字、不放照片。品牌名與成效數字有真實資料再補（brand、result）。 */
+export const worksGroups: { key: WorkGroup; label: string }[] = [
+  { key: 'cut', label: 'AI 剪片' }, { key: 'human', label: 'AI 數字人' }, { key: 'drama', label: '狗血劇' }, { key: 'other', label: '其他作品' },
 ];
 export const works: Work[] = [
-  ...worksBase.slice(0, 1),
-  ...cutDemos,
-  worksBase[1],
-  { type: 'AI 數字人', title: '卡通數字人', demo: '/home/demo/cartoon-human.mp4', poster: '/home/demo/cartoon-human-poster.webp' },
-  ...worksBase.slice(2),
-  { type: '線上課程', demo: '/home/demo/course.mp4', poster: '/home/demo/course-poster.webp' },
-  { type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
+  asWork('cut', cut0),
+  { group: 'cut', type: 'AI 剪片', title: '牛排・幾分熟怎麼分', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
+  { group: 'cut', type: 'AI 剪片', title: '保養・換季三個錯', demo: '/home/demo/cut-skincare.mp4', poster: '/home/demo/cut-skincare-poster.webp' },
+  { group: 'cut', type: 'AI 剪片', title: '台北・下午三點咖啡', demo: '/home/demo/cut-coffee.mp4', poster: '/home/demo/cut-coffee-poster.webp' },
+  { group: 'cut', type: 'AI 剪片', title: 'MC-001', demo: '/home/demo/cut-mc001.mp4', poster: '/home/demo/cut-mc001-poster.webp' },
+  asWork('human', human0),
+  { group: 'human', type: 'AI 數字人', title: '卡通數字人', demo: '/home/demo/cartoon-human.mp4', poster: '/home/demo/cartoon-human-poster.webp' },
+  asWork('drama', drama0),
+  asWork('other', real0),
+  { group: 'other', type: '線上課程', demo: '/home/demo/course.mp4', poster: '/home/demo/course-poster.webp' },
+  { group: 'other', type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
 ];
 
 /** 合作流程：交期與修改次數先不寫，重點是「生成之前」就確認好。 */
