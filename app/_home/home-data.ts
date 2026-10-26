@@ -1,5 +1,5 @@
 export const LINE_URL = 'https://lin.ee/rL0q31t';
-export const EMAIL = 'luxkey.tw@gmail.com';
+export const EMAIL = 'info@luxkey.com.tw';
 
 export type ServiceKey = 'posts' | 'video' | 'article' | 'ecommerce' | 'optimize' | 'website';
 
@@ -60,6 +60,8 @@ export type Video = {
   pitch: string;
   includes: string[];
   fit: string;
+  /** 卡片上多一句鉤子 */
+  hook?: string;
 };
 
 /** 主打影音：每支單價，一次 10 支起訂。market 為一般外包行情，僅供比較。 */
@@ -78,7 +80,7 @@ export const videos: Video[] = [
     fit: '老闆不想露臉、需要大量商品介紹影片的品牌',
   },
   {
-    key: 'drama', name: '狗血劇商品介紹', price: 3500, market: 30000, marketNote: '外面找演員、場地拍一支劇情短片',
+    key: 'drama', name: '狗血劇商品介紹', hook: '3 秒反轉的劇情廣告', price: 3500, market: 30000, marketNote: '外面找演員、場地拍一支劇情短片',
     pitch: '婆媳、霸總、逆襲反轉，用 AI 演出讓人停下來看完的劇情，最後自然帶出你的商品。',
     includes: ['劇情腳本與分鏡', 'AI 角色演出與場景', '字幕、配樂，直式交付'],
     fit: '想讓商品被大量轉傳、被記住的品牌',
@@ -107,7 +109,7 @@ export const clients: { slug: string; name: string }[] = [
   { slug: 'chuan-peng', name: 'Chuan Peng' }, { slug: 'trend', name: '趨勢商品開發' }, { slug: 'mazupu-tofu', name: '媽祖埔豆腐張' },
   { slug: 'amos', name: 'AMOS' }, { slug: 'things', name: 'things' }, { slug: 'laojing', name: '老井' },
   { slug: 'wooden-door-cafe', name: 'Wooden Door Cafe' }, { slug: 'tahir-zainab', name: 'Tahir Zainab' }, { slug: 'yiye-machinery', name: '憶燁機械' },
-  { slug: 'la-re-wang', name: 'La Re Wang' }, { slug: 'client-2', name: '合作客戶' }, { slug: 'client-5', name: '合作客戶' },
+  { slug: 'client-2', name: '合作客戶' }, { slug: 'client-5', name: '合作客戶' },
   { slug: 'client-6', name: '合作客戶' }, { slug: 'client-9', name: '合作客戶' },
 ];
 
@@ -126,7 +128,8 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
   {
     label: '合作方式',
     items: [
-      { q: '我需要準備什麼？', a: '品牌資料、商品照片和你想講的重點就夠了。腳本、AI 製作、剪輯、字幕都由我們處理，每一件成品都由專人檢查後才交付。' },
+      { q: '我要提供什麼素材？', a: '品牌介紹、商品照片或影片、你想強調的賣點，以及想參考的風格或同業影片。沒有素材也可以，先用 LINE 告訴我們你的想法，腳本、AI 製作、剪輯、字幕都由我們處理。' },
+      { q: '交期多久？可以改幾次？', a: 'AI 影片生成後再修改，幾乎等於重做，所以我們把確認放在生成之前：腳本、角色和畫面方向會跟你來回確認，確認好才開始製作。因為客人光看文字很難想像畫面，我們會用分鏡或參考圖幫你確認。實際交期依支數與影片類型而定，LINE 告訴我們需求就回覆。' },
       { q: '有包含留言、私訊回覆嗎？', a: '不包含。留言、私訊與客服需要即時的人力，我們專注在內容產出，才能把價格壓到最低。廣告投放代操可以另外加購。' },
       { q: '可以完全客製嗎？', a: '我們以 AI 與公版流程為主，才能維持低價。實拍、完全客製與網紅合作需另外報價，費用明顯較高，且每月只承接少量案件。' },
       { q: '怎麼開始？', a: '用 LINE 告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
@@ -137,9 +140,22 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
     items: [
       { q: 'A.C.E. 是什麼？', a: 'A.C.E.（AI · Creative · Execution）是金曜石國際（LUXKEY）的 AI 創意行銷品牌。用 AI 做品牌影音、社群圖文、搜尋文章與網站。' },
       { q: 'AI 做的影片看得出來嗎？', a: '看得出來是 AI 製作沒關係，重點是內容有沒有人看、有沒有帶來詢問。我們會控制角色、口吻和品牌調性，讓每一支都像同一個品牌在說話。' },
+      { q: 'AI 數字人的版權歸誰？可以下廣告嗎？', a: 'AI 數字人影片和其他影片一樣，交付的成品可供你的品牌商業使用，包含廣告投放、社群與官網。版權歸屬與實際授權範圍，會在合約中寫清楚。' },
       { q: 'AI 做的影片和圖片可以商業使用嗎？', a: '交付的成品可供你的品牌商業使用，例如社群、廣告與官網。實際授權範圍會在合約中寫清楚。' },
       { q: '我是行銷公司或顧問，可以經銷合作嗎？', a: '可以。全台同一價格，經銷商賣同一套服務，依成交抽成。合作方式請看經銷合作頁面。', link: { href: '/introduce/', label: '看經銷合作' } },
     ],
   },
 ];
 export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
+
+/** 作品案例：先用示範影片，品牌名與成效數字等有真實資料再補（brand、result）。 */
+export type Work = { type: string; brand?: string; result?: string; demo: string; poster: string };
+export const works: Work[] = pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER }));
+
+/** 合作流程：交期與修改次數先不寫，重點是「生成之前」就確認好。 */
+export const flow = [
+  { title: 'LINE 討論', body: '告訴我們你的產品、想講的重點，和想做哪種影片。' },
+  { title: '提供素材', body: '品牌資料、商品照片或影片，沒有素材也可以先聊想法。' },
+  { title: '生成前確認', body: '腳本、角色與畫面方向反覆確認，確認好才開始製作。' },
+  { title: '製作交片', body: '依確認好的內容製作，交付可以直接上架的直式影片。' },
+];

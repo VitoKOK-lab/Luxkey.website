@@ -2,14 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, ChevronLeft, ChevronRight, Film, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, pains, services, videos, type Pain, type ServiceKey } from './home-data';
+import { ArrowRight, Check, ChevronDown, Film, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, works, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
   posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate,
 };
-const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#faq', '常見問題']] as const;
+const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
 /** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
@@ -120,9 +120,10 @@ function Pains() {
   const sync = (v: HTMLVideoElement | null) => {
     if (!v) return;
     v.muted = true;
-    if (visibleRef.current && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause();
+    if (visibleRef.current && v === videoRefs.current[activeRef.current] && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause();
   };
-  useEffect(() => { visibleRef.current = visible; videoRefs.current.forEach(sync); }, [visible]);
+  const activeRef = useRef(0);
+  useEffect(() => { visibleRef.current = visible; activeRef.current = active; videoRefs.current.forEach(sync); }, [visible, active]);
 
   useEffect(() => {
     if (paused || !visible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -149,10 +150,6 @@ function Pains() {
       <div className="ace-wrap">
         <div className="ace-phones-head">
           <div><p className="ace-kicker">WHY WORK WITH US</p><h2 className="ace-h2">老闆的痛，<br className="ace-br-sm" />我們都懂。</h2></div>
-          <div className="ace-phones-arrows">
-            <button aria-label="上一個" onClick={() => show((active - 1 + n) % n)}><ChevronLeft size={20} /></button>
-            <button aria-label="下一個" onClick={() => show((active + 1) % n)}><ChevronRight size={20} /></button>
-          </div>
         </div>
         <div className="ace-phone-row" ref={rowRef} style={{ ['--n' as string]: n }}>
           {pains.map((x, i) => (
@@ -235,7 +232,7 @@ function Clients() {
             {[0, 1].map(copy => (
               <div key={copy} className="ace-table-track" aria-hidden={copy === 1}>
                 {row.map((c, i) => (
-                  <figure key={c.slug} className="ace-chip" style={{ ['--i' as string]: r * 9 + i, ['--tilt' as string]: `${((i * 7 + r * 3) % 7) - 3}deg` }}>
+                  <figure key={c.slug} className="ace-chip" style={{ ['--i' as string]: r * 9 + i }}>
                     <img src={`/home/clients/${c.slug}.webp`} alt={copy === 0 ? c.name : ''} loading="lazy" decoding="async" />
                   </figure>
                 ))}
@@ -243,6 +240,48 @@ function Clients() {
             ))}
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/** 作品案例：點開播放，一次只播一支；品牌名和成效數字有真實資料再補。 */
+function Works() {
+  const [playing, setPlaying] = useState(-1);
+  return (
+    <section id="works" className="ace-section ace-works">
+      <div className="ace-wrap">
+        <div className="ace-head-row">
+          <div><p className="ace-kicker">OUR WORK</p><h2 className="ace-h2">作品案例</h2></div>
+          <p className="ace-muted">實際作品陸續更新，點擊播放，看看不同類型的製作成果。</p>
+        </div>
+        <div className="ace-works-row">
+          {works.map((w, i) => (
+            <figure key={w.type} className={playing === i ? 'ace-work is-playing' : 'ace-work'}>
+              <div className="ace-work-screen">
+                {playing === i
+                  ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(-1)} />
+                  : <button onClick={() => setPlaying(i)} aria-label={`播放：${w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
+              </div>
+              <figcaption><b>{w.brand ?? w.type}</b><small>{w.brand ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** 合作流程：四步，生成之前先確認。 */
+function Process() {
+  return (
+    <section id="process" className="ace-section ace-process">
+      <div className="ace-wrap">
+        <p className="ace-kicker">HOW IT WORKS</p>
+        <h2 className="ace-h2">合作流程</h2>
+        <ol className="ace-flow">
+          {flow.map((f, i) => <li key={f.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{f.title}</strong><p>{f.body}</p></li>)}
+        </ol>
       </div>
     </section>
   );
@@ -306,16 +345,18 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
           </div>
           <div className="ace-wrap">
             <div className="ace-hero-copy">
-              <p className="ace-kicker">AI · CREATIVE · EXECUTION</p>
-              <h1 className="ace-h1"><span>讓 AI 成為</span><span>每個品牌的 <em>王牌</em></span></h1>
-              <p className="ace-lead">品牌影音、社群圖文、搜尋文章、網站，<br />外面一支要幾千到幾萬，我們只需要零頭。</p>
+              <p className="ace-kicker">讓 AI 成為每個品牌的王牌</p>
+              <h1 className="ace-h1"><span>品牌短影音，</span><span>一支 <em>NT$300</em> 起</span></h1>
+              <p className="ace-lead">十年行銷團隊 × AI 製作，<br />省下的是人事成本，不是品質。</p>
               <div className="ace-aces" aria-label="三種 AI 影片的價格">
                 {videos.map((v, i) => (
                   <a key={v.key} href="#why" className="ace-ace-card" style={{ animationDelay: `${.55 + i * .13}s` }} onClick={() => setPain(i)}>
                     <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
                     <b>{v.name}</b>
+                    {v.hook && <em className="ace-ace-hook">{v.hook}</em>}
                     <strong><small>NT$</small><CountUp to={v.price} delay={700 + i * 130} /><small>／支</small></strong>
                     <s>外面 NT${money(v.market)}</s>
+                    <span className="ace-ace-min">10 支起・未稅</span>
                   </a>
                 ))}
               </div>
@@ -329,7 +370,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
 
         <div className="ace-wrap ace-lift">
           <div className="ace-card ace-trust">
-            {[[Lightbulb, '近十年經驗', '行銷與品牌設計'], [Sparkles, '100+ 合作客戶', '跨產業合作經驗'], [ShieldCheck, '政府合作經驗', '品牌影音行銷顧問']].map(([Icon, t, s]) => {
+            {[[Lightbulb, '生成前反覆確認', '腳本與畫面確認好才製作'], [Sparkles, '10 支起訂', '同一批角色與風格一致'], [ShieldCheck, '100+ 品牌合作', '連鎖品牌到在地店家']].map(([Icon, t, s]) => {
               const I = Icon as typeof Film;
               return <div key={t as string}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t as string}</strong><small>{s as string}</small></span></div>;
             })}
@@ -347,8 +388,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
             <img src="/home/studio.webp" alt="攝影師在明亮攝影棚拍攝品牌代言人介紹保養品" loading="lazy" />
             <div>
               <p className="ace-kicker">WHY A.C.E.</p>
-              <h2 className="ace-h2">近十年的專業，<br />現在有了 AI 的速度。</h2>
-              <p className="ace-muted">從短影音到品牌網站，我們累積近十年的行銷設計經驗，服務過上百家客戶。現在把 AI 導入既有工作流程，兼顧品質、效率與合理成本。</p>
+              <h2 className="ace-h2">A.C.E. <br className="ace-br-sm" />兩個都有。</h2>
+              <p className="ace-muted">一般 AI 工作室會用工具，但不懂行銷；一般行銷公司懂行銷，但要等兩週。A.C.E. 兩個都有。</p>
               <div className="ace-ace">
                 {[['A', 'AI', 'AI 驅動製作'], ['C', 'Creative', '品牌行銷創意'], ['E', 'Execution', '高效落地執行']].map(([l, en, zh]) => (
                   <div key={l}><b>{l}</b><strong>{en}</strong><small>{zh}</small></div>
@@ -358,6 +399,10 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
           </div>
         </section>
 
+        <Works />
+
+        <Process />
+
         <Faq />
 
         <section id="contact" className="ace-section ace-contact">
@@ -365,9 +410,10 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
             <div>
               <p className="ace-kicker">LET'S TALK</p>
               <h2 className="ace-h2">把你的影音行銷，<br />交給王牌。</h2>
-              <p>告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。</p>
+              <p>告訴我們你的產品，1 個工作天內回覆做法與報價。</p>
             </div>
             <div className="ace-contact-actions">
+              <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>電腦版，用手機掃碼加 LINE</figcaption></figure>
               <a className="ace-btn ace-btn-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
               <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('A.C.E. 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
             </div>
