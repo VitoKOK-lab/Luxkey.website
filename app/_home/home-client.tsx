@@ -61,7 +61,7 @@ function Reels({ value }: { value: number }) {
 function HeroPrice({ market, price, base }: { market: number; price: number; base: number }) {
   return (
     <div className="hp" style={{ ['--b' as string]: `${base}s` }}>
-      <p className="hp-l hp-1"><span>外面行情</span><span className="hp-old">NT${money(market)}<i /></span></p>
+      <p className="hp-l hp-1"><span>業界平均收費</span><span className="hp-old">NT${money(market)}<i /></span></p>
       <p className="hp-l hp-2"><span>折扣</span><span className="hp-off">−NT$<CountUp from={0} to={market - price} delay={(base + .75) * 1000} /></span></p>
       <p className="hp-l hp-3"><span className="hp-lab">我們只要<em>超划算</em></span><span className="hp-now"><Reels value={price} /><small>／支</small></span></p>
     </div>
@@ -75,7 +75,7 @@ function CaptionPrice({ market, price, unit }: { market?: number; price: number;
   return (
     <div className="cp">
       <span className="cp-sticker" style={{ ['--d' as string]: `${t + 1.3}s` }}>超划算</span>
-      {market && <p className="cp-row"><span className="cp-bar cp-1" style={{ ['--d' as string]: '.2s' }}>外面行情 NT${money(market)}</span></p>}
+      {market && <p className="cp-row"><span className="cp-bar cp-1" style={{ ['--d' as string]: '.2s' }}>業界平均收費 NT${money(market)}</span></p>}
       {market && <p className="cp-row"><span className="cp-bar cp-2" style={{ ['--d' as string]: '.95s' }}>折扣 −NT${money(market - price)}</span></p>}
       <p className="cp-row cp-3" style={{ ['--t' as string]: `${t}s` }}>
         <span className="cp-big"><small>NT$</small>{money(price)}</span><em>／{unit}</em><u>年約最低價</u>
@@ -128,7 +128,7 @@ function Header() {
   );
 }
 
-/** 每一項的外面行情與我們的價格；影片取影片單價，其餘用自己的 market／price。 */
+/** 每一項的業界平均收費與我們的價格；影片取影片單價，其餘用自己的 market／price。 */
 function offerOf(p: Pain): { market?: number; price: number; unit: string } | null {
   const v = videos.find(x => x.key === p.video);
   if (v) return { market: v.market, price: v.price, unit: '支' };
