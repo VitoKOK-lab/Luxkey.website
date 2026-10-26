@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, works, type Pain, type ServiceKey } from './home-data';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -378,18 +378,25 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
 
         <Clients />
 
-        <section id="about" className="ace-section ace-about">
-          <div className="ace-wrap ace-about-grid">
-            <img src="/home/studio.webp" alt="攝影師在明亮攝影棚拍攝品牌代言人介紹保養品" loading="lazy" />
-            <div>
+        <section id="about" className="ace-section ace-why">
+          <div className="ace-wrap">
+            <div className="ace-why-head">
               <p className="ace-kicker">WHY A.C.E.</p>
-              <h2 className="ace-h2">A.C.E. <br className="ace-br-sm" />兩個都有。</h2>
-              <p className="ace-muted">一般 AI 工作室會用工具，但不懂行銷；一般行銷公司懂行銷，但要等兩週。A.C.E. 兩個都有。</p>
-              <div className="ace-ace">
-                {[['A', 'AI', 'AI 驅動製作'], ['C', 'Creative', '品牌行銷創意'], ['E', 'Execution', '高效落地執行']].map(([l, en, zh]) => (
-                  <div key={l}><b>{l}</b><strong>{en}</strong><small>{zh}</small></div>
-                ))}
+              <h2 className="ace-h2">為什麼是我們？</h2>
+            </div>
+            <div className="ace-vs">
+              {whyVs.map(v => (
+                <div key={v.who} className="ace-vs-card"><b>{v.who}</b><span><X size={16} />{v.lack}</span></div>
+              ))}
+              <div className="ace-vs-us">
+                <b>A.C.E.<small>三個都有</small></b>
+                <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
               </div>
+            </div>
+            <div className="ace-why-proof">
+              {whyProof.map((x, i) => (
+                <article key={x.title}><span>{String(i + 1).padStart(2, '0')}</span><h3>{x.title}</h3><p>{x.body}</p></article>
+              ))}
             </div>
           </div>
         </section>
