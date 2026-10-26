@@ -496,8 +496,8 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
               </div>
             </div>
             <div className="ace-why-proof">
-              {whyProof.map((x, i) => (
-                <article key={x.title}><span>{String(i + 1).padStart(2, '0')}</span><h3>{x.title}</h3><p>{x.body}</p></article>
+              {whyProof.map(x => (
+                <article key={x.title}><span>{x.stat}</span><h3>{x.title}</h3><p>{x.body}</p></article>
               ))}
             </div>
           </div>
