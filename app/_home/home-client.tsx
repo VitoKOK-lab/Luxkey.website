@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Film, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, works, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
@@ -92,44 +92,42 @@ function offerOf(p: Pain): { market?: number; price: number; unit: string } | nu
 /** 五支 iPhone 並排，每支播示範影片；下方一條服務列，點手機或服務名切換說明。每 6 秒自動換，滑鼠移入時暫停。 */
 function Pains() {
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [playing, setPlaying] = useState(-1);
   const [copied, setCopied] = useState(false);
-  const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const n = pains.length;
-  const show = (i: number) => { setActive(i); setCopied(false); };
+
+  const pauseAll = () => videoRefs.current.forEach(v => v?.pause());
+  /** 只切換說明，不播放（首頁價格卡跳過來用） */
+  const select = (i: number) => { pauseAll(); setActive(i); setCopied(false); };
+  /** 點手機：預設停止，點了才播（有聲音），再點暫停；一次只播一支，下面說明跟著換 */
+  const tap = (i: number) => {
+    const v = videoRefs.current[i];
+    if (!v) return;
+    if (i === active && !v.paused) { v.pause(); return; }
+    pauseAll();
+    setActive(i);
+    setCopied(false);
+    v.muted = false;
+    v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
+  };
 
   useEffect(() => {
-    const onJump = (e: Event) => show((e as CustomEvent<number>).detail);
+    const onJump = (e: Event) => select((e as CustomEvent<number>).detail);
     window.addEventListener('ace:pain', onJump);
     return () => window.removeEventListener('ace:pain', onJump);
   }, []);
 
+  // 離開這一區就暫停，不會在背後繼續出聲
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: .15 });
+    const io = new IntersectionObserver(([e]) => { if (!e.isIntersecting) videoRefs.current.forEach(v => v?.pause()); }, { threshold: 0 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
-
-  // 看得到這一區才播，離開就停，省流量也省電；使用者關閉動畫時只顯示封面
-  const visibleRef = useRef(false);
-  const sync = (v: HTMLVideoElement | null) => {
-    if (!v) return;
-    v.muted = true;
-    if (visibleRef.current && v === videoRefs.current[activeRef.current] && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) v.play().catch(() => {}); else v.pause();
-  };
-  const activeRef = useRef(0);
-  useEffect(() => { visibleRef.current = visible; activeRef.current = active; videoRefs.current.forEach(sync); }, [visible, active]);
-
-  useEffect(() => {
-    if (paused || !visible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const t = window.setInterval(() => setActive(a => (a + 1) % n), 6000);
-    return () => window.clearInterval(t);
-  }, [paused, visible, active, n]);
 
   // 手機版手機列可以橫滑，切換時把目前這支捲到中間
   useEffect(() => {
@@ -142,25 +140,22 @@ function Pains() {
   const p = pains[active];
   const offer = offerOf(p);
   return (
-    <section id="why" ref={sectionRef} className="ace-phones" aria-label="老闆的痛，我們都懂"
-      onMouseEnter={() => { if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) setPaused(true); }}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={e => { if (e.target.matches(':focus-visible')) setPaused(true); }}
-      onBlur={() => setPaused(false)}>
+    <section id="why" ref={sectionRef} className="ace-phones" aria-label="老闆的痛，我們都懂">
       <div className="ace-wrap">
         <div className="ace-phones-head">
           <div><p className="ace-kicker">WHY WORK WITH US</p><h2 className="ace-h2">老闆的痛，<br className="ace-br-sm" />我們都懂。</h2></div>
         </div>
         <div className="ace-phone-row" ref={rowRef} style={{ ['--n' as string]: n }}>
           {pains.map((x, i) => (
-            <div key={x.tag} className={i === active ? 'ace-phone is-active' : 'ace-phone'}>
-              <button className="ace-phone-btn" onClick={() => show(i)} aria-label={`看第 ${i + 1} 支：${x.tag}`}>
+            <div key={x.tag} className={`ace-phone${i === active ? ' is-active' : ''}${playing === i ? ' is-playing' : ''}`}>
+              <button className="ace-phone-btn" onClick={() => tap(i)} aria-label={`${playing === i ? '暫停' : '播放'}：${x.tag}`}>
                 <span className="ace-iphone">
                   <span className="ace-iphone-screen">
-                    <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} muted loop playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
-                      onLoadedMetadata={e => { const t = e.currentTarget; if (t.duration) t.currentTime = (i * t.duration / n) % t.duration; }} onLoadedData={e => sync(e.currentTarget)} />
+                    <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
+                      onPlay={() => setPlaying(i)} onPause={() => setPlaying(c => (c === i ? -1 : c))} onEnded={() => setPlaying(c => (c === i ? -1 : c))} />
                     <span className="ace-iphone-glare" />
-                    <span className="ace-iphone-name"><b>{i + 1}</b>{x.tag}{i === active && <i key={active} className={paused || !visible ? 'is-paused' : ''} />}</span>
+                    <span className="ace-iphone-play">{playing === i ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</span>
+                    <span className="ace-iphone-name"><b>{i + 1}</b>{x.tag}</span>
                   </span>
                   <span className="ace-iphone-island" />
                 </span>
@@ -168,7 +163,7 @@ function Pains() {
             </div>
           ))}
         </div>
-        <p className="ace-phones-hint">左右滑動查看更多影片</p>
+        <p className="ace-phones-hint">左右滑動，點手機播放</p>
         <div className="ace-phone-detail" key={active} aria-live="polite">
           <div>
             <h3>{p.title}</h3>
@@ -178,7 +173,7 @@ function Pains() {
             {offer && (
               <p className="ace-stage-price">
                 {offer.market && <span>外面行情 <s>NT${money(offer.market)}</s></span>}
-                <span>我們只需要 <strong>NT${money(offer.price)}</strong><small>／{offer.unit}</small></span>
+                <span className="ace-stage-now">我們只需要 <strong>NT$<CountUp from={offer.market ?? offer.price} to={offer.price} delay={250} /></strong><small>／{offer.unit}</small><em>年約最低價</em></span>
               </p>
             )}
             {offer
