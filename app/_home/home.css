@@ -348,7 +348,7 @@ body { margin: 0; background: #fbf6f2; }
 /* Works */
 .ace-works { background: var(--ace-bg); }
 .ace-works .ace-head-row { margin-bottom: 36px; }
-.ace-works-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); }
+.ace-works-row { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); }
 .ace-work { display: grid; gap: 12px; margin: 0; }
 .ace-work-screen { position: relative; overflow: hidden; aspect-ratio: 9 / 16; border: 1px solid var(--ace-line); border-radius: 22px; background: #05090a; box-shadow: 0 20px 34px -26px rgba(23, 54, 60, .6); }
 .ace-work-screen button, .ace-work-screen video { display: block; width: 100%; height: 100%; }

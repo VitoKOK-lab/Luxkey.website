@@ -250,7 +250,7 @@ function Works() {
           <div><p className="ace-kicker">OUR WORK</p><h2 className="ace-h2">作品案例</h2></div>
           <p className="ace-muted">實際作品陸續更新，點擊播放，看看不同類型的製作成果。</p>
         </div>
-        <div className="ace-works-row">
+        <div className="ace-works-row" style={{ ['--n' as string]: works.length }}>
           {works.map((w, i) => (
             <figure key={w.type} className={playing === i ? 'ace-work is-playing' : 'ace-work'}>
               <div className="ace-work-screen">
