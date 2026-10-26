@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
 import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, type Pain, type ServiceKey } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
-  posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate,
+  posts: Images, video: Film, article: FileText, ecommerce: ShoppingBag, optimize: Gauge, website: LayoutTemplate, course: GraduationCap,
 };
 const nav = [['#why', '影音價格'], ['#other', '其他服務'], ['#works', '作品案例'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');

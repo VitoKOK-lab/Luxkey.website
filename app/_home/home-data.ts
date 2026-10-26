@@ -1,7 +1,7 @@
 export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'info@luxkey.com.tw';
 
-export type ServiceKey = 'posts' | 'video' | 'article' | 'ecommerce' | 'optimize' | 'website';
+export type ServiceKey = 'posts' | 'video' | 'article' | 'ecommerce' | 'optimize' | 'website' | 'course';
 
 export type Service = {
   key: ServiceKey;
@@ -48,6 +48,12 @@ export const services: Service[] = [
     pitch: '從精選版型挑一款，換上你的文字、照片與聯絡方式就上線。手機好看，搜尋引擎與 AI 都讀得懂。',
     includes: ['精選響應式版型', '基礎 SEO 與結構化資料', 'LINE、表單詢問導流'],
     fit: '還沒有官網，或官網已經太舊的品牌',
+  },
+  {
+    key: 'course', name: '老師線上課程製作', short: '把老師的專業，做成可以上架的線上課程',
+    pitch: '老師講課，我們負責製作成一集一集的線上課程影片。',
+    includes: ['10 集　NT$20,000', '20 集　NT$35,000'],
+    fit: '老師、講師，想把專業做成線上課程的人',
   },
 ];
 
@@ -122,7 +128,7 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,800、狗血劇商品介紹 NT$3,900，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
       { q: 'AI 數字人一支多少錢？', a: 'AI 數字人統一 NT$2,800 一支，未稅。', link: { href: '#why', label: '看影片價格' } },
       { q: '外面行情是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
-      { q: '還有做其他服務嗎？費用怎麼算？', a: '有。社群圖文貼文 20 則 NT$28,000、SEO／AI 搜尋文章 6 篇 NT$12,000、電商商品圖文 10 個品項 NT$32,000、網站優化 20 頁 NT$30,000、公版官網 1 套 NT$48,000，價格皆未稅。這些只賣整包、不拆單件，需要的話用 LINE 告訴我們，我們回覆做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
+      { q: '還有做其他服務嗎？費用怎麼算？', a: '有。社群圖文貼文 20 則 NT$28,000、SEO／AI 搜尋文章 6 篇 NT$12,000、電商商品圖文 10 個品項 NT$32,000、網站優化 20 頁 NT$30,000、公版官網 1 套 NT$48,000、老師線上課程製作 10 集 NT$20,000（20 集 NT$35,000），價格皆未稅。這些只賣整包、不拆單件，需要的話用 LINE 告訴我們，我們回覆做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
       { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以月繳價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
       { q: '價格含稅嗎？', a: '網站上所有價格都是未稅價。全台統一價格，不議價也不打折。' },
     ],
