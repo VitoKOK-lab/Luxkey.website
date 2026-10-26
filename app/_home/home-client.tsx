@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Gauge, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, planTerms, plans, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type Work, type WorkGroup } from './home-data';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, clients, planTerms, plans, faqGroups, flow, pains, services, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type ServiceKey, type PlanTerm, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const serviceIcons: Record<ServiceKey, typeof Film> = {
@@ -228,10 +228,34 @@ function Pains() {
   );
 }
 
-/** 方案選擇：一張價格表看完。橫列是服務（三個主要服務各自獨立，加上三種都買的全家桶），直欄是年約、季約、單月；年約那欄放最大、標最划算。其他服務沒有季約年約，只有單價。 */
+/** 價格數字切換時，從舊價格快速滾到新價格 */
+function PriceNum({ value }: { value: number }) {
+  const [n, setN] = useState(value);
+  const prev = useRef(value);
+  useEffect(() => {
+    const from = prev.current;
+    prev.current = value;
+    if (from === value || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setN(value); return; }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - start) / 450);
+      setN(Math.round(from + (value - from) * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return <>{money(n)}</>;
+}
+
+/** 方案選擇：上面一個年約／季約／單月開關，一撥全部價格跟著變；下面項目橫向排開（三個主要服務各自獨立，加上三種都買的全家桶）。其他服務沒有季約年約，只有單價。 */
 function Plans() {
+  const [term, setTerm] = useState<PlanTerm>('year');
   const [copied, setCopied] = useState('');
-  const ask = async (name: string, note: string, term: string, price: number) => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${name}（${note}，${term} NT$${money(price)}／月）。`) ? name : '');
+  const t = planTerms.find(x => x.key === term)!;
+  const idx = planTerms.findIndex(x => x.key === term);
+  const ask = async (name: string, note: string, price: number) => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${name}（${note}，${t.label} NT$${money(price)}／月）。`) ? name : '');
   return (
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
@@ -239,25 +263,31 @@ function Plans() {
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
           <p className="ace-muted">每個服務獨立購買，每月 {plans[0].qty} 支起算。價格是每月金額、未稅。其他服務只有單價，沒有季約、年約。</p>
         </div>
-        <div className="pt" role="table" aria-label="方案價格表">
-          <div className="pt-head" role="row">
-            <span role="columnheader">服務</span>
-            {planTerms.map(t => <span key={t.key} role="columnheader" className={t.key === 'year' ? 'is-year' : ''}>{t.key === 'year' && <i>最划算</i>}{t.label}</span>)}
-            <span role="columnheader" aria-hidden="true" />
-          </div>
-          {plans.map(p => (
-            <div key={p.key} role="row" className={p.key === 'all' ? 'pt-row is-all' : 'pt-row'}>
-              <div className="pt-name" role="rowheader"><b>{p.name}</b><small>{p.note}</small><ul>{p.includes.map(x => <li key={x}><Check size={13} />{x}</li>)}</ul></div>
-              {planTerms.map(t => (
-                <div key={t.key} role="cell" className={t.key === 'year' ? 'pt-cell is-year' : 'pt-cell'} data-label={t.label}>
-                  <small>NT$</small><b>{money(p.price[t.key])}</b><em>／月</em>
-                </div>
-              ))}
-              <div className="pt-act" role="cell"><button onClick={() => ask(p.name, p.note, '年約', p.price.year)} aria-label={`LINE 詢問${p.name}`}><MessageCircle size={16} /> 詢問</button></div>
-            </div>
+        <div className="pc-switch" role="radiogroup" aria-label="選擇年約、季約或單月" style={{ ['--i' as string]: idx }}>
+          <i aria-hidden="true" />
+          {planTerms.map(x => (
+            <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => { setTerm(x.key); setCopied(''); }}>
+              {x.label}{x.key === 'year' && <em>最划算</em>}
+            </button>
           ))}
         </div>
-        {copied && <p className="ace-stage-copied pt-copied" aria-live="polite">{copied}的詢問內容已複製，到 LINE 貼上即可。</p>}
+        <div className="pc">
+          {plans.map(p => {
+            const price = p.price[term];
+            const save = term === 'year' ? `相較單月，一年省 NT$${money((p.price.month - p.price.year) * 12)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
+            return (
+              <div key={p.key} className={p.key === 'all' ? 'pc-col is-all' : 'pc-col'}>
+                <h3>{p.name}</h3>
+                <p className="pc-note">{p.note}</p>
+                <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
+                <p className="pc-save">{save}</p>
+                <ul>{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
+                <button className="pc-btn" onClick={() => ask(p.name, p.note, price)}><MessageCircle size={16} /> LINE 詢問</button>
+              </div>
+            );
+          })}
+        </div>
+        <p className="pc-foot">{t.label}價格，未稅。{copied && <span aria-live="polite">　{copied}的詢問內容已複製，到 LINE 貼上即可。</span>}</p>
       </div>
     </section>
   );
