@@ -4,14 +4,12 @@ export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'info@luxkey.com.tw';
 
 /** 附加選購：價格與項目以 Super5 的 service-data.ts 為參考；只列有明確對應價格的服務。 */
-export type AddOnKey = 'motion' | 'copy' | 'website' | 'course' | 'reviews' | 'influencer';
+export type AddOnKey = 'copy' | 'website' | 'course' | 'influencer';
 export type AddOn = { key: AddOnKey; name: string; detail: string; price: string; unit: string; more?: string };
 export const addOns: AddOn[] = [
-  { key: 'motion', name: 'AI 動態短片', detail: '客供少量照片，製作 AI 人聲動畫短片。', price: 'NT$12,800', unit: '／4 支' },
   { key: 'copy', name: '網站商品內文優化', detail: '重寫商品標題、賣點與購買引導。', price: 'NT$2,000 起', unit: '／品項' },
-  { key: 'website', name: '銷售型網站', detail: '一頁式網站，整理賣點與詢問入口。', price: 'NT$38,000 起', unit: '／案' },
+  { key: 'website', name: '電商網站', detail: '整理商品頁、賣點與購買動線；功能依需求報價。', price: 'NT$38,000 起', unit: '／案' },
   { key: 'course', name: '線上課程製作', detail: '將專業內容整理成可上架的分集影片。', price: 'NT$35,000', unit: '／自己講・11 集內', more: 'AI 配音・25 集內 NT$55,000' },
-  { key: 'reviews', name: '口碑開箱影片', detail: '五位創作者各拍一支真實使用分享。', price: 'NT$18,000', unit: '／5 支', more: '10 人組 NT$30,000' },
   { key: 'influencer', name: '網紅曝光合作', detail: '媒合創作者在自己的帳號發布。', price: 'NT$100,000', unit: '／組 3–5 位' },
 ];
 
@@ -55,13 +53,13 @@ export const videos: Video[] = [
 export const DEMO_VIDEO = '/home/demo/demo.mp4';
 export const DEMO_POSTER = '/home/demo/poster.webp';
 
-/** 老闆的痛點：五支手機並排，每支一個服務。video 對應影片價格；market／price 是沒有影片單價時的行情對照。 */
-export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; unit?: string; demo?: string; poster?: string };
+/** 老闆的痛點：四支手機並排，每支一個服務。video 對應影片價格；market／price 是沒有影片單價時的行情對照。 */
+export type Pain = { tag: string; title: string; body: string; video?: Video['key']; market?: number; price?: number; unit?: string; demo?: string; poster?: string };
 export const pains: Pain[] = [
   { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
   { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', demo: '/home/demo/digital-human.mp4', poster: '/home/demo/digital-human-poster.webp' },
   { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
-  { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
+  { tag: '真人口碑開箱影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', market: 12000, price: 2500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
 ];
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
@@ -83,12 +81,12 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
   {
     label: '影片與價格',
     items: [
-      { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,800、狗血劇商品介紹 NT$3,900，都是每支的價格，未稅。同一批影片會沿用同一組角色、風格與品牌調性，所以每種影片一次 10 支起訂。', link: { href: '#why', label: '看影片價格' } },
+      { q: '影片一支多少錢？', a: 'AI 剪片 NT$300、AI 數字人 NT$2,800、狗血劇商品介紹 NT$3,900、真人口碑開箱影片 NT$2,500，都是每支的未稅價格。前三種 AI 影片每種每月 10 支起訂；真人口碑開箱影片另依需求確認製作數量。', link: { href: '#why', label: '看影片價格' } },
       { q: 'AI 數字人一支多少錢？', a: 'AI 數字人統一 NT$2,800 一支，未稅。', link: { href: '#why', label: '看影片價格' } },
       { q: '業界平均收費是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
-      { q: '附加選購有哪些？費用怎麼算？', a: '附加選購只開放訂閱用戶。AI 動態短片 4 支 NT$12,800、網站商品內文優化每品項 NT$2,000 起、銷售型網站 NT$38,000 起、線上課程自己講 11 集內 NT$35,000（AI 配音 25 集內 NT$55,000）、口碑開箱 5 支 NT$18,000（10 支 NT$30,000）、網紅曝光合作 3–5 位 NT$100,000／組。社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上價格未稅。', link: { href: '#other', label: '看附加選購' } },
+      { q: '附加選購有哪些？費用怎麼算？', a: '附加選購只開放訂閱用戶。網站商品內文優化每品項 NT$2,000 起、電商網站 NT$38,000 起、線上課程自己講 11 集內 NT$35,000（AI 配音 25 集內 NT$55,000）、網紅曝光合作 3–5 位 NT$100,000／組。社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上價格未稅。', link: { href: '#other', label: '看附加選購' } },
       { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以單月價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
-      { q: '方案怎麼選？', a: `AI 剪片、AI 數字人、狗血劇商品介紹各自獨立，每個月買 ${PLAN_QTY} 支起算。想要天天上片，三種都買就是全家桶，每月 ${PLAN_QTY * 3} 支。年約最便宜，季約次之，單月最貴。附加選購限訂閱用戶，按項目計價。`, link: { href: '#plans', label: '看方案選擇' } },
+      { q: '方案怎麼選？', a: `AI 剪片、AI 數字人、狗血劇商品介紹各自獨立，每個月買 ${PLAN_QTY} 支起算。想要天天上片，三種都買就是全家桶，每月 ${PLAN_QTY * 3} 支。年約最便宜，季約次之，單月最貴。真人口碑開箱影片依支數洽詢，附加選購限訂閱用戶。`, link: { href: '#plans', label: '看方案選擇' } },
       { q: '價格含稅嗎？', a: '網站標示的價格均為未稅價。附加選購若標示「起」，會依實際製作範圍提供正式報價。' },
     ],
   },
@@ -120,7 +118,7 @@ export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
 export type WorkGroup = 'cut' | 'human' | 'drama' | 'other';
 export type Work = { group: WorkGroup; type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
 const demoOf = (key: string) => pains.find(p => p.video === key || p.tag === key);
-const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人推薦影片')!;
+const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人口碑開箱影片')!;
 const asWork = (group: WorkGroup, p: (typeof pains)[number], title?: string): Work => ({ group, type: p.tag, title, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER });
 /** 作品案例：各分頁都顯示影片卡片；品牌名與成效數字有真實資料再補（brand、result）。 */
 export const worksGroups: { key: WorkGroup; label: string }[] = [

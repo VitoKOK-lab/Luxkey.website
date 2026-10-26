@@ -2,23 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Film, GraduationCap, Pause, Play, FileText, Images, Lightbulb, LayoutTemplate, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type AddOnKey, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
-const addOnIcons: Record<AddOnKey, typeof Film> = {
-  motion: Film, copy: FileText, website: LayoutTemplate, course: GraduationCap, reviews: Images, influencer: Sparkles,
-};
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
-
-/** 先把詢問內容複製到剪貼簿，再開 LINE；沒有剪貼簿權限時照樣開 LINE。 */
-async function askOnLine(text: string) {
-  let copied = false;
-  try { await navigator.clipboard.writeText(text); copied = true; } catch { /* 忽略 */ }
-  window.open(LINE_URL, '_blank', 'noopener');
-  return copied;
-}
 
 /** 數字補間：delay 毫秒後用 1200 毫秒從 from 走到 to；使用者關閉動畫時直接顯示最終數字。 */
 function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
@@ -135,11 +124,10 @@ function offerOf(p: Pain): { market?: number; price: number; unit: string } | nu
   return p.price ? { market: p.market, price: p.price, unit: p.unit ?? '支' } : null;
 }
 
-/** 五支 iPhone 並排，每支播示範影片；下方一條服務列，點手機或服務名切換說明。每 6 秒自動換，滑鼠移入時暫停。 */
+/** 四支 iPhone 並排，每支播示範影片；下方說明會跟著目前選的服務切換。 */
 function Pains() {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(-1);
-  const [copied, setCopied] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -147,7 +135,7 @@ function Pains() {
 
   const pauseAll = () => videoRefs.current.forEach(v => v?.pause());
   /** 只切換說明，不播放（首頁價格卡跳過來用） */
-  const select = (i: number) => { pauseAll(); setActive(i); setCopied(false); };
+  const select = (i: number) => { pauseAll(); setActive(i); };
   /** 點手機：預設停止，點了才播（有聲音），再點暫停；一次只播一支，下面說明跟著換 */
   const tap = (i: number) => {
     const v = videoRefs.current[i];
@@ -155,7 +143,6 @@ function Pains() {
     if (i === active && !v.paused) { v.pause(); return; }
     pauseAll();
     setActive(i);
-    setCopied(false);
     v.muted = false;
     v.play().catch(() => { v.muted = true; v.play().catch(() => {}); });
   };
@@ -217,10 +204,6 @@ function Pains() {
           </div>
           <div className="ace-phone-offer">
             {offer && <CaptionPrice market={offer.market} price={offer.price} unit={offer.unit} />}
-            {offer
-              ? <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${p.tag}（NT$${money(offer.price)}／${offer.unit}）。`))}><MessageCircle size={18} /> LINE 詢問</button>
-              : <a href={p.href} className="ace-btn ace-btn-primary">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
-            {copied && <p className="ace-stage-copied">詢問內容已複製，到 LINE 貼上即可。</p>}
           </div>
         </div>
       </div>
@@ -252,10 +235,8 @@ function PriceNum({ value }: { value: number }) {
 /** 方案選擇：單月／季約／年約依每月價格由高到低排列；下面項目橫向排開。其他服務只有單價。 */
 function Plans() {
   const [term, setTerm] = useState<PlanTerm>('month');
-  const [copied, setCopied] = useState('');
   const t = planTerms.find(x => x.key === term)!;
   const idx = planTerms.findIndex(x => x.key === term);
-  const ask = async (name: string, note: string, price: number) => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${name}（${note}，${t.label} NT$${money(price)}／月）。`) ? name : '');
   return (
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
@@ -267,7 +248,7 @@ function Plans() {
         <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
           <i aria-hidden="true" />
           {planTerms.map(x => (
-            <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => { setTerm(x.key); setCopied(''); }}>
+            <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => setTerm(x.key)}>
               {x.label}{x.key === 'year' && <em>最划算</em>}
             </button>
           ))}
@@ -286,12 +267,11 @@ function Plans() {
                   <p className="pc-save">{save}</p>
                 </div>
                 <ul>{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
-                <button className="pc-btn" onClick={() => ask(p.name, p.note, price)}><MessageCircle size={16} /> 詢問{p.name}方案</button>
               </article>
             );
           })}
         </div>
-        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起；全家桶每月 {plans[3].qty} 支。以上為{t.label}每月價格，未稅。{copied && <span aria-live="polite">　{copied}的詢問內容已複製，到 LINE 貼上即可。</span>}</p>
+        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起；全家桶每月 {plans[3].qty} 支。以上為{t.label}每月價格，未稅。</p>
       </div>
     </section>
   );
@@ -304,20 +284,18 @@ function AddOns() {
       <div className="ace-wrap">
         <div className="ace-other-head">
           <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
-          <p className="ace-muted">僅開放訂閱用戶加購。主方案先做好影片，再依品牌需求擴充內容與曝光。</p>
+          <p className="ace-muted">僅開放訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
         </div>
         <ul className="ace-other-grid">
-          {addOns.map(a => { const Icon = addOnIcons[a.key]; return <li key={a.key}>
-            <span className="ace-other-icon" aria-hidden="true"><Icon size={22} strokeWidth={1.75} /></span>
+          {addOns.map(a => <li key={a.key}>
             <h3>{a.name}</h3>
             <p>{a.detail}</p>
             <div className="ace-other-price"><strong>{a.price}</strong><span>{a.unit}</span></div>
             {a.more && <small>{a.more}</small>}
-          </li>; })}
+          </li>)}
         </ul>
         <div className="ace-other-foot">
           <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅參考價。</p>
-          <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="ace-btn ace-btn-primary"><MessageCircle size={18} /> LINE 詢問加購</a>
         </div>
       </div>
     </section>
@@ -421,8 +399,7 @@ function Faq() {
         <div className="ace-faq-side">
           <p className="ace-kicker">FAQ</p>
           <h2 className="ace-h2">常見問題</h2>
-          <p className="ace-muted">沒找到答案？直接用 LINE 問我們。</p>
-          <a className="ace-btn ace-btn-primary" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} /> LINE 直接問</a>
+          <p className="ace-muted">影片、合作方式與授權，先從這裡找答案。</p>
         </div>
         <div>
           <div className="ace-tabs ace-faq-tabs" role="tablist">
@@ -485,7 +462,6 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
               </div>
               <div className="ace-actions">
                 <a href="#why" className="ace-btn ace-btn-primary ace-btn-lg">看影片價格 <ArrowRight size={20} /></a>
-                <a href={LINE_URL} target="_blank" rel="noopener noreferrer" className="ace-btn ace-btn-ghost ace-btn-lg"><MessageCircle size={20} /> LINE 直接聊</a>
               </div>
             </div>
           </div>
@@ -494,7 +470,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         <div className="ace-wrap ace-lift">
           <div className="ace-card ace-trust">
             {[[Lightbulb, '生成前反覆確認', '腳本與畫面確認好才製作'], [Sparkles, '10 支起訂', '同一批角色與風格一致'], [ShieldCheck, '100+ 品牌合作', '連鎖品牌到在地店家']].map(([Icon, t, s]) => {
-              const I = Icon as typeof Film;
+              const I = Icon as typeof Lightbulb;
               return <div key={t as string}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t as string}</strong><small>{s as string}</small></span></div>;
             })}
           </div>
