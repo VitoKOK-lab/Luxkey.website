@@ -100,7 +100,7 @@ export const DEMO_POSTER = '/home/demo/poster.webp';
 /** 老闆的痛點：五支手機並排，每支一個服務。video 對應影片價格；market／price 是沒有影片單價時的行情對照。 */
 export type Pain = { tag: string; title: string; body: string; href?: string; video?: Video['key']; market?: number; price?: number; unit?: string; demo?: string; poster?: string };
 export const pains: Pain[] = [
-  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', demo: '/home/demo/ai-edit.mp4', poster: '/home/demo/ai-edit-poster.webp' },
+  { tag: 'AI 剪片', title: '熱門話題等剪完，熱度早就沒了', body: '請一位專職剪輯，又沒有足夠的片量讓他天天剪。交給 AI 剪片，素材丟進來很快就出片，趁話題還熱就上架。', video: 'edit', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
   { tag: 'AI 數字人', title: '老闆不好意思露臉', body: '讓大量 AI 數字人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', demo: '/home/demo/digital-human.mp4', poster: '/home/demo/digital-human-poster.webp' },
   { tag: '狗血劇商品介紹', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
   { tag: '真人推薦影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', href: '#contact', market: 12000, price: 2500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
@@ -161,19 +161,19 @@ export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
 export type WorkGroup = 'cut' | 'human' | 'drama' | 'other';
 export type Work = { group: WorkGroup; type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
 const demoOf = (key: string) => pains.find(p => p.video === key || p.tag === key);
-const cut0 = demoOf('edit')!, human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人推薦影片')!;
+const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人推薦影片')!;
 const asWork = (group: WorkGroup, p: (typeof pains)[number], title?: string): Work => ({ group, type: p.tag, title, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER });
 /** 作品案例：AI 剪片、AI 數字人、狗血劇為主，各自一個分頁；其他作品只列文字、不放照片。品牌名與成效數字有真實資料再補（brand、result）。 */
 export const worksGroups: { key: WorkGroup; label: string }[] = [
   { key: 'cut', label: 'AI 剪片' }, { key: 'human', label: 'AI 數字人' }, { key: 'drama', label: '狗血劇' }, { key: 'other', label: '其他作品' },
 ];
 export const works: Work[] = [
-  asWork('cut', cut0),
   { group: 'cut', type: 'AI 剪片', title: '牛排・幾分熟怎麼分', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
   { group: 'cut', type: 'AI 剪片', title: '保養・換季三個錯', demo: '/home/demo/cut-skincare.mp4', poster: '/home/demo/cut-skincare-poster.webp' },
   { group: 'cut', type: 'AI 剪片', title: '台北・下午三點咖啡', demo: '/home/demo/cut-coffee.mp4', poster: '/home/demo/cut-coffee-poster.webp' },
   { group: 'cut', type: 'AI 剪片', title: 'MC-001', demo: '/home/demo/cut-mc001.mp4', poster: '/home/demo/cut-mc001-poster.webp' },
   asWork('human', human0),
+  { group: 'human', type: 'AI 數字人', demo: '/home/demo/ai-edit.mp4', poster: '/home/demo/ai-edit-poster.webp' },
   { group: 'human', type: 'AI 數字人', title: '卡通數字人', demo: '/home/demo/cartoon-human.mp4', poster: '/home/demo/cartoon-human-poster.webp' },
   asWork('drama', drama0),
   asWork('other', real0),
