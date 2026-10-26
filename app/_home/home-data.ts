@@ -150,8 +150,19 @@ export const faqs: Faq[] = faqGroups.flatMap(g => g.items);
 
 /** 作品案例：先用示範影片，品牌名與成效數字等有真實資料再補（brand、result）。 */
 export type Work = { type: string; title?: string; brand?: string; result?: string; demo: string; poster: string };
+const worksBase = pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER }));
+/** AI 剪片的示範：緊跟在 AI 剪片那張後面 */
+const cutDemos: Work[] = [
+  { type: 'AI 剪片', title: '牛排・幾分熟怎麼分', demo: '/home/demo/cut-steak.mp4', poster: '/home/demo/cut-steak-poster.webp' },
+  { type: 'AI 剪片', title: '重力消失 5 秒', demo: '/home/demo/cut-gravity.mp4', poster: '/home/demo/cut-gravity-poster.webp' },
+  { type: 'AI 剪片', title: '保養・換季三個錯', demo: '/home/demo/cut-skincare.mp4', poster: '/home/demo/cut-skincare-poster.webp' },
+  { type: 'AI 剪片', title: '台北・下午三點咖啡', demo: '/home/demo/cut-coffee.mp4', poster: '/home/demo/cut-coffee-poster.webp' },
+  { type: 'AI 剪片', title: 'MC-001', demo: '/home/demo/cut-mc001.mp4', poster: '/home/demo/cut-mc001-poster.webp' },
+];
 export const works: Work[] = [
-  ...pains.map(p => ({ type: p.tag, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER })),
+  ...worksBase.slice(0, 1),
+  ...cutDemos,
+  ...worksBase.slice(1),
   { type: '線上課程', demo: '/home/demo/course.mp4', poster: '/home/demo/course-poster.webp' },
   { type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
 ];

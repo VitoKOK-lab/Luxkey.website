@@ -348,8 +348,8 @@ body { margin: 0; background: #fbf6f2; }
 /* Works */
 .ace-works { background: var(--ace-bg); }
 .ace-works .ace-head-row { margin-bottom: 36px; }
-.ace-works-row { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: clamp(14px, 2vw, 28px); }
-.ace-work { display: grid; gap: 12px; margin: 0; }
+.ace-works-row { --gap: clamp(14px, 1.6vw, 22px); display: flex; gap: var(--gap); margin-inline: -6px; padding: 6px 6px 16px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: #e6b494 transparent; }
+.ace-work { display: grid; flex: none; width: calc((100% - 4 * var(--gap)) / 5); min-width: 180px; align-content: start; gap: 12px; margin: 0; scroll-snap-align: start; }
 .ace-work-screen { position: relative; overflow: hidden; aspect-ratio: 9 / 16; border: 1px solid var(--ace-line); border-radius: 22px; background: #05090a; box-shadow: 0 20px 34px -26px rgba(23, 54, 60, .6); }
 .ace-work-screen button, .ace-work-screen video { display: block; width: 100%; height: 100%; }
 .ace-work-screen button { position: relative; cursor: pointer; }

@@ -248,7 +248,7 @@ function Works() {
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">OUR WORK</p><h2 className="ace-h2">作品案例</h2></div>
-          <p className="ace-muted">實際作品陸續更新，點擊播放，看看不同類型的製作成果。</p>
+          <p className="ace-muted">實際作品陸續更新，點擊播放，左右滑動看更多。</p>
         </div>
         <div className="ace-works-row" style={{ ['--n' as string]: works.length }}>
           {works.map((w, i) => (
@@ -258,7 +258,7 @@ function Works() {
                   ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(-1)} />
                   : <button onClick={() => setPlaying(i)} aria-label={`播放：${w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
               </div>
-              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
             </figure>
           ))}
         </div>
