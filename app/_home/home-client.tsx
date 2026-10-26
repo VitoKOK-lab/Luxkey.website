@@ -20,10 +20,9 @@ async function askOnLine(text: string) {
   return copied;
 }
 
-/** 價格從外面行情一路降到我們的價格，落定時放大、上色，再回到正常；使用者關閉動畫時直接顯示。 */
+/** 數字補間：delay 毫秒後用 1200 毫秒從 from 走到 to；使用者關閉動畫時直接顯示最終數字。 */
 function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
   const [n, setN] = useState(() => to);
-  const [done, setDone] = useState(false);
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     setN(from);
@@ -32,12 +31,59 @@ function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: nu
     const tick = (t: number) => {
       const k = Math.min(1, Math.max(0, (t - start) / 1200));
       setN(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
-      if (k < 1) raf = requestAnimationFrame(tick); else setDone(true);
+      if (k < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [from, to, delay]);
-  return <span className={done ? 'ace-count is-done' : 'ace-count'}>{money(n)}</span>;
+  return <span className="ace-count">{money(n)}</span>;
+}
+
+/** 老虎機滾輪：每一位數字各自滾動，由左到右一位一位鎖定 */
+function Reels({ value }: { value: number }) {
+  const digits = String(value).split('');
+  let di = 0;
+  return (
+    <b className="hp-reels" role="text" aria-label={`NT$${money(value)}`}>
+      <small aria-hidden="true">NT$</small>
+      <span aria-hidden="true" className="hp-reels-row">
+        {money(value).split('').map((ch, i) => {
+          if (ch === ',') return <u key={i}>,</u>;
+          const d = Number(digits[di]); const k = di++;
+          return <span key={i} className="hp-reel" style={{ ['--to' as string]: d, ['--k' as string]: k }}><span>{Array.from({ length: 20 }, (_, j) => <i key={j}>{j % 10}</i>)}</span></span>;
+        })}
+      </span>
+    </b>
+  );
+}
+
+/** 首頁價格卡的價格：三行從右邊滑進來，行情被劃掉、折扣金額往上跑、價格用滾輪逐位鎖定，「超划算」貼在文字旁邊。base 是這張卡開始的時間（秒） */
+function HeroPrice({ market, price, base }: { market: number; price: number; base: number }) {
+  return (
+    <div className="hp" style={{ ['--b' as string]: `${base}s` }}>
+      <p className="hp-l hp-1"><span>外面行情</span><span className="hp-old">NT${money(market)}<i /></span></p>
+      <p className="hp-l hp-2"><span>折扣</span><span className="hp-off">−NT$<CountUp from={0} to={market - price} delay={(base + .75) * 1000} /></span></p>
+      <p className="hp-l hp-3"><span className="hp-lab">我們只要<em>超划算</em></span><span className="hp-now"><Reels value={price} /><small>／支</small></span></p>
+    </div>
+  );
+}
+
+/** 手機下方說明區的價格：像短影音爆點字幕，一條條帶色塊砸出來，價格放最大畫底線、噴火花，貼紙在右上角不壓數字 */
+function CaptionPrice({ market, price, unit }: { market?: number; price: number; unit: string }) {
+  const bars = market ? 2 : 0;
+  const t = bars ? 1.8 : .2;
+  return (
+    <div className="cp">
+      <span className="cp-sticker" style={{ ['--d' as string]: `${t + 1.3}s` }}>超划算</span>
+      {market && <p className="cp-row"><span className="cp-bar cp-1" style={{ ['--d' as string]: '.2s' }}>外面行情 NT${money(market)}</span></p>}
+      {market && <p className="cp-row"><span className="cp-bar cp-2" style={{ ['--d' as string]: '.95s' }}>折扣 −NT${money(market - price)}</span></p>}
+      <p className="cp-row cp-3" style={{ ['--t' as string]: `${t}s` }}>
+        <span className="cp-big"><small>NT$</small>{money(price)}</span><em>／{unit}</em><u>年約最低價</u>
+        <svg viewBox="0 0 220 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 50 2, 120 12, 218 4" fill="none" stroke="#f37021" strokeWidth="4" strokeLinecap="round" /></svg>
+        <span className="cp-sparks" aria-hidden="true">{Array.from({ length: 8 }, (_, k) => <i key={k} style={{ ['--a' as string]: `${k * 45}deg` }} />)}</span>
+      </p>
+    </div>
+  );
 }
 
 export function Brand() {
@@ -170,12 +216,7 @@ function Pains() {
             <p>{p.body}</p>
           </div>
           <div className="ace-phone-offer">
-            {offer && (
-              <p className="ace-stage-price">
-                {offer.market && <span>外面行情 <s>NT${money(offer.market)}</s></span>}
-                <span className="ace-stage-now">我們只需要 <strong><small>NT$</small><CountUp from={offer.market ?? offer.price} to={offer.price} delay={250} /></strong><small>／{offer.unit}</small><em>年約最低價</em></span>
-              </p>
-            )}
+            {offer && <CaptionPrice market={offer.market} price={offer.price} unit={offer.unit} />}
             {offer
               ? <button className="ace-btn ace-btn-primary" onClick={async () => setCopied(await askOnLine(`你好，我想了解 A.C.E. 的${p.tag}（NT$${money(offer.price)}／${offer.unit}）。`))}><MessageCircle size={18} /> LINE 詢問</button>
               : <a href={p.href} className="ace-btn ace-btn-primary">{p.href === '#contact' ? '來聊聊' : `看${p.tag}價格`} <ArrowRight size={18} /></a>}
@@ -349,8 +390,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
                     <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
                     <b>{v.name}</b>
                     {v.hook && <em className="ace-ace-hook">{v.hook}</em>}
-                    <strong><small>NT$</small><CountUp from={v.market} to={v.price} delay={900 + i * 1000} /><small>／支</small></strong>
-                    <s>外面 NT${money(v.market)}</s>
+                    <HeroPrice market={v.market} price={v.price} base={.9 + i} />
                     <span className="ace-ace-min">10 支起・未稅</span>
                   </a>
                 ))}
