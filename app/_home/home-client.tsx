@@ -20,24 +20,24 @@ async function askOnLine(text: string) {
   return copied;
 }
 
-/** 價格從 0 跑到定價；使用者關閉動畫時直接顯示。 */
-function CountUp({ to, delay = 0 }: { to: number; delay?: number }) {
+/** 價格從外面行情一路降到我們的價格，落定時放大、上色，再回到正常；使用者關閉動畫時直接顯示。 */
+function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
   const [n, setN] = useState(() => to);
-  const [ready, setReady] = useState(false);
+  const [done, setDone] = useState(false);
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    setN(0);
+    setN(from);
     let raf = 0;
     const start = performance.now() + delay;
     const tick = (t: number) => {
-      const k = Math.min(1, Math.max(0, (t - start) / 900));
-      setN(Math.round(to * (1 - Math.pow(1 - k, 3))));
-      if (k < 1) raf = requestAnimationFrame(tick); else setReady(true);
+      const k = Math.min(1, Math.max(0, (t - start) / 1200));
+      setN(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(tick); else setDone(true);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [to, delay]);
-  return <span className={ready ? 'ace-count is-done' : 'ace-count'}>{money(n)}</span>;
+  }, [from, to, delay]);
+  return <span className={done ? 'ace-count is-done' : 'ace-count'}>{money(n)}</span>;
 }
 
 export function Brand() {
@@ -354,7 +354,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
                     <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
                     <b>{v.name}</b>
                     {v.hook && <em className="ace-ace-hook">{v.hook}</em>}
-                    <strong><small>NT$</small><CountUp to={v.price} delay={700 + i * 130} /><small>／支</small></strong>
+                    <strong><small>NT$</small><CountUp from={v.market} to={v.price} delay={900 + i * 1000} /><small>／支</small></strong>
                     <s>外面 NT${money(v.market)}</s>
                     <span className="ace-ace-min">10 支起・未稅</span>
                   </a>

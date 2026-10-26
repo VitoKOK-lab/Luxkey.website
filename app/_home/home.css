@@ -273,7 +273,9 @@ body { margin: 0; background: #fbf6f2; }
 .ace-ace-card:nth-child(2) .ace-ace-suit { animation-delay: .6s; }
 .ace-ace-card:nth-child(3) .ace-ace-suit { animation-delay: 1.2s; }
 .ace-count { display: inline-block; font-variant-numeric: tabular-nums; }
-.ace-count.is-done { animation: ace-pop .35s var(--ace-ease); }
+.ace-count { transform-origin: left center; }
+.ace-count.is-done { animation: ace-land 1.2s var(--ace-ease); }
+@keyframes ace-land { 0% { transform: scale(1); color: inherit; } 30% { transform: scale(1.4); color: var(--ace-orange); } 65% { transform: scale(1.4); color: var(--ace-orange); } 100% { transform: scale(1); color: inherit; } }
 .ace-ace-card:hover .ace-ace-suit { animation: ace-pop .4s var(--ace-ease); }
 .ace-trust { animation: ace-up .8s var(--ace-ease) 1.15s both; }
 
