@@ -208,7 +208,7 @@ export const whyProof = [
 /** 方案選擇：三個主要服務各自獨立，每月 10 支起算；全家桶＝三種都買，每月 30 支。年約最便宜，季約 ×1.3、單月 ×1.7（取整到百位）。其他服務只有單價，沒有季約、年約。 */
 export type PlanTerm = 'year' | 'quarter' | 'month';
 export const planTerms: { key: PlanTerm; label: string; ratio: number }[] = [
-  { key: 'year', label: '年約', ratio: 1 }, { key: 'quarter', label: '季約', ratio: 1.3 }, { key: 'month', label: '單月', ratio: 1.7 },
+  { key: 'month', label: '單月', ratio: 1.7 }, { key: 'quarter', label: '季約', ratio: 1.3 }, { key: 'year', label: '年約', ratio: 1 },
 ];
 const roundHundred = (n: number) => Math.round(n / 100) * 100;
 const planBase = [

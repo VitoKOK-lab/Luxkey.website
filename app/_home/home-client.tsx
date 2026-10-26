@@ -249,9 +249,9 @@ function PriceNum({ value }: { value: number }) {
   return <>{money(n)}</>;
 }
 
-/** 方案選擇：上面一個年約／季約／單月開關，一撥全部價格跟著變；下面項目橫向排開（三個主要服務各自獨立，加上三種都買的全家桶）。其他服務沒有季約年約，只有單價。 */
+/** 方案選擇：單月／季約／年約依每月價格由高到低排列；下面項目橫向排開。其他服務只有單價。 */
 function Plans() {
-  const [term, setTerm] = useState<PlanTerm>('year');
+  const [term, setTerm] = useState<PlanTerm>('month');
   const [copied, setCopied] = useState('');
   const t = planTerms.find(x => x.key === term)!;
   const idx = planTerms.findIndex(x => x.key === term);
@@ -263,7 +263,7 @@ function Plans() {
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
           <p className="ace-muted">每個服務獨立購買，每月 {plans[0].qty} 支起算。價格是每月金額、未稅。其他服務只有單價，沒有季約、年約。</p>
         </div>
-        <div className="pc-switch" role="radiogroup" aria-label="選擇年約、季約或單月" style={{ ['--i' as string]: idx }}>
+        <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
           <i aria-hidden="true" />
           {planTerms.map(x => (
             <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => { setTerm(x.key); setCopied(''); }}>
