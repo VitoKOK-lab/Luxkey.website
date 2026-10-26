@@ -219,5 +219,5 @@ const planBase = [
 const monthly = (year: number) => Object.fromEntries(planTerms.map(t => [t.key, roundHundred(year * t.ratio)])) as Record<PlanTerm, number>;
 export const plans = [
   ...planBase.map(b => ({ key: b.key as string, name: b.name, qty: PLAN_QTY, unit: b.unit, note: `每月 ${PLAN_QTY} 支`, includes: [...b.includes], price: monthly(b.unit * PLAN_QTY) })),
-  { key: 'all', name: '全家桶', qty: PLAN_QTY * 3, unit: 0, note: `三種都買，每月 ${PLAN_QTY * 3} 支`, includes: ['AI 剪片、AI 數字人、狗血劇商品介紹，各 10 支', '上面三個服務的內容全包', '天天都有新影片可以上'], price: monthly(planBase.reduce((n, b) => n + b.unit * PLAN_QTY, 0)) },
+  { key: 'all', name: '全家桶', qty: PLAN_QTY * 3, unit: 0, note: `三種都買，每月 ${PLAN_QTY * 3} 支`, includes: ['AI 剪片、AI 數字人、狗血劇商品介紹，各 10 支', '上面三個服務的內容全包', '送一個 IP 角色', '天天都有新影片可以上'], price: monthly(planBase.reduce((n, b) => n + b.unit * PLAN_QTY, 0)) },
 ];
