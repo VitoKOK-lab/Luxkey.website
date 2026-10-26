@@ -212,12 +212,12 @@ export const planTerms: { key: PlanTerm; label: string; ratio: number }[] = [
 ];
 const roundHundred = (n: number) => Math.round(n / 100) * 100;
 const planBase = [
-  { key: 'edit', name: 'AI 剪片', unit: 300 },
-  { key: 'ugc', name: 'AI 數字人', unit: 2800 },
-  { key: 'drama', name: '狗血劇商品介紹', unit: 3900 },
+  { key: 'edit', name: 'AI 剪片', unit: 300, includes: ['你給素材，AI 剪輯、轉場與節奏調整', '自動字幕', '直式 9:16，可直接上架'] },
+  { key: 'ugc', name: 'AI 數字人', unit: 2800, includes: ['介紹腳本撰寫', 'AI 數字人口播與商品展示', '字幕、配樂，直式交付'] },
+  { key: 'drama', name: '狗血劇商品介紹', unit: 3900, includes: ['編劇：劇情腳本與分鏡', 'AI 角色演出與場景', '字幕、配樂，直式交付'] },
 ] as const;
 const monthly = (year: number) => Object.fromEntries(planTerms.map(t => [t.key, roundHundred(year * t.ratio)])) as Record<PlanTerm, number>;
 export const plans = [
-  ...planBase.map(b => ({ key: b.key as string, name: b.name, qty: PLAN_QTY, unit: b.unit, note: `每月 ${PLAN_QTY} 支`, price: monthly(b.unit * PLAN_QTY) })),
-  { key: 'all', name: '全家桶', qty: PLAN_QTY * 3, unit: 0, note: `三種都買，每月 ${PLAN_QTY * 3} 支`, price: monthly(planBase.reduce((n, b) => n + b.unit * PLAN_QTY, 0)) },
+  ...planBase.map(b => ({ key: b.key as string, name: b.name, qty: PLAN_QTY, unit: b.unit, note: `每月 ${PLAN_QTY} 支`, includes: [...b.includes], price: monthly(b.unit * PLAN_QTY) })),
+  { key: 'all', name: '全家桶', qty: PLAN_QTY * 3, unit: 0, note: `三種都買，每月 ${PLAN_QTY * 3} 支`, includes: ['AI 剪片、AI 數字人、狗血劇商品介紹，各 10 支', '上面三個服務的內容全包', '天天都有新影片可以上'], price: monthly(planBase.reduce((n, b) => n + b.unit * PLAN_QTY, 0)) },
 ];
