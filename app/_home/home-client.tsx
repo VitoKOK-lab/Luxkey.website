@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Briefcase, CalendarClock, Check, ChevronDown, Clapperboard, ClipboardList, GraduationCap, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
+import { EMAIL, LINE_ID, LINE_URL, BRIEF_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -77,9 +77,9 @@ function CaptionPrice({ market, price, unit }: { market?: number; price: number;
 
 export function Brand() {
   return (
-    <Link href="/" className="ace-brand" aria-label="A.C.E. 首頁">
+    <Link href="/" className="ace-brand" aria-label="ACE Impact 首頁">
       <img src="/home/ace-mark.webp" alt="" width={46} height={45} />
-      <span><strong>A.C.E<i>.</i></strong><small>讓 AI 成為每個品牌的王牌</small></span>
+      <span><strong>ACE <i>Impact</i></strong><small>讓 AI 成為每個品牌的王牌</small></span>
     </Link>
   );
 }
@@ -92,7 +92,7 @@ export function Footer() {
         <div className="ace-footer-info">
           <p>金曜石國際股份有限公司（LUXKEY）</p>
           <p>臺北市信義區信義路四段458號6樓 · <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
-          <p><Link href="/introduce/">經銷合作</Link> · <Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} A.C.E.</p>
+          <p><Link href="/introduce/">經銷合作</Link> · <Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} ACE Impact</p>
         </div>
       </div>
     </footer>
@@ -114,6 +114,32 @@ function Header() {
         </button>
       </div>
     </header>
+  );
+}
+
+/** 雙 11 活動條：價格全部由方案資料算，改名、改價會自動跟著變；過了 PROMO_END 自動隱藏。 */
+function PromoBar({ initialOn }: { initialOn: boolean }) {
+  const [on, setOn] = useState(initialOn);
+  useEffect(() => {
+    if (!promoActive()) { setOn(false); return; }
+    const t = setInterval(() => { if (!promoActive()) setOn(false); }, 60_000);
+    return () => clearInterval(t);
+  }, []);
+  if (!on) return null;
+  const ugc = plans.find(p => p.key === 'ugc')!, edit = plans.find(p => p.key === 'edit')!;
+  const monthUnit = ugc.price.month / ugc.qty, yearUnit = ugc.price.year / ugc.qty;
+  return (
+    <a href="#plans" className="ace-promo" aria-label={`${PROMO.title}，${PROMO.deadline}，看方案`}>
+      <div className="ace-wrap ace-promo-row">
+        <div className="ace-promo-copy">
+          <p className="ace-promo-tag"><b>{PROMO.title}</b><span>{PROMO.quota}</span></p>
+          <p className="ace-promo-title">簽約後第一個月，全部用年約最低價</p>
+          <p className="ace-promo-eg">例：{ugc.name}每支 <s>{money(monthUnit)}</s> → <b>{money(yearUnit)}</b>，再送 {PROMO.gift} 支{/^[A-Za-z]/.test(edit.name) ? ' ' : ''}{edit.name}</p>
+          <p className="ace-promo-note">單月也適用・{edit.name}用你的口播素材・第 2 個月起照原方案</p>
+        </div>
+        <span className="ace-promo-end"><CalendarClock size={18} />{PROMO.deadline}<ArrowRight size={16} className="ace-promo-go" /></span>
+      </div>
+    </a>
   );
 }
 
@@ -181,13 +207,15 @@ function Pains() {
         <div className="ace-phone-row" ref={rowRef} style={{ ['--n' as string]: n }}>
           {pains.map((x, i) => (
             <div key={x.tag} className={`ace-phone${i === active ? ' is-active' : ''}${playing === i ? ' is-playing' : ''}`}>
-              <button className="ace-phone-btn" onClick={() => tap(i)} aria-label={`${playing === i ? '暫停' : '播放'}：${x.tag}`}>
+              <button className="ace-phone-btn" onClick={() => (x.soon ? select(i) : tap(i))} aria-label={!x.soon ? `${playing === i ? '暫停' : '播放'}：${x.tag}` : `${x.tag}（示範影片準備中）`}>
                 <span className="ace-iphone">
                   <span className="ace-iphone-screen">
-                    <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
-                      onPlay={() => setPlaying(i)} onPause={() => setPlaying(c => (c === i ? -1 : c))} onEnded={() => setPlaying(c => (c === i ? -1 : c))} />
+                    {!x.soon
+                      ? <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
+                          onPlay={() => setPlaying(i)} onPause={() => setPlaying(c => (c === i ? -1 : c))} onEnded={() => setPlaying(c => (c === i ? -1 : c))} />
+                      : <img src={x.poster ?? DEMO_POSTER} alt="" loading="lazy" />}
                     <span className="ace-iphone-glare" />
-                    <span className="ace-iphone-play">{playing === i ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</span>
+                    {!x.soon && <span className="ace-iphone-play">{playing === i ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</span>}
                     <span className="ace-iphone-name"><b>{i + 1}</b>{x.tag}</span>
                   </span>
                   <span className="ace-iphone-island" />
@@ -211,91 +239,67 @@ function Pains() {
   );
 }
 
-/** 價格數字切換時，從舊價格快速滾到新價格 */
-function PriceNum({ value }: { value: number }) {
-  const [n, setN] = useState(value);
-  const prev = useRef(value);
-  useEffect(() => {
-    const from = prev.current;
-    prev.current = value;
-    if (from === value || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setN(value); return; }
-    let raf = 0;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const k = Math.min(1, (t - start) / 450);
-      setN(Math.round(from + (value - from) * (1 - Math.pow(1 - k, 3))));
-      if (k < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [value]);
-  return <>{money(n)}</>;
-}
-
-/** 方案選擇：單月／季約／年約依每月價格由高到低排列；下面項目橫向排開。其他服務只有單價。 */
+/** 方案選擇：A–D 四張卡，每張同時列出單月、季約、年約。每列先放「一支的價格」，下面再寫 10 支每月多少。 */
 function Plans() {
-  const [term, setTerm] = useState<PlanTerm>('month');
-  const t = planTerms.find(x => x.key === term)!;
-  const idx = planTerms.findIndex(x => x.key === term);
   return (
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
-          <p className="ace-muted">看過作品，選一種影片開始；三種都要，就選全家桶。先選合作期間，再看每月價格。</p>
-        </div>
-        <p className="pc-switch-label">選擇合作期間</p>
-        <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
-          <i aria-hidden="true" />
-          {planTerms.map(x => (
-            <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => setTerm(x.key)}>
-              {x.label}{x.key === 'year' && <em>最划算</em>}
-            </button>
-          ))}
+          <p className="ace-muted">四種影片可以自由搭配，訂越久每支越便宜。</p>
         </div>
         <div className="pc">
-          {plans.map(p => {
-            const price = p.price[term];
-            const save = term === 'year' ? `相較單月，一年省 NT$${money((p.price.month - p.price.year) * 12)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
-            return (
-              <article key={p.key} className={p.key === 'all' ? 'pc-col is-all' : 'pc-col'}>
-                <div className="pc-main">
-                  <p className="pc-eyebrow">{p.key === 'all' ? '三種服務一次做' : '單項影片服務'}</p>
-                  <h3>{p.name}</h3>
-                  <p className="pc-note">{p.note}</p>
-                  <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
-                  <p className="pc-save">{save}</p>
-                </div>
-                <ul>{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
-              </article>
-            );
-          })}
+          {plans.map(p => (
+            <article key={p.key} className="pc-col">
+              <div className="pc-main">
+                <p className="pc-eyebrow"><i className="ace-letter">{p.letter}</i>方案 {p.letter}</p>
+                <h3>{p.name}</h3>
+                <p className="pc-note">{p.pitch}</p>
+              </div>
+              <ul className="pc-terms">
+                {planTerms.map(t => (
+                  <li key={t.key} className={t.key === 'year' ? 'is-best' : ''}>
+                    <span className="pc-term">{t.label}{t.key === 'year' && <em>最划算</em>}</span>
+                    <span className="pc-per"><small>每支 NT$</small><b>{money(p.price[t.key] / p.qty)}</b></span>
+                    <span className="pc-total">{p.qty} 支 = 每月 NT${money(p.price[t.key])}</span>
+                  </li>
+                ))}
+              </ul>
+              <ul className="pc-feat">{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
+            </article>
+          ))}
         </div>
-        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起；全家桶每月 {plans[3].qty} 支。以上為{t.label}每月價格，未稅。</p>
+        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起，可自由搭配。以上為每月價格，未稅。</p>
       </div>
     </section>
   );
 }
 
-/** 訂閱用戶的附加選購；公開價格與 Super5 的相同項目對齊。 */
+/** 訂閱用戶的附加選購 E–J：先展示價格，標「即將開放」，不放詢問入口。 */
 function AddOns() {
   return (
     <section id="other" className="ace-other">
       <div className="ace-wrap">
         <div className="ace-other-head">
           <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
-          <p className="ace-muted">僅開放訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
+          <p className="ace-muted">訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
         </div>
-        <ul className="ace-other-grid">
+        <ul className="ace-other-list">
           {addOns.map(a => <li key={a.key}>
-            <h3>{a.name}</h3>
-            <p>{a.detail}</p>
-            <div className="ace-other-price"><strong>{a.price}</strong><span>{a.unit}</span></div>
-            {a.more && <small>{a.more}</small>}
+            <i className="ace-letter">{a.letter}</i>
+            <div className="ace-other-main">
+              <h3>{a.name}{a.soon && <em>即將開放</em>}</h3>
+              <p>{a.detail}{a.more && <> ｜ {a.more}</>}</p>
+            </div>
+            <div className="ace-other-side">
+              {a.market && <s>{a.marketLabel} {a.market}</s>}
+              <div className="ace-other-price"><strong>{a.price}</strong>{a.unit && <span>{a.unit}</span>}</div>
+              {a.pack && <small>{a.pack}</small>}
+            </div>
           </li>)}
         </ul>
         <div className="ace-other-foot">
-          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅參考價。</p>
+          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅價格。</p>
         </div>
       </div>
     </section>
@@ -359,13 +363,15 @@ function Works() {
         </div>
         <div className={tab === 'other' ? 'ace-works-row is-other' : 'ace-works-row'} key={tab}>
           {list.map(w => (
-            <figure key={w.demo} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
+            <figure key={w.demo ?? w.poster} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
               <div className="ace-work-screen">
-                {playing === w
+                {!w.demo
+                  ? <img src={w.poster} alt="" loading="lazy" />
+                  : playing === w
                   ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(null)} />
                   : <button onClick={() => setPlaying(w)} aria-label={`播放：${w.title ?? w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
               </div>
-              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{!w.demo ? '有影片後更新' : w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
             </figure>
           ))}
         </div>
@@ -379,10 +385,10 @@ function Process() {
   return (
     <section id="process" className="ace-section ace-process">
       <div className="ace-wrap">
-        <p className="ace-kicker">HOW IT WORKS</p>
-        <h2 className="ace-h2">合作流程</h2>
+        <p className="ace-kicker">STEP 3</p>
+        <h2 className="ace-h2">怎麼拿到影片</h2>
         <ol className="ace-flow">
-          {flow.map((f, i) => <li key={f.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{f.title}</strong><p>{f.body}</p></li>)}
+          {flow.map((f, i) => <li key={f.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{f.title}</strong><p>{f.body}</p>{f.href && <Link href={f.href} className="ace-text-link">{f.cta} <ArrowRight size={16} /></Link>}</li>)}
         </ol>
       </div>
     </section>
@@ -424,7 +430,7 @@ function Faq() {
 /** 首頁王牌卡片點了之後，要讓痛點輪播切到那一支影片 */
 const setPain = (i: number) => window.dispatchEvent(new CustomEvent('ace:pain', { detail: i }));
 
-export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
+export default function HomePage({ fontClass = '', promoOn = false }: { fontClass?: string; promoOn?: boolean }) {
   const [heroVideoReady, setHeroVideoReady] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -432,6 +438,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
   }, []);
   return (
     <div className={`ace ${fontClass}`}>
+      <PromoBar initialOn={promoOn} />
       <Header />
       <main>
         <section className="ace-hero">
@@ -447,13 +454,15 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
           <div className="ace-wrap">
             <div className="ace-hero-copy">
               <p className="ace-kicker">讓 AI 成為每個品牌的王牌</p>
-              <h1 className="ace-h1"><span>品牌短影音，</span><span>一支 <em>NT$300</em> 起</span></h1>
-              <p className="ace-lead">十年行銷團隊 × AI 製作，<br />省下的是人事成本，不是品質。</p>
-              <div className="ace-aces" aria-label="三種 AI 影片的價格">
+              <h1 className="ace-h1"><span>老闆，你累了嗎？</span></h1>
+              <p className="ace-hero-sub">沒有短影音不行，但天天拍片又燒錢又累。</p>
+              <p className="ace-lead">交給我們，一個月不到一個小編的價格，<br />不用拍片也能穩定出片。</p>
+              <ul className="ace-chips" aria-label="影片規格">{heroSpecs.map(x => <li key={x}>{x}</li>)}</ul>
+              <div className="ace-aces" aria-label="四種 AI 影片的價格">
                 {videos.map((v, i) => (
                   <a key={v.key} href="#why" className="ace-ace-card" style={{ animationDelay: `${.55 + i * .13}s` }} onClick={() => setPain(i)}>
-                    <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
-                    <b>{v.name}</b>
+                    <span className="ace-ace-suit">{['♠', '♥', '♣', '♦'][i]}</span>
+                    <b><i className="ace-letter">{v.letter}</i>{v.name}</b>
                     {v.hook && <em className="ace-ace-hook">{v.hook}</em>}
                     <HeroPrice market={v.market} price={v.price} base={.9 + i} />
                     <span className="ace-ace-min">10 支起・未稅</span>
@@ -469,9 +478,9 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
 
         <div className="ace-wrap ace-lift">
           <div className="ace-card ace-trust">
-            {[[Lightbulb, '生成前反覆確認', '腳本與畫面確認好才製作'], [Sparkles, '10 支起訂', '同一批角色與風格一致'], [ShieldCheck, '100+ 品牌合作', '連鎖品牌到在地店家']].map(([Icon, t, s]) => {
-              const I = Icon as typeof Lightbulb;
-              return <div key={t as string}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t as string}</strong><small>{s as string}</small></span></div>;
+            {[[LayoutGrid, sop[0]], [Upload, sop[1]], [UserCheck, sop[2]]].map(([Icon, x]) => {
+              const I = Icon as typeof LayoutGrid, t = x as (typeof sop)[number];
+              return <div key={t.title}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t.title}</strong><small>{t.body}</small></span></div>;
             })}
           </div>
         </div>
@@ -483,17 +492,37 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         <section id="about" className="ace-section ace-why">
           <div className="ace-wrap">
             <div className="ace-why-head">
-              <p className="ace-kicker">WHY A.C.E.</p>
-              <h2 className="ace-h2">為什麼是我們？</h2>
+              <p className="ace-kicker">WHY ACE IMPACT</p>
+              <h2 className="ace-h2">為什麼選 ACE Impact？</h2>
             </div>
-            <div className="ace-vs">
-              {whyVs.map(v => (
-                <div key={v.who} className="ace-vs-card"><b>{v.who}</b><span><X size={16} />{v.lack}</span></div>
+            <div className="ace-stats">
+              {[TrendingUp, Clapperboard, Users].map((Icon, k) => (
+                <div key={stats[k].label} className="ace-card ace-stat">
+                  <span className="ace-icon"><Icon size={22} /></span>
+                  <b>{stats[k].big}<small>{stats[k].unit}</small></b>
+                  <p>{stats[k].label}<br />{stats[k].label2}</p>
+                </div>
               ))}
-              <div className="ace-vs-us">
-                <b>A.C.E.<small>三個都有</small></b>
-                <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
+            </div>
+            <ul className="ace-creds">
+              {[Briefcase, Landmark, GraduationCap, VideoIcon].map((Icon, k) => <li key={creds[k]}><Icon size={16} />{creds[k]}</li>)}
+            </ul>
+            <p className="ace-stat-src">{statSource}</p>
+
+            <div className="ace-compare">
+              <div className="ace-compare-head">
+                <h3 className="ace-h3">同一個團隊，只收 AI 的價格</h3>
+                <p className="ace-muted">AI 省下人力成本，全部回饋給你。</p>
               </div>
+              <div className="ace-compare-row">
+                <div className="ace-card ace-compare-old"><p>{compareHuman.label}</p><b>{compareHuman.price}</b><small>{compareHuman.note}</small></div>
+                <div className="ace-card ace-compare-new"><p>{compareUs.label}</p><b>NT${videoOf('ugc').price.toLocaleString('en-US')}<small>起</small></b><small>{compareUs.note}</small></div>
+              </div>
+            </div>
+
+            <div className="ace-vs-us ace-strengths">
+              <b>ACE Impact<small>我們的強項</small></b>
+              <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
             </div>
             <div className="ace-why-proof">
               {whyProof.map(x => (
@@ -516,14 +545,16 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
         <section id="contact" className="ace-section ace-contact">
           <div className="ace-wrap ace-contact-card">
             <div>
-              <p className="ace-kicker">LET'S TALK</p>
-              <h2 className="ace-h2">把你的影音行銷，<br />交給王牌。</h2>
-              <p>告訴我們你的產品，1 個工作天內回覆做法與報價。</p>
+              <p className="ace-kicker">GET STARTED</p>
+              <h2 className="ace-h2">選好影片和版型，<br />就能開始。</h2>
+              <p>以上皆未稅。合約、交期與付款方式，由業務提供正式報價。</p>
+              <p className="ace-line-id">LINE ID：<b>{LINE_ID}</b></p>
             </div>
             <div className="ace-contact-actions">
-              <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>電腦版，用手機掃碼加 LINE</figcaption></figure>
-              <a className="ace-btn ace-btn-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
-              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('A.C.E. 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
+              <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>掃碼加 LINE，直接問報價</figcaption></figure>
+              <Link className="ace-btn ace-btn-light ace-btn-lg" href={BRIEF_URL}><ClipboardList size={20} /> 填需求單</Link>
+              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
+              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('ACE Impact 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
             </div>
           </div>
           <div className="ace-wrap ace-partner">
