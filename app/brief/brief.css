@@ -26,3 +26,6 @@
 .bf-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .bf-note { margin: 0; color: var(--ace-teal-deep); font-size: 14px; font-weight: 700; }
 @media (max-width: 560px) { .bf-actions .ace-btn { width: 100%; } }
+
+.bf-trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.bf-result .ace-btn:disabled { opacity: .6; cursor: progress; }
