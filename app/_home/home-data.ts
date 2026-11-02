@@ -3,6 +3,11 @@ export const PLAN_QTY = 10;
 export const LINE_URL = 'https://lin.ee/rL0q31t';
 export const EMAIL = 'info@luxkey.com.tw';
 
+/** 雙 11 活動：到 PROMO_END（台灣時間 11/20 23:59:59）自動下架。改檔期只改這裡。 */
+export const PROMO_END = Date.parse('2026-11-20T23:59:59+08:00');
+export const PROMO = { title: '雙 11 下殺優惠', quota: '限量 11 家', deadline: '11/20 23:59 截止', gift: 11 };
+export const promoActive = (now = Date.now()) => now <= PROMO_END;
+
 /** 附加選購：價格與項目以 Super5 的 service-data.ts 為參考；只列有明確對應價格的服務。 */
 export type AddOnKey = 'copy' | 'website' | 'course' | 'influencer';
 export type AddOn = { key: AddOnKey; name: string; detail: string; price: string; unit: string; more?: string };

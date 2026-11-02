@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, CalendarClock, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -114,6 +114,32 @@ function Header() {
         </button>
       </div>
     </header>
+  );
+}
+
+/** 雙 11 活動條：價格全部由方案資料算，改名、改價會自動跟著變；過了 PROMO_END 自動隱藏。 */
+function PromoBar({ initialOn }: { initialOn: boolean }) {
+  const [on, setOn] = useState(initialOn);
+  useEffect(() => {
+    if (!promoActive()) { setOn(false); return; }
+    const t = setInterval(() => { if (!promoActive()) setOn(false); }, 60_000);
+    return () => clearInterval(t);
+  }, []);
+  if (!on) return null;
+  const ugc = plans.find(p => p.key === 'ugc')!, edit = plans.find(p => p.key === 'edit')!;
+  const monthUnit = ugc.price.month / ugc.qty, yearUnit = ugc.price.year / ugc.qty;
+  return (
+    <a href="#plans" className="ace-promo" aria-label={`${PROMO.title}，${PROMO.deadline}，看方案`}>
+      <div className="ace-wrap ace-promo-row">
+        <div className="ace-promo-copy">
+          <p className="ace-promo-tag"><b>{PROMO.title}</b><span>{PROMO.quota}</span></p>
+          <p className="ace-promo-title">簽約後第一個月，全部用年約最低價</p>
+          <p className="ace-promo-eg">例：{ugc.name}每支 <s>{money(monthUnit)}</s> → <b>{money(yearUnit)}</b>，再送 {PROMO.gift} 支 {edit.name}</p>
+          <p className="ace-promo-note">單月也適用・{edit.name}用你的口播素材・第 2 個月起照原方案</p>
+        </div>
+        <span className="ace-promo-end"><CalendarClock size={18} />{PROMO.deadline}<ArrowRight size={16} className="ace-promo-go" /></span>
+      </div>
+    </a>
   );
 }
 
@@ -424,7 +450,7 @@ function Faq() {
 /** 首頁王牌卡片點了之後，要讓痛點輪播切到那一支影片 */
 const setPain = (i: number) => window.dispatchEvent(new CustomEvent('ace:pain', { detail: i }));
 
-export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
+export default function HomePage({ fontClass = '', promoOn = false }: { fontClass?: string; promoOn?: boolean }) {
   const [heroVideoReady, setHeroVideoReady] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -432,6 +458,7 @@ export default function HomePage({ fontClass = '' }: { fontClass?: string }) {
   }, []);
   return (
     <div className={`ace ${fontClass}`}>
+      <PromoBar initialOn={promoOn} />
       <Header />
       <main>
         <section className="ace-hero">

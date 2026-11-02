@@ -521,3 +521,23 @@ body { margin: 0; background: #fbf6f2; }
   .pc-col.is-all { display: flex; }
   .pc-col.is-all ul { grid-template-columns: 1fr; width: 100%; padding-top: 18px; border-top: 1px dashed rgba(255, 255, 255, .25); }
 }
+
+/* 雙 11 活動條：整條可點，跳到方案區；不 sticky，避免和主選單一起吃掉手機畫面 */
+.ace-promo { display: block; background: var(--ace-orange-soft); border-bottom: 1px solid #f6d3bd; color: var(--ace-ink); text-decoration: none; }
+.ace-promo:hover .ace-promo-end { background: var(--ace-orange-deep); }
+.ace-promo-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-top: 14px; padding-bottom: 14px; }
+.ace-promo-copy { min-width: 0; }
+.ace-promo-copy p { margin: 0; }
+.ace-promo-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; }
+.ace-promo-tag b { color: var(--ace-orange-deep); letter-spacing: .04em; }
+.ace-promo-tag span { padding: 2px 8px; border-radius: 999px; background: var(--ace-orange); color: #fff; font-weight: 700; font-size: 12px; }
+.ace-promo-title { margin-top: 4px !important; font-size: clamp(17px, 2vw, 22px); font-weight: 800; line-height: 1.4; }
+.ace-promo-eg { margin-top: 2px !important; font-size: 14px; font-weight: 600; }
+.ace-promo-eg s { color: var(--ace-muted); font-weight: 500; }
+.ace-promo-eg b { color: var(--ace-orange-deep); font-family: var(--font-latin), sans-serif; }
+.ace-promo-note { margin-top: 2px !important; color: var(--ace-muted); font-size: 12px; }
+.ace-promo-end { display: inline-flex; flex: none; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; background: var(--ace-orange); color: #fff; font-weight: 700; font-size: 14px; font-family: var(--font-latin), sans-serif; transition: background .3s; }
+@media (max-width: 560px) {
+  .ace-promo-row { flex-direction: column; align-items: stretch; gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+  .ace-promo-end { justify-content: center; }
+}

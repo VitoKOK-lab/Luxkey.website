@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { fontClass } from './_home/fonts';
 import HomePage from './_home/home-client';
-import { EMAIL, addOns, faqs, videos } from './_home/home-data';
+import { EMAIL, addOns, faqs, promoActive, videos } from './_home/home-data';
 
 const title = 'A.C.E.｜讓 AI 成為每個品牌的王牌';
 const description = 'A.C.E. 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,800、狗血劇商品介紹每支 NT$3,900。另有社群圖文、SEO 文章、電商與網站服務。';
@@ -48,6 +48,6 @@ const schema = {
 export default function Page() {
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, '\\u003c') }} />
-    <HomePage fontClass={fontClass} />
+    <HomePage fontClass={fontClass} promoOn={promoActive()} />
   </>;
 }
