@@ -134,7 +134,7 @@ function PromoBar({ initialOn }: { initialOn: boolean }) {
         <div className="ace-promo-copy">
           <p className="ace-promo-tag"><b>{PROMO.title}</b><span>{PROMO.quota}</span></p>
           <p className="ace-promo-title">簽約後第一個月，全部用年約最低價</p>
-          <p className="ace-promo-eg">例：{ugc.name}每支 <s>{money(monthUnit)}</s> → <b>{money(yearUnit)}</b>，再送 {PROMO.gift} 支 {edit.name}</p>
+          <p className="ace-promo-eg">例：{ugc.name}每支 <s>{money(monthUnit)}</s> → <b>{money(yearUnit)}</b>，再送 {PROMO.gift} 支{/^[A-Za-z]/.test(edit.name) ? ' ' : ''}{edit.name}</p>
           <p className="ace-promo-note">單月也適用・{edit.name}用你的口播素材・第 2 個月起照原方案</p>
         </div>
         <span className="ace-promo-end"><CalendarClock size={18} />{PROMO.deadline}<ArrowRight size={16} className="ace-promo-go" /></span>
@@ -207,13 +207,15 @@ function Pains() {
         <div className="ace-phone-row" ref={rowRef} style={{ ['--n' as string]: n }}>
           {pains.map((x, i) => (
             <div key={x.tag} className={`ace-phone${i === active ? ' is-active' : ''}${playing === i ? ' is-playing' : ''}`}>
-              <button className="ace-phone-btn" onClick={() => tap(i)} aria-label={`${playing === i ? '暫停' : '播放'}：${x.tag}`}>
+              <button className="ace-phone-btn" onClick={() => (x.soon ? select(i) : tap(i))} aria-label={!x.soon ? `${playing === i ? '暫停' : '播放'}：${x.tag}` : `${x.tag}（示範影片準備中）`}>
                 <span className="ace-iphone">
                   <span className="ace-iphone-screen">
-                    <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
-                      onPlay={() => setPlaying(i)} onPause={() => setPlaying(c => (c === i ? -1 : c))} onEnded={() => setPlaying(c => (c === i ? -1 : c))} />
+                    {!x.soon
+                      ? <video ref={el => { videoRefs.current[i] = el; }} src={x.demo ?? DEMO_VIDEO} poster={x.poster ?? DEMO_POSTER} playsInline preload="metadata" tabIndex={-1} aria-hidden="true"
+                          onPlay={() => setPlaying(i)} onPause={() => setPlaying(c => (c === i ? -1 : c))} onEnded={() => setPlaying(c => (c === i ? -1 : c))} />
+                      : <img src={x.poster ?? DEMO_POSTER} alt="" loading="lazy" />}
                     <span className="ace-iphone-glare" />
-                    <span className="ace-iphone-play">{playing === i ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</span>
+                    {!x.soon && <span className="ace-iphone-play">{playing === i ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" />}</span>}
                     <span className="ace-iphone-name"><b>{i + 1}</b>{x.tag}</span>
                   </span>
                   <span className="ace-iphone-island" />
@@ -268,7 +270,7 @@ function Plans() {
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
-          <p className="ace-muted">看過作品，選一種影片開始；三種都要，就選全家桶。先選合作期間，再看每月價格。</p>
+          <p className="ace-muted">四種影片可以自由搭配，訂越久每支越便宜。先選合作期間，再看每月價格。</p>
         </div>
         <p className="pc-switch-label">選擇合作期間</p>
         <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
@@ -284,11 +286,12 @@ function Plans() {
             const price = p.price[term];
             const save = term === 'year' ? `相較單月，一年省 NT$${money((p.price.month - p.price.year) * 12)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
             return (
-              <article key={p.key} className={p.key === 'all' ? 'pc-col is-all' : 'pc-col'}>
+              <article key={p.key} className="pc-col">
                 <div className="pc-main">
-                  <p className="pc-eyebrow">{p.key === 'all' ? '三種服務一次做' : '單項影片服務'}</p>
+                  <p className="pc-eyebrow"><i className="ace-letter">{p.letter}</i>方案 {p.letter}</p>
                   <h3>{p.name}</h3>
-                  <p className="pc-note">{p.note}</p>
+                  <p className="pc-note">{p.pitch}</p>
+                  <p className="pc-unit">每支 NT${money(price / p.qty)}{term !== 'year' && <s>年約 NT${money(p.price.year / p.qty)}</s>}</p>
                   <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
                   <p className="pc-save">{save}</p>
                 </div>
@@ -297,7 +300,7 @@ function Plans() {
             );
           })}
         </div>
-        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起；全家桶每月 {plans[3].qty} 支。以上為{t.label}每月價格，未稅。</p>
+        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起，可自由搭配。以上為{t.label}每月價格（{plans[0].qty} 支），未稅。</p>
       </div>
     </section>
   );
@@ -385,13 +388,15 @@ function Works() {
         </div>
         <div className={tab === 'other' ? 'ace-works-row is-other' : 'ace-works-row'} key={tab}>
           {list.map(w => (
-            <figure key={w.demo} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
+            <figure key={w.demo ?? w.poster} className={playing === w ? 'ace-work is-playing' : 'ace-work'}>
               <div className="ace-work-screen">
-                {playing === w
+                {!w.demo
+                  ? <img src={w.poster} alt="" loading="lazy" />
+                  : playing === w
                   ? <video src={w.demo} poster={w.poster} autoPlay controls playsInline loop onEnded={() => setPlaying(null)} />
                   : <button onClick={() => setPlaying(w)} aria-label={`播放：${w.title ?? w.type}`}><img src={w.poster} alt="" loading="lazy" /><span className="ace-work-play"><Play size={26} fill="currentColor" /></span></button>}
               </div>
-              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
+              <figcaption><b>{w.title ?? w.brand ?? w.type}</b><small>{!w.demo ? '有影片後更新' : w.brand || w.title ? w.type : '點擊播放'}{w.result ? `・${w.result}` : ''}</small></figcaption>
             </figure>
           ))}
         </div>
@@ -476,11 +481,11 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
               <p className="ace-kicker">讓 AI 成為每個品牌的王牌</p>
               <h1 className="ace-h1"><span>品牌短影音，</span><span>一支 <em>NT$300</em> 起</span></h1>
               <p className="ace-lead">十年行銷團隊 × AI 製作，<br />省下的是人事成本，不是品質。</p>
-              <div className="ace-aces" aria-label="三種 AI 影片的價格">
+              <div className="ace-aces" aria-label="四種 AI 影片的價格">
                 {videos.map((v, i) => (
                   <a key={v.key} href="#why" className="ace-ace-card" style={{ animationDelay: `${.55 + i * .13}s` }} onClick={() => setPain(i)}>
-                    <span className="ace-ace-suit">{['♠', '♥', '♦'][i]}</span>
-                    <b>{v.name}</b>
+                    <span className="ace-ace-suit">{['♠', '♥', '♣', '♦'][i]}</span>
+                    <b><i className="ace-letter">{v.letter}</i>{v.name}</b>
                     {v.hook && <em className="ace-ace-hook">{v.hook}</em>}
                     <HeroPrice market={v.market} price={v.price} base={.9 + i} />
                     <span className="ace-ace-min">10 支起・未稅</span>

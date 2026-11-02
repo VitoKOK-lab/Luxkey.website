@@ -4,7 +4,7 @@ import HomePage from './_home/home-client';
 import { EMAIL, addOns, faqs, promoActive, videos } from './_home/home-data';
 
 const title = 'ACE Impact｜讓 AI 成為每個品牌的王牌';
-const description = 'ACE Impact 用 AI 做品牌影音：AI 剪片每支 NT$300、AI 數字人每支 NT$2,800、狗血劇商品介紹每支 NT$3,900。另有社群圖文、SEO 文章、電商與網站服務。';
+const description = `ACE Impact 用 AI 做品牌短影音：${videos.map(v => `${v.name}每支 NT$${v.price.toLocaleString('en-US')}`).join('、')}（年約，每月 10 支起）。另有素人開箱、電商網站與線上課程。`;
 const url = 'https://luxkey.com.tw/';
 
 export const metadata: Metadata = {
