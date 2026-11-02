@@ -173,16 +173,29 @@ export const flow = [
   { title: '製作交片', body: '依確認好的內容製作，交付可以直接上架的直式影片。' },
 ];
 
-/** 為什麼是我們：三種對手各缺一塊，我們三塊都有；下面三段是我們的底氣。 */
-export const whyVs = [
-  { who: '行銷公司', lack: '不懂商業' },
-  { who: '商業顧問公司', lack: '不懂 AI' },
-  { who: 'AI 公司', lack: '只會炫技' },
+/** 首頁主視覺的規格標籤 */
+export const heroSpecs = ['30–60 秒', '1080p 直式', '單月・季・年都能訂'];
+
+/** 為什麼選我們：三個產業數據（來源照線稿，標在區塊下方）、四枚經歷、一組比價、三個強項、三個 SOP 賣點。 */
+export const stats = [
+  { big: '86', unit: '%', label: '美國廣告買家', label2: '用 AI 做影片' },
+  { big: '1,000', unit: '億', label: '微短劇規模', label2: '超越電影票房' },
+  { big: '100', unit: '+', label: '合作品牌', label2: '近千萬業績' },
 ];
+export const statSource = '資料來源：IAB 2025 數位影音廣告報告；工商時報 2026 年 4 月（人民幣）';
+export const creds = ['設計行銷近 10 年', '市政府合作顧問', '大學講師', '2019 起做短影音'];
+/** 真人行銷公司拍一支的行情，對比 ACE Impact AI 代言人（價格取自方案資料） */
+export const compareHuman = { label: '真人行銷公司拍一支', price: 'NT$8,000–16,000', note: '真人出鏡＋拍攝＋剪輯' };
+export const compareUs = { label: 'ACE Impact AI 做一支', note: 'AI 出鏡＋腳本＋剪輯' };
 export const whyUs = ['懂行銷', '懂商業', '會用 AI'];
+export const sop = [
+  { title: '版型直接選', body: '挑了就開始' },
+  { title: '規格好上架', body: 'IG・抖音・YT 直接傳' },
+  { title: '先確認再做', body: '腳本畫面確認才製作' },
+];
 export const whyProof = [
   { stat: '2019', title: '比市場早一步', body: '抖音還沒人看好，我們就在拍短影音；AI 一出現，就用進每支影片。' },
-  { stat: '合理價', title: '不割韭菜', body: '不收冤枉錢，用合理的價格，做真正有用的短影音。' },
+  { stat: '合理價', title: '價格透明', body: '價格公開、一支一支算清楚，用合理的價格，做真正有用的短影音。' },
   { stat: '10 萬+', title: '自己的帳號就是證明', body: '10 年行銷經驗、政府合作，全網 10 萬粉絲。怎麼幫自己做，就怎麼幫你做。' },
 ];
 

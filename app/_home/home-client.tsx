@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CalendarClock, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Briefcase, CalendarClock, Check, ChevronDown, Clapperboard, GraduationCap, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
+import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -454,8 +454,10 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
           <div className="ace-wrap">
             <div className="ace-hero-copy">
               <p className="ace-kicker">讓 AI 成為每個品牌的王牌</p>
-              <h1 className="ace-h1"><span>品牌短影音，</span><span>一支 <em>NT$300</em> 起</span></h1>
-              <p className="ace-lead">十年行銷團隊 × AI 製作，<br />省下的是人事成本，不是品質。</p>
+              <h1 className="ace-h1"><span>老闆，你累了嗎？</span></h1>
+              <p className="ace-hero-sub">沒有短影音不行，但天天拍片又燒錢又累。</p>
+              <p className="ace-lead">交給我們，一個月不到一個小編的價格，<br />不用拍片也能穩定出片。</p>
+              <ul className="ace-chips" aria-label="影片規格">{heroSpecs.map(x => <li key={x}>{x}</li>)}</ul>
               <div className="ace-aces" aria-label="四種 AI 影片的價格">
                 {videos.map((v, i) => (
                   <a key={v.key} href="#why" className="ace-ace-card" style={{ animationDelay: `${.55 + i * .13}s` }} onClick={() => setPain(i)}>
@@ -476,9 +478,9 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
 
         <div className="ace-wrap ace-lift">
           <div className="ace-card ace-trust">
-            {[[Lightbulb, '生成前反覆確認', '腳本與畫面確認好才製作'], [Sparkles, '10 支起訂', '同一批角色與風格一致'], [ShieldCheck, '100+ 品牌合作', '連鎖品牌到在地店家']].map(([Icon, t, s]) => {
-              const I = Icon as typeof Lightbulb;
-              return <div key={t as string}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t as string}</strong><small>{s as string}</small></span></div>;
+            {[[LayoutGrid, sop[0]], [Upload, sop[1]], [UserCheck, sop[2]]].map(([Icon, x]) => {
+              const I = Icon as typeof LayoutGrid, t = x as (typeof sop)[number];
+              return <div key={t.title}><span className="ace-icon ace-icon-line"><I size={22} /></span><span><strong>{t.title}</strong><small>{t.body}</small></span></div>;
             })}
           </div>
         </div>
@@ -491,16 +493,36 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
           <div className="ace-wrap">
             <div className="ace-why-head">
               <p className="ace-kicker">WHY ACE IMPACT</p>
-              <h2 className="ace-h2">為什麼是我們？</h2>
+              <h2 className="ace-h2">為什麼選 ACE Impact？</h2>
             </div>
-            <div className="ace-vs">
-              {whyVs.map(v => (
-                <div key={v.who} className="ace-vs-card"><b>{v.who}</b><span><X size={16} />{v.lack}</span></div>
+            <div className="ace-stats">
+              {[TrendingUp, Clapperboard, Users].map((Icon, k) => (
+                <div key={stats[k].label} className="ace-card ace-stat">
+                  <span className="ace-icon"><Icon size={22} /></span>
+                  <b>{stats[k].big}<small>{stats[k].unit}</small></b>
+                  <p>{stats[k].label}<br />{stats[k].label2}</p>
+                </div>
               ))}
-              <div className="ace-vs-us">
-                <b>ACE Impact<small>三個都有</small></b>
-                <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
+            </div>
+            <ul className="ace-creds">
+              {[Briefcase, Landmark, GraduationCap, VideoIcon].map((Icon, k) => <li key={creds[k]}><Icon size={16} />{creds[k]}</li>)}
+            </ul>
+            <p className="ace-stat-src">{statSource}</p>
+
+            <div className="ace-compare">
+              <div className="ace-compare-head">
+                <h3 className="ace-h3">同一個團隊，只收 AI 的價格</h3>
+                <p className="ace-muted">AI 省下人力成本，全部回饋給你。</p>
               </div>
+              <div className="ace-compare-row">
+                <div className="ace-card ace-compare-old"><p>{compareHuman.label}</p><b>{compareHuman.price}</b><small>{compareHuman.note}</small></div>
+                <div className="ace-card ace-compare-new"><p>{compareUs.label}</p><b>NT${videoOf('ugc').price.toLocaleString('en-US')}<small>起</small></b><small>{compareUs.note}</small></div>
+              </div>
+            </div>
+
+            <div className="ace-vs-us ace-strengths">
+              <b>ACE Impact<small>我們的強項</small></b>
+              <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
             </div>
             <div className="ace-why-proof">
               {whyProof.map(x => (
