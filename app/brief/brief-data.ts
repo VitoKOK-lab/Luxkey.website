@@ -3,6 +3,9 @@ import { videos } from '../_home/home-data';
 /** 客人上傳素材的 Google Drive 連結。拿到連結後貼在這裡，頁面上的「上傳素材」按鈕就會亮起來。 */
 export const DRIVE_UPLOAD_URL = '';
 
+/** 需求單直接送進 Google 試算表的網址（Apps Script 網頁應用程式）。設定方式見 docs/brief-sheet.gs。空的時候，需求單改為複製後貼到 LINE 或 Email。 */
+export const FORM_ENDPOINT = '';
+
 export type Values = Record<string, string | string[]>;
 export type Ctx = { promo: boolean };
 export type Field = {

@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, ClipboardCopy, ExternalLink, Mail, MessageCircle, Upload } from 'lucide-react';
+import { ArrowRight, Check, ClipboardCopy, ExternalLink, Mail, MessageCircle, Send, Upload } from 'lucide-react';
 import { Brand, Footer } from '../_home/home-client';
 import { EMAIL, LINE_URL, promoActive } from '../_home/home-data';
 import '../_home/home.css';
 import './brief.css';
-import { DRIVE_UPLOAD_URL, sections, uploadList, type Field, type Values } from './brief-data';
+import { DRIVE_UPLOAD_URL, FORM_ENDPOINT, sections, uploadList, type Field, type Values } from './brief-data';
 
 const STORE = 'ace-brief-v1';
 const asList = (x: string | string[] | undefined) => (Array.isArray(x) ? x : x ? [x] : []);
@@ -38,6 +38,8 @@ export default function BriefPage({ fontClass = '' }: { fontClass?: string }) {
   const [errors, setErrors] = useState<string[]>([]);
   const [result, setResult] = useState('');
   const [note, setNote] = useState('');
+  const [sent, setSent] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+  const [trap, setTrap] = useState('');
   const resultRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
@@ -52,7 +54,7 @@ export default function BriefPage({ fontClass = '' }: { fontClass?: string }) {
   }, [v, ready]);
 
   const ctx = useMemo(() => ({ promo }), [promo]);
-  const set = (key: string, val: string | string[]) => { setV(p => ({ ...p, [key]: val })); setResult(''); };
+  const set = (key: string, val: string | string[]) => { setV(p => ({ ...p, [key]: val })); setResult(''); setSent('idle'); };
   const visible = sections.filter(s => !s.show || s.show(v, ctx));
 
   const build = () => {
@@ -80,6 +82,17 @@ export default function BriefPage({ fontClass = '' }: { fontClass?: string }) {
   const copy = async () => {
     try { await navigator.clipboard.writeText(result); setNote('已複製。到 LINE 或 Email 貼上就能送出。'); return true; }
     catch { setNote('這個瀏覽器不能自動複製，請長按下方文字全選後複製。'); return false; }
+  };
+  /** 直接送進 Google 試算表。用 no-cors + text/plain：不需要預檢請求，但看不到回應內容，所以只能確認「有送出去」。 */
+  const send = async () => {
+    setSent('sending');
+    const g = (k: string) => asList(v[k]).join('、');
+    const payload = { hp: trap, text: result, fields: { brand: g('brand'), name: g('name'), contact: g('contact'), email: g('email'), plans: g('plans'), term: g('term'), qty: g('qty'), promo: g('promo'), product: g('product') } };
+    try {
+      await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+      setSent('done');
+      try { localStorage.removeItem(STORE); } catch { /* 沒關係 */ }
+    } catch { setSent('error'); }
   };
   const viaLine = async () => { await copy(); window.open(LINE_URL, '_blank', 'noopener'); };
   const viaMail = async () => {
@@ -139,13 +152,24 @@ export default function BriefPage({ fontClass = '' }: { fontClass?: string }) {
           {result && (
             <div className="ace-card bf-card bf-result" ref={resultRef} aria-live="polite">
               <h2>確認並送出</h2>
-              <p className="bf-hint">需求單已產生。選一個方式送給我們，內容會先複製起來，到對話框貼上即可。</p>
+              <p className="bf-hint">{FORM_ENDPOINT ? '確認內容沒問題，按「送出給我們」。業務會用你留的聯絡方式回覆。' : '需求單已產生。選一個方式送給我們，內容會先複製起來，到對話框貼上即可。'}</p>
               <textarea readOnly rows={Math.min(18, result.split('\n').length + 1)} value={result} onFocus={e => e.currentTarget.select()} aria-label="需求單全文" />
-              <div className="bf-actions">
+              {FORM_ENDPOINT && sent !== 'done' && (
+                <>
+                  <input className="bf-trap" type="text" tabIndex={-1} autoComplete="off" aria-hidden="true" value={trap} onChange={e => setTrap(e.target.value)} />
+                  <div className="bf-actions">
+                    <button type="button" className="ace-btn ace-btn-primary ace-btn-lg" disabled={sent === 'sending'} onClick={send}><Send size={18} />{sent === 'sending' ? '送出中…' : '送出給我們'}</button>
+                  </div>
+                  {sent === 'error' && <p className="bf-err" role="alert">送出失敗，請檢查網路後再試一次，或改用下面的 LINE、Email。</p>}
+                </>
+              )}
+              {sent === 'done' && <p className="bf-note" role="status">已送出。業務會用你留的聯絡方式回覆{DRIVE_UPLOAD_URL ? '，素材請從上方連結上傳' : '，並傳素材上傳連結給你'}。</p>}
+              {sent !== 'done' && FORM_ENDPOINT && <p className="bf-hint">或改用其他方式：</p>}
+              {sent !== 'done' && <div className="bf-actions">
                 <button type="button" className="ace-btn ace-btn-primary" onClick={viaLine}><MessageCircle size={18} />複製並開啟 LINE</button>
                 <button type="button" className="ace-btn ace-btn-ghost" onClick={viaMail}><Mail size={18} />複製並寫 Email</button>
                 <button type="button" className="ace-btn ace-btn-ghost" onClick={copy}><ClipboardCopy size={18} />只複製</button>
-              </div>
+              </div>}
               {note && <p className="bf-note" role="status">{note}</p>}
             </div>
           )}
