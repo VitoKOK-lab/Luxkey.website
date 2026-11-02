@@ -92,7 +92,7 @@ export function Footer() {
         <div className="ace-footer-info">
           <p>金曜石國際股份有限公司（LUXKEY）</p>
           <p>臺北市信義區信義路四段458號6樓 · <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
-          <p><Link href="/introduce/">經銷合作</Link> · <Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} ACE Impact</p>
+          <p><Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} ACE Impact</p>
         </div>
       </div>
     </footer>
@@ -592,10 +592,6 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
               <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
               <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('ACE Impact 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
             </div>
-          </div>
-          <div className="ace-wrap ace-partner">
-            <span>行銷公司、顧問、接案夥伴？</span>
-            <Link href="/introduce/">看經銷合作方案 <ArrowRight size={16} /></Link>
           </div>
         </section>
       </main>
