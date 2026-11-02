@@ -40,6 +40,8 @@ export type Video = {
   fit: string;
   /** 卡片上多一句鉤子 */
   hook?: string;
+  /** 適用情境：方案卡底部的標籤 */
+  scenes: string[];
 };
 
 /** 主打影音 A–D：每支年約單價，每月 10 支起訂。market 為一般外包行情，僅供比較。方案價格全部由這裡的 price 算出。 */
@@ -50,25 +52,40 @@ export const videos: Video[] = [
     pitch: '現成素材，快速剪輯成短影音。',
     includes: ['現成素材快速剪輯', '多種版型、節奏風格', '加上字幕、重點與轉場', '商品亮點導向', '適合活動、開箱、花絮', '高效率、穩定出片'],
     fit: '手上有拍攝素材、但沒時間剪的品牌',
+    scenes: ['活動紀錄', '新品宣傳', '電商導購'],
   },
   {
     key: 'ugc', letter: 'B', name: 'AI 代言人', price: 2800, market: 8000, marketNote: '外面找人出鏡拍一支商品介紹',
     pitch: '不用真人，AI 人物自然代言產品。',
     includes: ['AI 代言人一鍵生成', '支援多種人節奏風格', '口條自然、畫面真實', '可置入產品介紹與賣點', '適合品牌介紹、商品推薦', '節省拍攝與人力成本'],
     fit: '老闆不想露臉、需要大量商品介紹影片的品牌',
+    scenes: ['品牌介紹', '商品推廣', '活動宣傳'],
   },
   {
     key: 'clone', letter: 'C', name: '個人品牌分身', price: 3500, market: 8000, marketNote: '外面找人出鏡、專業形象打造一支',
     pitch: '專業形象打造，本人不需出鏡，AI 分身替你發聲。',
     includes: ['以你的形象打造專屬分身', '保留個人風格與語氣', '可長期持續製作內容', '適合知識分享、觀點輸出', '建立專業形象與影響力', '穩定產出、提升品牌信任'],
     fit: '想經營個人品牌、但沒時間天天拍片的老闆與專業人士',
+    scenes: ['知識分享', '專業觀點', '個人品牌'],
   },
   {
     key: 'drama', letter: 'D', name: 'AI 短劇置入', price: 3900, market: 30000, marketNote: '外面找演員、場地拍一支劇情短片',
     pitch: '把產品自然融入情境短劇。',
     includes: ['AI 生成情境短劇', '劇情自然融入產品', '多種題材與風格（生活、職場等）', '提升觀看率與互動', '適合品牌故事、情境行銷', '高 CP 值、快速量產'],
     fit: '想讓商品被大量轉傳、被記住的品牌',
+    scenes: ['情境短劇', '產品置入', '行銷活動'],
   },
+];
+/** STEP 1 的影片類型方塊：點了捲到對應的方案卡或區塊。沒有專屬方案的類型，先指到最接近的地方。 */
+export const videoTiles: { label: string; icon: string; to: string }[] = [
+  { label: '素人實拍系列', icon: 'camera', to: '#other' },
+  { label: '素材快剪', icon: 'scissors', to: '#plan-edit' },
+  { label: 'AI 代言人', icon: 'bot', to: '#plan-ugc' },
+  { label: '個人品牌分身', icon: 'face', to: '#plan-clone' },
+  { label: 'AI 短劇置入', icon: 'film', to: '#plan-drama' },
+  { label: '電商導購影片', icon: 'bag', to: '#plan-edit' },
+  { label: '線上課程宣傳', icon: 'course', to: '#other' },
+  { label: '更多影片類型', icon: 'more', to: '#contact' },
 ];
 export const videoOf = (k: VideoKey) => videos.find(v => v.key === k)!;
 

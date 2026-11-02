@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Briefcase, CalendarClock, Check, ChevronDown, Clapperboard, ClipboardList, GraduationCap, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
-import { EMAIL, LINE_ID, LINE_URL, BRIEF_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Bot, Briefcase, CalendarClock, Camera, Check, ChevronDown, ChevronRight, Clapperboard, ClipboardList, Ellipsis, Film, GraduationCap, ScanFace, Scissors, ShoppingBag, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
+import { EMAIL, LINE_ID, LINE_URL, BRIEF_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, videoTiles, PLAN_QTY, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -239,37 +239,73 @@ function Pains() {
   );
 }
 
-/** 方案選擇：A–D 四張卡，每張同時列出單月、季約、年約。每列先放「一支的價格」，下面再寫 10 支每月多少。 */
+const tileIcons = { camera: Camera, scissors: Scissors, bot: Bot, face: ScanFace, film: Film, bag: ShoppingBag, course: GraduationCap, more: Ellipsis } as const;
+
+/** 方案選擇分兩段：STEP 1 選影片（類型方塊＋A–D 方案卡），STEP 2 長期訂閱（單月、季約、年約價格表）。價格表每格先寫一支多少，下面再寫 10 支每月多少。 */
 function Plans() {
   return (
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
-        <div className="ace-head-row">
-          <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
-          <p className="ace-muted">四種影片可以自由搭配，訂越久每支越便宜。</p>
-        </div>
-        <div className="pc">
-          {plans.map(p => (
-            <article key={p.key} className="pc-col">
-              <div className="pc-main">
-                <p className="pc-eyebrow"><i className="ace-letter">{p.letter}</i>方案 {p.letter}</p>
-                <h3>{p.name}</h3>
-                <p className="pc-note">{p.pitch}</p>
+        <div className="ace-step-head"><span className="ace-step-pill">STEP 1</span><h2 className="ace-h2">選影片</h2></div>
+        <p className="ace-muted ace-step-sub">依需求選擇影片類型（可自由搭配、可單選，多種方案可選）</p>
+        <ul className="ace-tiles">
+          {videoTiles.map(t => {
+            const I = tileIcons[t.icon as keyof typeof tileIcons];
+            return <li key={t.label}><a href={t.to}><I size={20} />{t.label}{t.icon === 'more' && <ChevronRight size={16} className="ace-tile-go" />}</a></li>;
+          })}
+        </ul>
+        <div className="pk-list">
+          {videos.map(v => (
+            <article key={v.key} id={`plan-${v.key}`} className="ace-card pk">
+              <div className="pk-head">
+                <div>
+                  <h3><i className="ace-letter">{v.letter}</i>{v.name}</h3>
+                  <p>{v.pitch}</p>
+                </div>
+                <p className="pk-price"><s>市場價 NT${money(v.market)}</s><b>NT${money(v.price)}</b><span>起 ／ 支</span><small>每月 {PLAN_QTY} 支起</small></p>
               </div>
-              <ul className="pc-terms">
-                {planTerms.map(t => (
-                  <li key={t.key} className={t.key === 'year' ? 'is-best' : ''}>
-                    <span className="pc-term">{t.label}{t.key === 'year' && <em>最划算</em>}</span>
-                    <span className="pc-per"><small>每支 NT$</small><b>{money(p.price[t.key] / p.qty)}</b></span>
-                    <span className="pc-total">{p.qty} 支 = 每月 NT${money(p.price[t.key])}</span>
-                  </li>
-                ))}
-              </ul>
-              <ul className="pc-feat">{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
+              <div className="pk-feat">
+                <p className="pk-label">方案特色</p>
+                <ul>{v.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
+              </div>
+              <div className="pk-scenes">
+                <span className="pk-label">適用情境</span>
+                {[...v.scenes, '更多應用'].map(x => <em key={x}>{x}</em>)}
+              </div>
             </article>
           ))}
         </div>
-        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起，可自由搭配。以上為每月價格，未稅。</p>
+
+        <div id="pricing" className="ace-step-head ace-step-2"><span className="ace-step-pill">STEP 2</span><h2 className="ace-h2">長期訂閱，越久越划算</h2></div>
+        <p className="ace-muted ace-step-sub">選擇訂閱方案（單月／季約／年約），享更優惠的單支價格</p>
+        <div className="pt" role="table" aria-label="方案價格表">
+          <div className="pt-row pt-headrow" role="row">
+            <span role="columnheader">方案</span>
+            {planTerms.map(t => <span key={t.key} role="columnheader">{t.label}{t.key === 'year' && <em>最划算</em>}</span>)}
+          </div>
+          {plans.map(p => (
+            <div key={p.key} className="pt-row" role="row">
+              <span className="pt-name" role="rowheader"><i className="ace-letter">{p.letter}</i>{p.name}</span>
+              {planTerms.map(t => (
+                <span key={t.key} className={t.key === 'year' ? 'pt-cell is-best' : 'pt-cell'} role="cell">
+                  <span className="pt-term">{t.label}<i>・每支</i></span>
+                  <b>NT${money(p.price[t.key] / p.qty)}<i>／支</i></b>
+                  <small>{p.qty} 支 = 每月 NT${money(p.price[t.key])}</small>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p className="pt-note">※ 以上為方案參考價，實際價格依合約內容為準。價格未稅，每種影片每月 {PLAN_QTY} 支起，可自由搭配。</p>
+
+        <div className="ace-card ace-ask">
+          <figure><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={96} height={96} loading="lazy" /></figure>
+          <div>
+            <p>想了解方案細節或索取完整報價？</p>
+            <strong>掃碼加 LINE，專人為你說明</strong>
+            <a href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={16} />LINE ID：{LINE_ID}</a>
+          </div>
+        </div>
       </div>
     </section>
   );
