@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Briefcase, CalendarClock, Check, ChevronDown, Clapperboard, GraduationCap, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
-import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
+import { ArrowRight, Briefcase, CalendarClock, Check, ChevronDown, Clapperboard, ClipboardList, GraduationCap, Landmark, LayoutGrid, Mail, Menu, MessageCircle, Pause, Play, TrendingUp, Upload, UserCheck, Users, Video as VideoIcon, X } from 'lucide-react';
+import { EMAIL, LINE_ID, LINE_URL, BRIEF_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, compareHuman, compareUs, creds, heroSpecs, sop, stats, statSource, videoOf, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -385,10 +385,10 @@ function Process() {
   return (
     <section id="process" className="ace-section ace-process">
       <div className="ace-wrap">
-        <p className="ace-kicker">HOW IT WORKS</p>
-        <h2 className="ace-h2">合作流程</h2>
+        <p className="ace-kicker">STEP 3</p>
+        <h2 className="ace-h2">怎麼拿到影片</h2>
         <ol className="ace-flow">
-          {flow.map((f, i) => <li key={f.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{f.title}</strong><p>{f.body}</p></li>)}
+          {flow.map((f, i) => <li key={f.title}><span>{String(i + 1).padStart(2, '0')}</span><strong>{f.title}</strong><p>{f.body}</p>{f.href && <Link href={f.href} className="ace-text-link">{f.cta} <ArrowRight size={16} /></Link>}</li>)}
         </ol>
       </div>
     </section>
@@ -545,13 +545,15 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
         <section id="contact" className="ace-section ace-contact">
           <div className="ace-wrap ace-contact-card">
             <div>
-              <p className="ace-kicker">LET'S TALK</p>
-              <h2 className="ace-h2">把你的影音行銷，<br />交給王牌。</h2>
-              <p>告訴我們你的產品，1 個工作天內回覆做法與報價。</p>
+              <p className="ace-kicker">GET STARTED</p>
+              <h2 className="ace-h2">選好影片和版型，<br />就能開始。</h2>
+              <p>以上皆未稅。合約、交期與付款方式，由業務提供正式報價。</p>
+              <p className="ace-line-id">LINE ID：<b>{LINE_ID}</b></p>
             </div>
             <div className="ace-contact-actions">
-              <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>電腦版，用手機掃碼加 LINE</figcaption></figure>
-              <a className="ace-btn ace-btn-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
+              <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>掃碼加 LINE，直接問報價</figcaption></figure>
+              <Link className="ace-btn ace-btn-light ace-btn-lg" href={BRIEF_URL}><ClipboardList size={20} /> 填需求單</Link>
+              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
               <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('ACE Impact 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
             </div>
           </div>

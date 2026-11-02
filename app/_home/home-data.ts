@@ -1,7 +1,9 @@
 /** 方案：每個服務每月 10 支起算 */
 export const PLAN_QTY = 10;
 export const LINE_URL = 'https://lin.ee/rL0q31t';
+export const LINE_ID = '@250zlmxy';
 export const EMAIL = 'info@luxkey.com.tw';
+export const BRIEF_URL = '/brief/';
 
 /** 雙 11 活動：到 PROMO_END（台灣時間 11/20 23:59:59）自動下架。改檔期只改這裡。 */
 export const PROMO_END = Date.parse('2026-11-20T23:59:59+08:00');
@@ -104,6 +106,14 @@ export const clients: { slug: string; name: string }[] = [
 export type Faq = { q: string; a: string; link?: { href: string; label: string } };
 export const faqGroups: { label: string; items: Faq[] }[] = [
   {
+    label: '老闆常問',
+    items: [
+      { q: '看得出是 AI 嗎？', a: '沒關係，有人看、有詢問才是重點。' },
+      { q: '能下廣告、放官網嗎？', a: '可以，授權範圍寫在合約。' },
+      { q: '合約、交期怎麼算？', a: '業務會提供正式報價。', link: { href: BRIEF_URL, label: '填需求單' } },
+    ],
+  },
+  {
     label: '影片與價格',
     items: [
       { q: '影片一支多少錢？', a: `${videos.map(v => `${v.name} NT$${v.price.toLocaleString('en-US')}`).join('、')}，都是年約每支的未稅價格，每種每月 ${PLAN_QTY} 支起訂；季約、單月每支價格較高。素人真實開箱每支 NT$3,500（10 支一組），屬附加選購，即將開放。`, link: { href: '#why', label: '看影片價格' } },
@@ -122,14 +132,13 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '交期多久？可以改幾次？', a: 'AI 影片生成後再修改，幾乎等於重做，所以我們把確認放在生成之前：腳本、角色和畫面方向會跟你來回確認，確認好才開始製作。因為客人光看文字很難想像畫面，我們會用分鏡或參考圖幫你確認。實際交期依支數與影片類型而定，LINE 告訴我們需求就回覆。' },
       { q: '有包含留言、私訊回覆嗎？', a: '不包含。留言、私訊與客服需要即時的人力，我們專注在內容產出，才能把價格壓到最低。廣告投放代操可以另外加購。' },
       { q: '可以完全客製嗎？', a: '我們以 AI 與公版流程為主，才能維持低價。實拍與完全客製需另外報價，費用明顯較高，且每月只承接少量案件。' },
-      { q: '怎麼開始？', a: '用 LINE 告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
+      { q: '怎麼開始？', a: '先填需求單，附上素材或產品照；也可以直接用 LINE 告訴我們想做哪種影片，我們回覆建議做法與報價。', link: { href: BRIEF_URL, label: '填需求單' } },
     ],
   },
   {
     label: 'AI 與授權',
     items: [
       { q: 'ACE Impact 是什麼？', a: 'ACE Impact 是金曜石國際（LUXKEY）的 AI 創意行銷品牌，前身為 A.C.E.。用 AI 做品牌影音、社群圖文、搜尋文章與網站。' },
-      { q: 'AI 做的影片看得出來嗎？', a: '看得出來是 AI 製作沒關係，重點是內容有沒有人看、有沒有帶來詢問。我們會控制角色、口吻和品牌調性，讓每一支都像同一個品牌在說話。' },
       { q: '可以用公司的真人出鏡嗎？', a: '可以。需要先建立角色卡，費用 NT$15,000，一次付費，可長期使用。' },
       { q: 'AI 代言人的版權歸誰？可以下廣告嗎？', a: 'AI 代言人影片和其他影片一樣，交付的成品可供你的品牌商業使用，包含廣告投放、社群與官網。版權歸屬與實際授權範圍，會在合約中寫清楚。' },
       { q: 'AI 做的影片和圖片可以商業使用嗎？', a: '交付的成品可供你的品牌商業使用，例如社群、廣告與官網。實際授權範圍會在合約中寫清楚。' },
@@ -165,12 +174,11 @@ export const works: Work[] = [
   { group: 'other', type: '線上課程', title: '自媒體入門課', demo: '/home/demo/course-media.mp4', poster: '/home/demo/course-media-poster.webp' },
 ];
 
-/** 合作流程：交期與修改次數先不寫，重點是「生成之前」就確認好。 */
+/** 怎麼拿到影片：3 步。交期與修改次數先不寫，重點是「生成之前」就確認好。 */
 export const flow = [
-  { title: 'LINE 討論', body: '告訴我們你的產品、想講的重點，和想做哪種影片。' },
-  { title: '提供素材', body: '品牌資料、商品照片或影片，沒有素材也可以先聊想法。' },
-  { title: '生成前確認', body: '腳本、角色與畫面方向反覆確認，確認好才開始製作。' },
-  { title: '製作交片', body: '依確認好的內容製作，交付可以直接上架的直式影片。' },
+  { title: '填需求單', body: '附上素材或產品照', href: BRIEF_URL, cta: '填需求單' },
+  { title: '確認後製作', body: '腳本畫面先確認' },
+  { title: '雲端下載', body: '直接上傳各平台' },
 ];
 
 /** 首頁主視覺的規格標籤 */

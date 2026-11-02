@@ -1,0 +1,28 @@
+.bf-wrap { display: grid; gap: 20px; max-width: 760px; }
+.bf-lead { max-width: 560px; font-size: 15px; line-height: 1.7; }
+.bf-card { display: grid; gap: 18px; padding: clamp(20px, 3vw, 32px); border-radius: 24px; }
+.bf-card h2 { margin: 0; color: var(--ace-ink); font-family: var(--ace-serif); font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; }
+.bf-hint { margin: 0; color: var(--ace-muted); font-size: 13px; line-height: 1.6; }
+.bf-field { display: grid; gap: 8px; scroll-margin-top: 120px; }
+.bf-label { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--ace-ink); font-size: 15px; font-weight: 700; }
+.bf-label em { padding: 1px 8px; border-radius: 999px; background: var(--ace-orange-soft); color: var(--ace-orange-deep); font-size: 11px; font-style: normal; font-weight: 800; }
+.bf input[type='text'], .bf textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--ace-line); border-radius: 12px; background: #fff; color: var(--ace-ink); font: inherit; font-size: 16px; line-height: 1.5; }
+.bf textarea { resize: vertical; }
+.bf input[type='text']:focus, .bf textarea:focus { outline: 2px solid var(--ace-orange); outline-offset: 1px; border-color: transparent; }
+.bf-field.has-error input, .bf-field.has-error textarea { border-color: #d92d20; }
+.bf-err { margin: 0; color: #d92d20; font-size: 13px; font-weight: 700; }
+.bf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.bf-chip { position: relative; display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0 16px; border: 1px solid var(--ace-line); border-radius: 999px; background: #fff; color: var(--ace-ink); font-size: 15px; cursor: pointer; transition: background .2s, border-color .2s; }
+.bf-chip input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+.bf-chip:has(input:focus-visible) { outline: 2px solid var(--ace-orange); outline-offset: 2px; }
+.bf-chip.is-on { border-color: var(--ace-orange); background: var(--ace-orange-soft); color: var(--ace-orange-deep); font-weight: 700; }
+.bf-field.has-error .bf-chip { border-color: #f4b4ad; }
+.bf-upload { display: grid; justify-items: start; gap: 10px; padding: 16px; border: 1px dashed #d9cfc4; border-radius: 16px; background: var(--ace-bg-soft); }
+.bf-upload ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.bf-upload li { display: flex; align-items: flex-start; gap: 8px; color: var(--ace-text); font-size: 14px; line-height: 1.5; }
+.bf-upload li svg { flex: none; margin-top: 4px; color: var(--ace-orange); }
+.bf-submit { display: grid; justify-items: start; gap: 10px; }
+.bf-result textarea { background: var(--ace-bg-soft); font-size: 14px; }
+.bf-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.bf-note { margin: 0; color: var(--ace-teal-deep); font-size: 14px; font-weight: 700; }
+@media (max-width: 560px) { .bf-actions .ace-btn { width: 100%; } }
