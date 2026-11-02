@@ -275,25 +275,31 @@ function Plans() {
   );
 }
 
-/** 訂閱用戶的附加選購；公開價格與 Super5 的相同項目對齊。 */
+/** 訂閱用戶的附加選購 E–J：先展示價格，標「即將開放」，不放詢問入口。 */
 function AddOns() {
   return (
     <section id="other" className="ace-other">
       <div className="ace-wrap">
         <div className="ace-other-head">
           <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
-          <p className="ace-muted">僅開放訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
+          <p className="ace-muted">訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
         </div>
-        <ul className="ace-other-grid">
+        <ul className="ace-other-list">
           {addOns.map(a => <li key={a.key}>
-            <h3>{a.name}</h3>
-            <p>{a.detail}</p>
-            <div className="ace-other-price"><strong>{a.price}</strong><span>{a.unit}</span></div>
-            {a.more && <small>{a.more}</small>}
+            <i className="ace-letter">{a.letter}</i>
+            <div className="ace-other-main">
+              <h3>{a.name}{a.soon && <em>即將開放</em>}</h3>
+              <p>{a.detail}{a.more && <> ｜ {a.more}</>}</p>
+            </div>
+            <div className="ace-other-side">
+              {a.market && <s>{a.marketLabel} {a.market}</s>}
+              <div className="ace-other-price"><strong>{a.price}</strong>{a.unit && <span>{a.unit}</span>}</div>
+              {a.pack && <small>{a.pack}</small>}
+            </div>
           </li>)}
         </ul>
         <div className="ace-other-foot">
-          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅參考價。</p>
+          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅價格。</p>
         </div>
       </div>
     </section>

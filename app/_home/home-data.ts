@@ -8,14 +8,19 @@ export const PROMO_END = Date.parse('2026-11-20T23:59:59+08:00');
 export const PROMO = { title: '雙 11 下殺優惠', quota: '限量 11 家', deadline: '11/20 23:59 截止', gift: 11 };
 export const promoActive = (now = Date.now()) => now <= PROMO_END;
 
-/** 附加選購：價格與項目以 Super5 的 service-data.ts 為參考；只列有明確對應價格的服務。 */
-export type AddOnKey = 'copy' | 'website' | 'course' | 'influencer';
-export type AddOn = { key: AddOnKey; name: string; detail: string; price: string; unit: string; more?: string };
+/** 附加選購 E–J（接在 A–D 方案後面）。先展示、不開放選購：soon 為 true 的項目標「即將開放」，不放詢問入口。市價（market）是外面的行情，只做對照。 */
+export type AddOn = {
+  letter: string; key: string; name: string; detail: string;
+  price: string; unit: string; pack?: string; more?: string;
+  marketLabel?: string; market?: string; soon: boolean;
+};
 export const addOns: AddOn[] = [
-  { key: 'copy', name: '網站商品內文優化', detail: '重寫商品標題、賣點與購買引導。', price: 'NT$2,000 起', unit: '／品項' },
-  { key: 'website', name: '電商網站', detail: '整理商品頁、賣點與購買動線；功能依需求報價。', price: 'NT$38,000 起', unit: '／案' },
-  { key: 'course', name: '線上課程製作', detail: '將專業內容整理成可上架的分集影片。', price: 'NT$35,000', unit: '／自己講・11 集內', more: 'AI 配音・25 集內 NT$55,000' },
-  { key: 'influencer', name: '網紅曝光合作', detail: '媒合創作者在自己的帳號發布。', price: 'NT$100,000', unit: '／組 3–5 位' },
+  { letter: 'E', key: 'unboxing', name: '素人真實開箱', detail: '比網紅更真實・產品寄給素人', marketLabel: '網紅行情', market: 'NT$12,000 數十萬', price: 'NT$3,500', unit: '／支', pack: '10 支一組', soon: true },
+  { letter: 'F', key: 'film', name: '電影級 AI 形象大片', detail: '電影感・1 分鐘・橫式', marketLabel: '真人行情', market: 'NT$100,000+', price: 'NT$10,000', unit: '／支', soon: true },
+  { letter: 'G', key: 'copy', name: '網站商品內文優化', detail: '標題、賣點、購買引導', price: 'NT$2,000 起', unit: '／品項', pack: '10 品項一組', soon: true },
+  { letter: 'H', key: 'website', name: '電商網站', detail: '商品頁、購買動線', marketLabel: '真人行情', market: 'NT$40,000–150,000', price: 'NT$38,000 起', unit: '／案', soon: true },
+  { letter: 'I', key: 'course', name: '線上課程製作', detail: '自己講 11 集', more: 'AI 配音 25 集 NT$55,000', price: 'NT$35,000 起', unit: '', soon: true },
+  { letter: 'J', key: 'collab', name: '素人影音合作', detail: '發在素人帳號・品牌可用', price: 'NT$3,500', unit: '／位', pack: '10 位一組', soon: true },
 ];
 
 export type VideoKey = 'edit' | 'ugc' | 'clone' | 'drama';
@@ -79,7 +84,7 @@ export const pains: Pain[] = [
   { tag: 'AI 代言人', title: '老闆不好意思露臉', body: '讓大量 AI 代言人幫你介紹、推薦商品。不同人物、不同口吻，打進不同客群。', video: 'ugc', demo: '/home/demo/digital-human.mp4', poster: '/home/demo/digital-human-poster.webp' },
   { tag: '個人品牌分身', title: '想經營個人品牌，卻沒時間天天拍', body: '用你的形象打造專屬 AI 分身，保留你的風格與語氣。本人不用出鏡，分身替你穩定發聲。', video: 'clone', poster: CLONE_POSTER, soon: true },
   { tag: 'AI 短劇置入', title: 'AI 短劇正在佔滿大家的碎片時間', body: '別在這波熱潮脫隊。讓霸總拯救少女的時候，順手置入你的品牌商品。', video: 'drama' },
-  { tag: '真人口碑開箱影片', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', market: 12000, price: 2500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
+  { tag: '素人真實開箱', title: '網友買東西，先看評價', body: '我們安排各種不同身分的真實素人，拍攝你的品牌商品，留下真實的使用心得。', market: 12000, price: 3500, demo: '/home/demo/ugc-sales.mp4', poster: '/home/demo/ugc-sales-poster.webp' },
 ];
 
 /** 合作客戶 logo，檔案在 public/home/clients/。 */
@@ -101,12 +106,12 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
   {
     label: '影片與價格',
     items: [
-      { q: '影片一支多少錢？', a: `${videos.map(v => `${v.name} NT$${v.price.toLocaleString('en-US')}`).join('、')}，都是年約每支的未稅價格，每種每月 ${PLAN_QTY} 支起訂；季約、單月每支價格較高。真人口碑開箱影片另依需求確認製作數量。`, link: { href: '#why', label: '看影片價格' } },
+      { q: '影片一支多少錢？', a: `${videos.map(v => `${v.name} NT$${v.price.toLocaleString('en-US')}`).join('、')}，都是年約每支的未稅價格，每種每月 ${PLAN_QTY} 支起訂；季約、單月每支價格較高。素人真實開箱每支 NT$3,500（10 支一組），屬附加選購，即將開放。`, link: { href: '#why', label: '看影片價格' } },
       { q: 'AI 代言人一支多少錢？', a: 'AI 代言人年約每支 NT$2,800，未稅；季約、單月每支價格較高。', link: { href: '#why', label: '看影片價格' } },
       { q: '業界平均收費是怎麼算的？', a: '我們拿一般外包製作一支同類型影片的參考價來比較，例如請人剪一支短影音、找人出鏡拍商品介紹、做一套個人分身、找演員和場地拍劇情短片。實際行情依廠商而異，只是讓你知道差距有多大。' },
-      { q: '附加選購有哪些？費用怎麼算？', a: '附加選購只開放訂閱用戶。網站商品內文優化每品項 NT$2,000 起、電商網站 NT$38,000 起、線上課程自己講 11 集內 NT$35,000（AI 配音 25 集內 NT$55,000）、網紅曝光合作 3–5 位 NT$100,000／組。社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上價格未稅。', link: { href: '#other', label: '看附加選購' } },
+      { q: '附加選購有哪些？費用怎麼算？', a: `附加選購給訂閱用戶，目前即將開放：${addOns.map(a => `${a.name} ${a.price}${a.unit}${a.pack ? `（${a.pack}）` : ''}`).join('、')}。社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上價格未稅。`, link: { href: '#other', label: '看附加選購' } },
       { q: '中途解約怎麼算？', a: '解約時，已使用的期間改以單月價格計算，從已付的費用中扣除後，退還尚未執行（未實現）的費用。實際條件以合約為準。' },
-      { q: '方案怎麼選？', a: `${videos.map(v => v.name).join('、')}四種影片各自獨立，可以自由搭配，每種每個月 ${PLAN_QTY} 支起算。年約最便宜，季約次之，單月最貴。真人口碑開箱影片依支數洽詢，附加選購限訂閱用戶。`, link: { href: '#plans', label: '看方案選擇' } },
+      { q: '方案怎麼選？', a: `${videos.map(v => v.name).join('、')}四種影片各自獨立，可以自由搭配，每種每個月 ${PLAN_QTY} 支起算。年約最便宜，季約次之，單月最貴。附加選購限訂閱用戶，即將開放。`, link: { href: '#plans', label: '看方案選擇' } },
       { q: '價格含稅嗎？', a: '網站標示的價格均為未稅價。附加選購若標示「起」，會依實際製作範圍提供正式報價。' },
     ],
   },
@@ -116,7 +121,7 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '我要提供什麼素材？', a: '品牌介紹、商品照片或影片、你想強調的賣點，以及想參考的風格或同業影片。沒有素材也可以，先用 LINE 告訴我們你的想法，腳本、AI 製作、剪輯、字幕都由我們處理。' },
       { q: '交期多久？可以改幾次？', a: 'AI 影片生成後再修改，幾乎等於重做，所以我們把確認放在生成之前：腳本、角色和畫面方向會跟你來回確認，確認好才開始製作。因為客人光看文字很難想像畫面，我們會用分鏡或參考圖幫你確認。實際交期依支數與影片類型而定，LINE 告訴我們需求就回覆。' },
       { q: '有包含留言、私訊回覆嗎？', a: '不包含。留言、私訊與客服需要即時的人力，我們專注在內容產出，才能把價格壓到最低。廣告投放代操可以另外加購。' },
-      { q: '可以完全客製嗎？', a: '我們以 AI 與公版流程為主，才能維持低價。實拍、完全客製與網紅合作需另外報價，費用明顯較高，且每月只承接少量案件。' },
+      { q: '可以完全客製嗎？', a: '我們以 AI 與公版流程為主，才能維持低價。實拍與完全客製需另外報價，費用明顯較高，且每月只承接少量案件。' },
       { q: '怎麼開始？', a: '用 LINE 告訴我們想做哪種影片、品牌現在最想完成的事，我們回覆建議做法與報價。', link: { href: '#contact', label: '聯絡我們' } },
     ],
   },
@@ -139,7 +144,7 @@ export type WorkGroup = 'cut' | 'human' | 'clone' | 'drama' | 'other';
 /** demo 留空＝示範影片準備中，只顯示封面、不能播放 */
 export type Work = { group: WorkGroup; type: string; title?: string; brand?: string; result?: string; demo?: string; poster: string };
 const demoOf = (key: string) => pains.find(p => p.video === key || p.tag === key);
-const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '真人口碑開箱影片')!;
+const human0 = demoOf('ugc')!, drama0 = demoOf('drama')!, real0 = pains.find(p => p.tag === '素人真實開箱')!;
 const asWork = (group: WorkGroup, p: (typeof pains)[number], title?: string): Work => ({ group, type: p.tag, title, demo: p.demo ?? DEMO_VIDEO, poster: p.poster ?? DEMO_POSTER });
 /** 作品案例：各分頁都顯示影片卡片；品牌名與成效數字有真實資料再補（brand、result）。 */
 export const worksGroups: { key: WorkGroup; label: string }[] = [
