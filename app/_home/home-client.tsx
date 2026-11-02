@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, CalendarClock, Check, ChevronDown, Pause, Play, Lightbulb, Mail, Menu, MessageCircle, ShieldCheck, Sparkles, X } from 'lucide-react';
-import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type PlanTerm, type Work, type WorkGroup } from './home-data';
+import { EMAIL, LINE_URL, PROMO, promoActive, DEMO_POSTER, DEMO_VIDEO, addOns, clients, planTerms, plans, faqGroups, flow, pains, videos, whyProof, whyUs, whyVs, works, worksGroups, type Pain, type Work, type WorkGroup } from './home-data';
 import './home.css';
 
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
@@ -239,68 +239,37 @@ function Pains() {
   );
 }
 
-/** 價格數字切換時，從舊價格快速滾到新價格 */
-function PriceNum({ value }: { value: number }) {
-  const [n, setN] = useState(value);
-  const prev = useRef(value);
-  useEffect(() => {
-    const from = prev.current;
-    prev.current = value;
-    if (from === value || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setN(value); return; }
-    let raf = 0;
-    const start = performance.now();
-    const tick = (t: number) => {
-      const k = Math.min(1, (t - start) / 450);
-      setN(Math.round(from + (value - from) * (1 - Math.pow(1 - k, 3))));
-      if (k < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [value]);
-  return <>{money(n)}</>;
-}
-
-/** 方案選擇：單月／季約／年約依每月價格由高到低排列；下面項目橫向排開。其他服務只有單價。 */
+/** 方案選擇：A–D 四張卡，每張同時列出單月、季約、年約。每列先放「一支的價格」，下面再寫 10 支每月多少。 */
 function Plans() {
-  const [term, setTerm] = useState<PlanTerm>('month');
-  const t = planTerms.find(x => x.key === term)!;
-  const idx = planTerms.findIndex(x => x.key === term);
   return (
     <section id="plans" className="ace-section ace-plans">
       <div className="ace-wrap">
         <div className="ace-head-row">
           <div><p className="ace-kicker">PLANS</p><h2 className="ace-h2">選擇你的方案</h2></div>
-          <p className="ace-muted">四種影片可以自由搭配，訂越久每支越便宜。先選合作期間，再看每月價格。</p>
-        </div>
-        <p className="pc-switch-label">選擇合作期間</p>
-        <div className="pc-switch" role="radiogroup" aria-label="選擇單月、季約或年約" style={{ ['--i' as string]: idx }}>
-          <i aria-hidden="true" />
-          {planTerms.map(x => (
-            <button key={x.key} role="radio" aria-checked={x.key === term} className={x.key === term ? 'is-on' : ''} onClick={() => setTerm(x.key)}>
-              {x.label}{x.key === 'year' && <em>最划算</em>}
-            </button>
-          ))}
+          <p className="ace-muted">四種影片可以自由搭配，訂越久每支越便宜。</p>
         </div>
         <div className="pc">
-          {plans.map(p => {
-            const price = p.price[term];
-            const save = term === 'year' ? `相較單月，一年省 NT$${money((p.price.month - p.price.year) * 12)}` : `改簽年約，每月省 NT$${money(price - p.price.year)}`;
-            return (
-              <article key={p.key} className="pc-col">
-                <div className="pc-main">
-                  <p className="pc-eyebrow"><i className="ace-letter">{p.letter}</i>方案 {p.letter}</p>
-                  <h3>{p.name}</h3>
-                  <p className="pc-note">{p.pitch}</p>
-                  <p className="pc-unit">每支 NT${money(price / p.qty)}{term !== 'year' && <s>年約 NT${money(p.price.year / p.qty)}</s>}</p>
-                  <p className="pc-price"><small>NT$</small><b><PriceNum value={price} /></b><em>／月</em></p>
-                  <p className="pc-save">{save}</p>
-                </div>
-                <ul>{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
-              </article>
-            );
-          })}
+          {plans.map(p => (
+            <article key={p.key} className="pc-col">
+              <div className="pc-main">
+                <p className="pc-eyebrow"><i className="ace-letter">{p.letter}</i>方案 {p.letter}</p>
+                <h3>{p.name}</h3>
+                <p className="pc-note">{p.pitch}</p>
+              </div>
+              <ul className="pc-terms">
+                {planTerms.map(t => (
+                  <li key={t.key} className={t.key === 'year' ? 'is-best' : ''}>
+                    <span className="pc-term">{t.label}{t.key === 'year' && <em>最划算</em>}</span>
+                    <span className="pc-per"><small>每支 NT$</small><b>{money(p.price[t.key] / p.qty)}</b></span>
+                    <span className="pc-total">{p.qty} 支 = 每月 NT${money(p.price[t.key])}</span>
+                  </li>
+                ))}
+              </ul>
+              <ul className="pc-feat">{p.includes.map(x => <li key={x}><Check size={14} />{x}</li>)}</ul>
+            </article>
+          ))}
         </div>
-        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起，可自由搭配。以上為{t.label}每月價格（{plans[0].qty} 支），未稅。</p>
+        <p className="pc-foot">每種影片每月 {plans[0].qty} 支起，可自由搭配。以上為每月價格，未稅。</p>
       </div>
     </section>
   );
