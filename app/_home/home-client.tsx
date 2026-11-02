@@ -77,9 +77,9 @@ function CaptionPrice({ market, price, unit }: { market?: number; price: number;
 
 export function Brand() {
   return (
-    <Link href="/" className="ace-brand" aria-label="A.C.E. 首頁">
+    <Link href="/" className="ace-brand" aria-label="ACE Impact 首頁">
       <img src="/home/ace-mark.webp" alt="" width={46} height={45} />
-      <span><strong>A.C.E<i>.</i></strong><small>讓 AI 成為每個品牌的王牌</small></span>
+      <span><strong>ACE <i>Impact</i></strong><small>讓 AI 成為每個品牌的王牌</small></span>
     </Link>
   );
 }
@@ -92,7 +92,7 @@ export function Footer() {
         <div className="ace-footer-info">
           <p>金曜石國際股份有限公司（LUXKEY）</p>
           <p>臺北市信義區信義路四段458號6樓 · <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
-          <p><Link href="/introduce/">經銷合作</Link> · <Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} A.C.E.</p>
+          <p><Link href="/introduce/">經銷合作</Link> · <Link href="/privacy/">隱私說明</Link> · © {new Date().getFullYear()} ACE Impact</p>
         </div>
       </div>
     </footer>
@@ -510,7 +510,7 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
         <section id="about" className="ace-section ace-why">
           <div className="ace-wrap">
             <div className="ace-why-head">
-              <p className="ace-kicker">WHY A.C.E.</p>
+              <p className="ace-kicker">WHY ACE IMPACT</p>
               <h2 className="ace-h2">為什麼是我們？</h2>
             </div>
             <div className="ace-vs">
@@ -518,7 +518,7 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
                 <div key={v.who} className="ace-vs-card"><b>{v.who}</b><span><X size={16} />{v.lack}</span></div>
               ))}
               <div className="ace-vs-us">
-                <b>A.C.E.<small>三個都有</small></b>
+                <b>ACE Impact<small>三個都有</small></b>
                 <ul>{whyUs.map(x => <li key={x}><Check size={16} />{x}</li>)}</ul>
               </div>
             </div>
@@ -550,7 +550,7 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
             <div className="ace-contact-actions">
               <figure className="ace-qr"><img src="/home/line-qr.svg" alt="LINE 官方帳號 QR Code，用手機掃描加入" width={132} height={132} /><figcaption>電腦版，用手機掃碼加 LINE</figcaption></figure>
               <a className="ace-btn ace-btn-light ace-btn-lg" href={LINE_URL} target="_blank" rel="noopener noreferrer"><MessageCircle size={20} /> LINE 直接聊</a>
-              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('A.C.E. 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
+              <a className="ace-btn ace-btn-outline-light ace-btn-lg" href={`mailto:${EMAIL}?subject=${encodeURIComponent('ACE Impact 服務詢問')}`}><Mail size={20} /> {EMAIL}</a>
             </div>
           </div>
           <div className="ace-wrap ace-partner">

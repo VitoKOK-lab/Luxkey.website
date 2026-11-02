@@ -5,7 +5,7 @@ import { EMAIL } from '../_home/home-data';
 import '../_home/home.css';
 
 export const metadata: Metadata = {
-  title: '隱私說明｜A.C.E.',
+  title: '隱私說明｜ACE Impact',
   alternates: { canonical: 'https://luxkey.com.tw/privacy/' },
   icons: { icon: '/home/ace-icon-192.png', apple: '/home/ace-icon-192.png' },
 };
