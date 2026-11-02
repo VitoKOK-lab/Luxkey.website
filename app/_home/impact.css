@@ -1,0 +1,180 @@
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px}body{margin:0;background:#fafbfd;color:#242a31;font-family:Arial,'Noto Sans TC','Microsoft JhengHei',sans-serif}
+.impact{line-height:1.65;background:radial-gradient(ellipse at 95% 20%,#eaf0f650,transparent 50%),#fcfdfe}
+.impact a{color:inherit;text-decoration:none}
+.impact a:focus-visible{outline:3px solid #547faa;outline-offset:5px}
+.impact-nav{display:flex;gap:22px;align-items:center;padding:18px max(5%,calc((100% - 1080px)/2));border-bottom:1px solid #acb8c6;background:#f1f4f8}
+.impact-nav>a:last-child{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px}
+.impact-brand{font-weight:800;font-size:21px;white-space:nowrap;border:1px solid #35404c;border-radius:7px;padding:1px 12px}
+.impact-promo{background:linear-gradient(110deg,#e2e8f0,#f4f5f7);padding:28px max(5%,calc((100% - 1080px)/2));display:flex;gap:28px;align-items:center;justify-content:space-between;border-bottom:1px solid #aab6c5}
+.impact-promo h2{font-size:clamp(22px,3vw,34px);margin:8px 0;line-height:1.4}
+.impact-promo p{margin:0;font-size:18px;font-weight:600}
+.impact-promo small{font-size:14px}
+.impact-deadline{flex-shrink:0;text-align:center;border:1.5px solid;border-radius:12px;padding:12px 20px;line-height:1.5;font-weight:700}
+.impact-deadline svg{width:20px;vertical-align:middle;margin-right:8px}
+.impact-wrap{max-width:1080px;margin:auto;padding:0 36px}
+.impact section{padding:42px 0;scroll-margin-top:20px}
+.impact h1{font-size:clamp(40px,6.8vw,76px);letter-spacing:-.04em;line-height:1.22;margin:22px 0 16px;font-weight:850}
+.impact h2{font-size:clamp(27px,3.5vw,40px);line-height:1.4;letter-spacing:-.025em;margin:0 0 14px}
+.impact h3{font-size:24px;line-height:1.4;margin:0 0 6px}
+.impact p{margin:5px 0}
+.impact .impact-hero{padding-top:55px}
+.impact-eyebrow{display:flex;align-items:center;gap:16px;color:#596574}
+.impact-eyebrow b{background:#485b6d;color:white;padding:4px 14px;border-radius:8px;font-size:20px}
+.impact-lead{font-size:24px;color:#606b78}
+.impact-hero h2{font-size:30px;margin-top:30px}
+.impact-chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.impact-chips span{border:1px solid #7e8997;border-radius:30px;padding:7px 16px;display:flex;align-items:center;gap:8px;font-weight:600}
+.impact svg{stroke-width:1.6;flex-shrink:0}
+.impact-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:28px}
+.impact-stats article,.impact-compare article{border:1px solid #adb8c7;border-radius:16px;padding:24px;background:linear-gradient(135deg,#fff,#eff2f6)}
+.impact-stats svg,.impact-flow>article>svg,.impact-faq>article>svg{width:48px;height:48px;background:#e4e8ee;border-radius:12px;padding:10px}
+.impact-stats strong{display:block;font-size:clamp(32px,5vw,54px);line-height:1.5}
+.impact-stats p{font-size:21px;font-weight:650}
+.impact-credentials{gap:8px}
+.impact-credentials span{font-size:14px;padding:5px 13px;border-color:#b4bdca}
+.impact-source{display:block;font-size:13px;color:#6b7787;margin-top:15px}
+.impact-muted{color:#606b78;font-size:19px}
+.impact-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:22px}
+.impact-compare article:last-child{background:#e7edf6;border:2px solid #3f566f}
+.impact-compare del{display:block;font-size:29px;font-weight:700;color:#858b94}
+.impact-compare strong{display:block;font-size:42px}
+.impact-compare strong small{font-size:22px}
+.impact-compare p{color:#606b78;font-size:18px}
+.impact-flow{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin:26px 0}
+.impact-flow h3{margin-top:12px}
+.impact-flow p{color:#606b78;font-size:18px}
+.impact-button{display:inline-flex;align-items:center;gap:16px;background:#465c73;border-radius:12px;padding:16px 25px;color:#fff!important;font-size:22px;font-weight:700;margin-top:12px}
+.impact-step{display:inline-block!important;background:#587da3;color:#fff;padding:2px 12px;border-radius:7px;font-weight:750;margin:0 12px 14px 0!important}
+.impact-step+h2{display:inline;font-size:34px}
+.impact-types{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:24px 0 34px}
+.impact-types a{display:flex;gap:18px;align-items:center;border:1px solid #c0cad7;border-radius:10px;padding:12px 20px;font-weight:650}
+.impact-types a:hover{background:#e8eef5}
+.impact-plan-list{display:grid;gap:22px}
+.impact-plan{border:1px solid #b9c4d2;border-radius:16px;padding:22px;box-shadow:0 2px 0 #dfe4eb80;scroll-margin-top:20px}
+.impact-plan-top{display:flex;gap:22px;align-items:center}
+.impact-plan-icon{background:#e4eaf2;border-radius:12px;width:110px;height:110px;display:grid;place-items:center;flex-shrink:0}
+.impact-plan-icon svg{width:42px;height:42px}
+.impact-plan h3{font-size:29px;display:flex;align-items:center;gap:14px}
+.impact-plan h3 b{background:#5a86b4;color:#fff;border-radius:6px;padding:0 8px}
+.impact-plan-top p{color:#54606e}
+.impact-price{display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;margin-top:10px}
+.impact-price del{color:#85909e}
+.impact-price strong{font-size:29px;white-space:nowrap}
+.impact-price small{font-size:17px}
+.impact-price>span{font-size:13px;color:#667485}
+.impact-plan h4{border-top:1px solid #d1d9e3;padding-top:12px;margin:16px 0 6px}
+.impact-plan ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(3,auto);gap:5px 20px;font-size:15px}
+.impact-plan li{display:flex;align-items:flex-start;gap:8px}
+.impact-plan li svg{width:18px;height:18px;margin-top:3px}
+.impact-uses{display:flex;flex-wrap:wrap;align-items:center;gap:10px;border-top:1px solid #d1d9e3;padding-top:12px;margin-top:15px;font-size:14px}
+.impact-uses span,.impact-uses a{border:1px solid #c2ccd9;border-radius:30px;padding:4px 15px}
+.impact-table-scroll{overflow-x:auto;margin-top:24px;border:1px solid #b5c1d0;border-radius:12px}
+.impact table{border-collapse:collapse;width:100%;min-width:600px;font-size:16px}
+.impact caption{text-align:left;font-size:13px;color:#687485;padding:10px 16px}
+.impact th,.impact td{padding:14px;border:1px solid #d4dce7;text-align:center}
+.impact thead{background:#e5eaf1}
+.impact tbody th{text-align:left}
+.impact td:last-child{background:#e7effa}
+.impact td small{display:block;color:#6d7989;font-size:12px}
+.impact-contact{border:1px solid #a9b7c8;background:#edf1f7;border-radius:16px;display:flex;align-items:center;gap:28px;padding:22px 30px;margin-top:30px}
+.impact-contact img{background:white;border-radius:10px;padding:8px}
+.impact-contact strong{display:block;font-size:24px;margin:5px 0}
+.impact-contact small{display:block;color:#5a6a7b}
+.impact-extras{border:1px solid #aebacb;border-radius:17px;padding:6px 24px;margin-top:24px}
+.impact-extras article{display:flex;align-items:center;gap:22px;padding:24px 0;border-bottom:1px solid #d0d8e3;scroll-margin-top:20px}
+.impact-extras article:last-child{border:0}
+.impact-extra-icon{position:relative;background:#e4eaf2;border-radius:12px;width:64px;height:64px;display:grid;place-items:center;flex-shrink:0}
+.impact-extra-icon svg{width:34px;height:34px}
+.impact-extra-icon b{position:absolute;bottom:-5px;right:-5px;background:#424d5a;color:white;border-radius:5px;padding:0 6px;font-size:13px}
+.impact-extras h3{font-size:23px}
+.impact-extras p{font-size:16px;color:#526071}
+.impact-extra-price{margin-left:auto;text-align:right;flex-shrink:0}
+.impact-extra-price strong{font-size:28px}
+.impact-extra-price small{font-size:16px}
+.impact-number{font-size:32px;color:#7a8798;font-weight:750;margin-left:16px;vertical-align:top}
+.impact-faq article{display:flex;align-items:center;gap:20px;border-top:1px solid #cbd4e0;padding:23px 0}
+.impact-faq{margin-top:24px}
+.impact-faq h3{font-size:23px}
+.impact-faq p{color:#5f6b79;font-size:18px}
+.impact-footer{background:linear-gradient(120deg,#e5ebf3,#d8e1ed);padding:48px 0 24px;margin-top:30px}
+.impact-footer .impact-contact{background:transparent;border:0;padding-left:0}
+.impact-footer>a{display:block}
+.impact-footer-links{display:flex;gap:22px;font-size:13px;color:#596879;border-top:1px solid #bfcad7;margin-top:35px;padding-top:18px}
+.impact-footer-links span{margin-right:auto}@media(max-width:680px){.impact-wrap{padding:0 22px}
+.impact-nav{padding:14px 22px;gap:10px}
+.impact-nav>span{font-size:12px}
+.impact-nav>a:last-child{font-size:0;gap:0}
+.impact-brand{font-size:17px;padding:2px 8px}
+.impact-promo{padding:22px;gap:12px}
+.impact-promo p{font-size:14px}
+.impact-promo small{font-size:12px}
+.impact-promo>div>strong{font-size:13px}
+.impact-promo h2{font-size:22px}
+.impact-deadline{font-size:12px;padding:8px}
+.impact-deadline svg{display:block;margin:0 auto 4px}
+.impact section{padding:30px 0}
+.impact h1{font-size:43px}
+.impact .impact-hero{padding-top:34px}
+.impact-lead{font-size:18px}
+.impact-hero h2{font-size:23px}
+.impact-chips{gap:7px;margin-top:20px}
+.impact-chips span{font-size:12px;padding:6px 10px}
+.impact-chips svg{width:17px;height:17px}
+.impact-stats{gap:9px;margin-top:20px}
+.impact-stats article{padding:13px 10px;border-radius:12px}
+.impact-stats svg{width:36px;height:36px;padding:8px}
+.impact-stats strong{font-size:27px;letter-spacing:-1px;white-space:nowrap}
+.impact-stats p{font-size:13px}
+.impact-credentials span{font-size:11px}
+.impact-source{font-size:11px}
+.impact-compare{gap:10px}
+.impact-compare article{padding:15px 12px}
+.impact-compare h3{font-size:16px}
+.impact-compare del{font-size:18px}
+.impact-compare strong{font-size:25px}
+.impact-compare strong small{font-size:15px}
+.impact-compare p{font-size:13px}
+.impact-flow{gap:12px}
+.impact-flow h3{font-size:19px}
+.impact-flow p{font-size:13px}
+.impact-flow>article>svg{width:42px;height:42px}
+.impact-button{font-size:18px;padding:13px 20px}
+.impact-step+h2{font-size:25px}
+.impact-muted{font-size:15px}
+.impact-types{gap:8px;margin:20px 0}
+.impact-types a{padding:10px;font-size:13px;gap:9px}
+.impact-types svg{width:20px;height:20px}
+.impact-plan{padding:16px}
+.impact-plan-top{gap:12px;align-items:flex-start}
+.impact-plan-icon{width:54px;height:64px}
+.impact-plan-icon svg{width:28px}
+.impact-plan h3{font-size:21px;gap:8px}
+.impact-plan-top p{font-size:13px}
+.impact-price{gap:3px 12px}
+.impact-price del{font-size:12px}
+.impact-price strong{font-size:24px}
+.impact-price small{font-size:13px}
+.impact-price>span{font-size:11px}
+.impact-plan ul{font-size:12px;gap:7px 12px}
+.impact-plan li{gap:5px}
+.impact-plan li svg{width:14px;height:14px}
+.impact-uses{font-size:11px;gap:6px}
+.impact-uses span,.impact-uses a{padding:3px 9px}
+.impact-contact{padding:16px;gap:14px;font-size:13px}
+.impact-contact img{width:86px;height:86px}
+.impact-contact strong{font-size:18px}
+.impact-extras{padding:0 14px}
+.impact-extras article{gap:12px;flex-wrap:wrap;padding:20px 0}
+.impact-extras h3{font-size:19px}
+.impact-extras p{font-size:13px}
+.impact-extra-icon{width:45px;height:48px}
+.impact-extra-icon svg{width:27px}
+.impact-extra-price{width:100%;padding-left:57px;text-align:left}
+.impact-extra-price strong{font-size:26px}
+.impact-number{font-size:23px;margin-left:8px}
+.impact-faq h3{font-size:20px}
+.impact-faq p{font-size:15px}
+.impact-footer{padding-top:34px}
+.impact-footer h2{font-size:27px}
+.impact-footer p{font-size:14px}
+.impact-footer-links{gap:12px;font-size:11px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
