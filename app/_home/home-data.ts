@@ -119,7 +119,7 @@ export const clients: { slug: string; name: string }[] = [
   { slug: 'client-6', name: '合作客戶' }, { slug: 'client-9', name: '合作客戶' },
 ];
 
-/** 常見問題：依主題分組；經銷那題要放最後，元件會接上經銷頁連結。 */
+/** 常見問題：依主題分組。 */
 export type Faq = { q: string; a: string; link?: { href: string; label: string } };
 export const faqGroups: { label: string; items: Faq[] }[] = [
   {
@@ -159,7 +159,6 @@ export const faqGroups: { label: string; items: Faq[] }[] = [
       { q: '可以用公司的真人出鏡嗎？', a: '可以。需要先建立角色卡，費用 NT$15,000，一次付費，可長期使用。' },
       { q: 'AI 代言人的版權歸誰？可以下廣告嗎？', a: 'AI 代言人影片和其他影片一樣，交付的成品可供你的品牌商業使用，包含廣告投放、社群與官網。版權歸屬與實際授權範圍，會在合約中寫清楚。' },
       { q: 'AI 做的影片和圖片可以商業使用嗎？', a: '交付的成品可供你的品牌商業使用，例如社群、廣告與官網。實際授權範圍會在合約中寫清楚。' },
-      { q: '我是行銷公司或顧問，可以經銷合作嗎？', a: '可以。全台同一價格，經銷商賣同一套服務，依成交抽成。合作方式請看經銷合作頁面。', link: { href: '/introduce/', label: '看經銷合作' } },
     ],
   },
 ];

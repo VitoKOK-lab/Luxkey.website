@@ -144,8 +144,6 @@ body { margin: 0; background: #fbf6f2; }
 .ace-contact-card .ace-h2 { color: #fff; }
 .ace-contact-card p { margin: 18px 0 0; font-size: 17px; color: #fff3ec; }
 .ace-contact-actions { display: grid; gap: 14px; }
-.ace-partner { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin-top: 24px; color: var(--ace-muted); }
-.ace-partner a { display: inline-flex; align-items: center; gap: 6px; color: var(--ace-orange-deep); font-weight: 700; }
 
 /* Footer */
 .ace-footer { padding-block: 48px; border-top: 1px solid var(--ace-line); background: var(--ace-bg-soft); }
