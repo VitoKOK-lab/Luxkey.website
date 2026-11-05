@@ -9,6 +9,45 @@ import './home.css';
 const nav = [['#why', '影音價格'], ['#works', '作品案例'], ['#plans', '方案選擇'], ['#other', '附加選購'], ['#process', '合作流程'], ['#faq', '常見問題']] as const;
 const money = (n: number) => n.toLocaleString('en-US');
 
+type EditorialSlide = { src: string; title: string; alt: string };
+const impactSlides: EditorialSlide[] = [
+  { src: '/home/editorial/impact-team.webp', title: '從行銷策略開始', alt: 'AI 生成情境：創意團隊一起討論品牌短影音企劃與分鏡' },
+  { src: '/home/editorial/impact-storyboard.webp', title: '把企劃做到成片', alt: 'AI 生成情境：團隊檢視商品影片分鏡、素材與拍攝畫面' },
+];
+const addOnPhotos: Record<string, { src: string; alt: string }> = {
+  unboxing: { src: '/home/editorial/addon-unboxing.webp', alt: 'AI 生成情境：素人在家用手機自然拍攝商品開箱' },
+  film: { src: '/home/editorial/addon-film.webp', alt: 'AI 生成情境：影像團隊在電腦上製作電影感 AI 品牌影片' },
+  copy: { src: '/home/editorial/addon-ecommerce.webp', alt: 'AI 生成情境：店主與設計師檢視商品介紹與購買頁面' },
+  website: { src: '/home/editorial/addon-ecommerce.webp', alt: 'AI 生成情境：店主與設計師檢視電商網站的桌機與手機版' },
+  course: { src: '/home/editorial/addon-course.webp', alt: 'AI 生成情境：講師錄製線上課程並檢視影片剪輯畫面' },
+  collab: { src: '/home/editorial/addon-unboxing.webp', alt: 'AI 生成情境：素人使用手機拍攝可用於社群的商品影片' },
+};
+const addOnSlides: EditorialSlide[] = addOns.map(a => ({ ...addOnPhotos[a.key], title: a.name }));
+
+function usePhotoRotation(count: number) {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const timer = window.setInterval(() => setActive(current => (current + 1) % count), 6000);
+    return () => window.clearInterval(timer);
+  }, [count, paused]);
+  return { active, setActive, setPaused };
+}
+
+function PhotoCarousel({ slides, label, active, onSelect, onPauseChange }: {
+  slides: EditorialSlide[]; label: string; active: number;
+  onSelect: (index: number) => void; onPauseChange: (paused: boolean) => void;
+}) {
+  return <figure className="ace-photo-carousel" aria-label={label} onMouseEnter={() => onPauseChange(true)} onMouseLeave={() => onPauseChange(false)} onFocusCapture={() => onPauseChange(true)} onBlurCapture={() => onPauseChange(false)}>
+    {slides.map((slide, index) => <img key={`${slide.title}-${index}`} className={index === active ? 'is-active' : ''} src={slide.src} alt={index === active ? slide.alt : ''} aria-hidden={index !== active} width={1200} height={800} loading="eager" fetchPriority="low" decoding="async" />)}
+    <figcaption className="ace-photo-caption"><span>AI 情境示意</span><strong>{slides[active].title}</strong></figcaption>
+    <div className="ace-photo-dots" role="group" aria-label={`${label}照片切換`}>
+      {slides.map((slide, index) => <button key={`${slide.title}-${index}`} type="button" className={index === active ? 'is-active' : ''} aria-label={`顯示${slide.title}照片`} aria-pressed={index === active} onClick={() => onSelect(index)} />)}
+    </div>
+  </figure>;
+}
+
 /** 數字補間：delay 毫秒後用 1200 毫秒從 from 走到 to；使用者關閉動畫時直接顯示最終數字。 */
 function CountUp({ from, to, delay = 0 }: { from: number; to: number; delay?: number }) {
   const [n, setN] = useState(() => to);
@@ -313,29 +352,41 @@ function Plans() {
 
 /** 訂閱用戶的附加選購 E–J：先展示價格，標「即將開放」，不放詢問入口。 */
 function AddOns() {
+  const photos = usePhotoRotation(addOnSlides.length);
+  const preview = (index: number) => {
+    photos.setActive(index);
+    if (window.innerWidth <= 1080) {
+      document.querySelector('#other .ace-photo-carousel')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    }
+  };
   return (
     <section id="other" className="ace-other">
-      <div className="ace-wrap">
-        <div className="ace-other-head">
-          <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
-          <p className="ace-muted">訂閱用戶加購，依品牌需求擴充內容與曝光。</p>
-        </div>
-        <ul className="ace-other-list">
-          {addOns.map(a => <li key={a.key}>
-            <i className="ace-letter">{a.letter}</i>
-            <div className="ace-other-main">
-              <h3>{a.name}{a.soon && <em>即將開放</em>}</h3>
-              <p>{a.detail}{a.more && <> ｜ {a.more}</>}</p>
-            </div>
-            <div className="ace-other-side">
-              {a.market && <s>{a.marketLabel} {a.market}</s>}
-              <div className="ace-other-price"><strong>{a.price}</strong>{a.unit && <span>{a.unit}</span>}</div>
-              {a.pack && <small>{a.pack}</small>}
-            </div>
-          </li>)}
-        </ul>
-        <div className="ace-other-foot">
-          <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅價格。</p>
+      <div className="ace-wrap ace-other-layout">
+        <PhotoCarousel slides={addOnSlides} label="附加選購服務情境" active={photos.active} onSelect={photos.setActive} onPauseChange={photos.setPaused} />
+        <div className="ace-other-content">
+          <div className="ace-other-head">
+            <div><p className="ace-kicker">ADD-ONS</p><h2 className="ace-h2">附加選購</h2></div>
+            <p className="ace-muted">訂閱用戶加購，依品牌需求擴充內容與曝光。點選服務可預覽對應情境。</p>
+          </div>
+          <ul className="ace-other-list">
+            {addOns.map((a, index) => <li key={a.key}>
+              <button type="button" className={photos.active === index ? 'ace-other-choice is-active' : 'ace-other-choice'} aria-pressed={photos.active === index} aria-label={`預覽${a.name}情境照片`} onClick={() => preview(index)}>
+                <i className="ace-letter">{a.letter}</i>
+                <span className="ace-other-main">
+                  <strong>{a.name}{a.soon && <em>即將開放</em>}</strong>
+                  <span>{a.detail}{a.more && <> ｜ {a.more}</>}</span>
+                </span>
+                <span className="ace-other-side">
+                  {a.market && <s>{a.marketLabel} {a.market}</s>}
+                  <span className="ace-other-price"><strong>{a.price}</strong>{a.unit && <span>{a.unit}</span>}</span>
+                  {a.pack && <small>{a.pack}</small>}
+                </span>
+              </button>
+            </li>)}
+          </ul>
+          <div className="ace-other-foot">
+            <p>社群圖文、SEO 文章、電商圖文與完整官網頁面優化依需求報價。以上為未稅價格。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -469,6 +520,7 @@ const setPain = (i: number) => window.dispatchEvent(new CustomEvent('ace:pain', 
 export default function HomePage({ fontClass = '', promoOn = false }: { fontClass?: string; promoOn?: boolean }) {
   const [heroVideoReady, setHeroVideoReady] = useState(false);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const impactPhotos = usePhotoRotation(impactSlides.length);
   useEffect(() => {
     if (heroVideoRef.current && heroVideoRef.current.readyState >= 2) setHeroVideoReady(true);
   }, []);
@@ -527,23 +579,28 @@ export default function HomePage({ fontClass = '', promoOn = false }: { fontClas
 
         <section id="about" className="ace-section ace-why">
           <div className="ace-wrap">
-            <div className="ace-why-head">
-              <p className="ace-kicker">WHY ACE IMPACT</p>
-              <h2 className="ace-h2">為什麼選 ACE Impact？</h2>
-            </div>
-            <div className="ace-stats">
-              {[TrendingUp, Clapperboard, Users].map((Icon, k) => (
-                <div key={stats[k].label} className="ace-card ace-stat">
-                  <span className="ace-icon"><Icon size={22} /></span>
-                  <b>{stats[k].big}<small>{stats[k].unit}</small></b>
-                  <p>{stats[k].label}<br />{stats[k].label2}</p>
+            <div className="ace-why-intro">
+              <PhotoCarousel slides={impactSlides} label="ACE Impact 企劃與製作情境" active={impactPhotos.active} onSelect={impactPhotos.setActive} onPauseChange={impactPhotos.setPaused} />
+              <div className="ace-why-intro-content">
+                <div className="ace-why-head">
+                  <p className="ace-kicker">WHY ACE IMPACT</p>
+                  <h2 className="ace-h2">為什麼選 ACE Impact？</h2>
                 </div>
-              ))}
+                <div className="ace-stats">
+                  {[TrendingUp, Clapperboard, Users].map((Icon, k) => (
+                    <div key={stats[k].label} className="ace-card ace-stat">
+                      <span className="ace-icon"><Icon size={22} /></span>
+                      <b>{stats[k].big}<small>{stats[k].unit}</small></b>
+                      <p>{stats[k].label}<br />{stats[k].label2}</p>
+                    </div>
+                  ))}
+                </div>
+                <ul className="ace-creds">
+                  {[Briefcase, Landmark, GraduationCap, VideoIcon].map((Icon, k) => <li key={creds[k]}><Icon size={16} />{creds[k]}</li>)}
+                </ul>
+                <p className="ace-stat-src">{statSource}</p>
+              </div>
             </div>
-            <ul className="ace-creds">
-              {[Briefcase, Landmark, GraduationCap, VideoIcon].map((Icon, k) => <li key={creds[k]}><Icon size={16} />{creds[k]}</li>)}
-            </ul>
-            <p className="ace-stat-src">{statSource}</p>
 
             <div className="ace-compare">
               <div className="ace-compare-head">
